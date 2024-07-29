@@ -18,8 +18,13 @@ function Modal({ modalOpen, setModalOpen, isCreateModal, selectedSpace, addNewSp
 
   const handleAddSpace = () => {
     if (newTitle.trim()) {
+      if (isPrivate && !newPassword.trim()) {
+        alert('비밀번호를 입력해야 합니다.');
+        return;
+      }
       addNewSpace(newTitle);
       setNewTitle('');
+      setNewPassword('');
       setModalOpen(false);
     }
   };
@@ -50,10 +55,16 @@ function Modal({ modalOpen, setModalOpen, isCreateModal, selectedSpace, addNewSp
                         onChange={(e) => setNewTitle(e.target.value)}
                     />
                     <div className={styles.modalButtonGroup}>
-                      <button className={styles.modalButton} onClick={handlePublicClick}>
-                        public
+                      <button
+                          className={`${styles.modalButton} ${isPrivate ? styles.modalButtonActive : ''}`}
+                          onClick={handlePublicClick}
+                      >
+                        Public
                       </button>
-                      <button className={styles.modalButton} onClick={handlePrivateClick}>
+                      <button
+                          className={`${styles.modalButton} ${isPrivate ? '' : styles.modalButtonActive}`}
+                          onClick={handlePrivateClick}
+                      >
                         Private
                       </button>
                     </div>
