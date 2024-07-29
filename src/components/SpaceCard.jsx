@@ -1,7 +1,7 @@
 import React, {useRef, useState} from 'react';
 import styles from '../styles/SpaceCard.module.css';
 
-function Modal({ modalOpen, setModalOpen }) {
+function Modal({ modalOpen, setModalOpen, isCreateModal, selectedSpace }) {
   const [isPrivate, setIsPrivate] = useState(false);
 
   const modalBackground = useRef();
@@ -29,20 +29,34 @@ function Modal({ modalOpen, setModalOpen }) {
               <button className={styles.modalCloseBtn} onClick={() => setModalOpen(false)}>
                 &times;
               </button>
-              <p>방 생성하기</p>
-              <input className={styles.modalInput} type="text" placeholder="방 제목"/>
-              <div className={styles.modalButtonGroup}>
-                <button className={styles.modalButton} onClick={handlePublicClick}>
-                  public
-                </button>
-                <button className={styles.modalButton} onClick={handlePrivateClick}>
-                  Private
-                </button>
-              </div>
-              {isPrivate && <input className={styles.modalInput} type="password" placeholder="방 패스워드"/>}
-              <div className={styles.modalFooter}>
-                <button className={styles.modalSubmitBtn}>방 생성하기</button>
-              </div>
+              {isCreateModal ? (
+                  <>
+                    <p>방 생성하기</p>
+                    <input className={styles.modalInput} type="text" placeholder="방 제목"/>
+                    <div className={styles.modalButtonGroup}>
+                      <button className={styles.modalButton} onClick={handlePublicClick}>
+                        public
+                      </button>
+                      <button className={styles.modalButton} onClick={handlePrivateClick}>
+                        Private
+                      </button>
+                    </div>
+                    {isPrivate && <input className={styles.modalInput} type="password" placeholder="방 패스워드"/>}
+                    <div className={styles.modalFooter}>
+                      <button className={styles.modalSubmitBtn}>방 생성하기</button>
+                    </div>
+                  </>
+              ) : (
+                  <>
+                    <p>Private</p>
+                    <input className={styles.modalInput} type="text" readOnly
+                           defaultValue={selectedSpace?.title || ''}/>
+                    <input className={styles.modalInput} type="password" placeholder="방 패스워드"/>
+                    <div className={styles.modalFooter}>
+                      <button className={styles.modalSubmitBtn}>입장하기</button>
+                    </div>
+                  </>
+              )}
             </div>
           </div>
       )
@@ -52,6 +66,8 @@ function Modal({ modalOpen, setModalOpen }) {
 function SpaceCard() {
 
   const [modalOpen, setModalOpen] = useState(false);
+  const [isCreateModal, setIsCreateModal] = useState(true);
+  const [selectedSpace, setSelectedSpace] = useState(null);
 
   const spaces = [
     {icon: '🏢', title: '방 제목1', description: '총 20명'},
@@ -61,15 +77,29 @@ function SpaceCard() {
     // 추가 공간 정보
   ];
 
+  const handleCreateClick = () => {
+    setIsCreateModal(true);
+    setSelectedSpace(null);
+    setModalOpen(true);
+  };
+
+  const handleCardClick = (space) => {
+    setIsCreateModal(false);
+    setSelectedSpace(space);
+    setModalOpen(true);
+  };
+
   return (
       <div className={styles.container}>
         <div className={styles.header}>
           <h1 className={styles.heading}>방 목록</h1>
-          <button className={styles.createButton} onClick={() => setModalOpen(true)}>방 생성</button>
+          <button className={styles.createButton} onClick={handleCreateClick}>
+            방 생성
+          </button>
         </div>
         <div className={styles.spaceGrid}>
           {spaces.map((space, index) => (
-              <div key={index} className={styles.spaceCard}>
+              <div key={index} className={styles.spaceCard} onClick={() => handleCardClick(space)}>
                 <div className={styles.spaceIcon}>{space.icon}</div>
                 <div className={styles.spaceInfo}>
                   <h2 className={styles.spaceTitle}>{space.title}</h2>
@@ -78,7 +108,7 @@ function SpaceCard() {
               </div>
           ))}
         </div>
-        <Modal modalOpen={modalOpen} setModalOpen={setModalOpen} />
+        <Modal modalOpen={modalOpen} setModalOpen={setModalOpen} isCreateModal={isCreateModal} selectedSpace={selectedSpace} />
       </div>
   );
 }
