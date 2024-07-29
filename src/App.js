@@ -7,6 +7,7 @@ import RoomPage from './pages/RoomPage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import ChangePasswordPage from './pages/ChangePasswordPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import QuestionDetailPage from './pages/QuestionDetailPage';
 
 function HomePage() {
@@ -33,6 +34,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/changepassword" element={<ChangePasswordPage />} />
+          <Route path="/forgotpassword" element={<ForgotPasswordPage />} />
           <Route path="/room/:roomId/question/:questionId" element={<QuestionDetailPage/>}/>
         </Routes>
       </div>
