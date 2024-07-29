@@ -1,0 +1,40 @@
+.wrongAnswers {
+    padding: 20px;
+}
+
+.answerTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.answerTable th, .answerTable td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+.answerTable th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.answerTable tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.answerTable tr:hover {
+    background-color: #f5f5f5;
+}
+
+.retryButton {
+    padding: 6px 12px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.retryButton:hover {
+    background-color: #45a049;
+}

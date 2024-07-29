@@ -1,0 +1,28 @@
+.solvedProblems {
+    text-align: left;
+    padding: 20px;
+}
+
+.problemTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.problemTable th, .problemTable td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+.problemTable th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.problemTable tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.problemTable tr:hover {
+    background-color: #f5f5f5;
+}
