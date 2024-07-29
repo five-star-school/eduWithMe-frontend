@@ -1,0 +1,61 @@
+.sidebar {
+  width: 200px;
+  padding: 0px 20px;
+  background-color: #f8f9fa;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.roomTitle {
+  font-size: 20px;
+  font-weight: bold;
+  padding: 18px;
+  background-color: #e9ecef;
+  border-radius: 5px;
+  margin: 10px 0;
+}
+
+.memberList {
+  list-style-type: none;
+  padding: 0;
+}
+
+.memberList li {
+  margin-bottom: 10px;
+  padding: 15px;
+  border-radius: 3px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.roomOwner {
+  font-weight: bold;
+  background-color: #e6f3ff;
+}
+
+.ownerTag {
+  font-size: 0.8em;
+  background-color: #007bff;
+  color: white;
+  padding: 2px 5px;
+  border-radius: 3px;
+}
+
+.sectionTitle {
+  font-weight: bold;
+  background-color: #f0f0f0;
+  justify-content: center;
+}
+
+.student {
+  background-color: #fffde7;
+}
+
+.studentTag {
+  font-size: 0.8em;
+  background-color: #ffd600;
+  color: #000;
+  padding: 2px 5px;
+  border-radius: 3px;
+}
