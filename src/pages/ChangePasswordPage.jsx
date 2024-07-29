@@ -1,7 +1,7 @@
 import React from 'react';
 import ChangePassword from '../components/ChangePassword';
 
-function LoginPage() {
+function ChangePasswordPage() {
   return (
     <div className="changePassword-page">
       <ChangePassword />
@@ -9,4 +9,4 @@ function LoginPage() {
   );
 }
 
-export default LoginPage;
+export default ChangePasswordPage;
