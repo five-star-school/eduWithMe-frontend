@@ -1,0 +1,179 @@
+.questionDetailPage {
+    padding: 20px;
+}
+
+.questionSection {
+    margin-bottom: 20px;
+}
+
+.questionTitleSection,
+.questionContentSection {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.questionLabel {
+    flex: 0 0 100px; /* 고정 너비 */
+    font-weight: bold;
+}
+
+.questionTitle {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+.questionTitleInput,
+.questionContentInput {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.questionTitleInput {
+    height: 40px;
+}
+
+.questionContentInput {
+    height: 100px;
+    resize: vertical;
+}
+
+.questionContent {
+    background-color: #f0f0f0;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.answerOptions {
+    margin: 30px 0px 30px 70px;
+}
+
+.answerOption {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.optionNumber {
+    background-color: #007bff;
+    color: white;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.questionInfo {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.commentSection {
+    margin-top: 20px;
+}
+
+.commentSort {
+    display: flex;
+    margin-bottom: 15px;
+}
+
+.sortButton {
+    padding: 5px 10px;
+    background: #f0f0f0;
+    border: none;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.sortButton.active {
+    font-weight: bold;
+    background: #e0e0e0;
+}
+
+.commentList {
+    background-color: #f5f5f5;
+    padding: 15px;
+}
+
+.commentItem {
+    background-color: #fff;
+    padding: 15px;
+    margin-bottom: 10px;
+    border: 1px solid #e0e0e0;
+}
+
+.commentHeader {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.commentAuthor {
+    font-weight: bold;
+}
+
+.commentTime {
+    color: #666;
+    font-size: 12px;
+}
+
+.commentDate {
+    color: #666;
+    font-size: 0.9em;
+}
+
+.commentContent {
+    margin-bottom: -30px;
+}
+
+.commentActions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.actionButton {
+    padding: 5px 10px;
+    background: #f0f0f0;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.commentInput textarea {
+    width: 98%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+}
+
+.submitComment {
+    padding: 8px 15px;
+    background-color: #ffa500;
+    color: white;
+    border: none;
+    cursor: pointer;
+    float: right;
+}
+
+.questionInfo {
+    display: flex;
+    justify-content: flex-end;  /* 오른쪽 정렬 */
+    margin-bottom: 20px;
+}
+
+.difficulty, .points {
+    margin-left: 20px;  /* 난이도와 포인트 사이의 간격 */
+}
+
+/* 필요하다면 추가 스타일 */
+.infoLabel {
+    font-weight: bold;
+    margin-right: 5px;
+}
