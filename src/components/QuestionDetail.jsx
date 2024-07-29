@@ -1,6 +1,6 @@
 import React from 'react';
 import {useParams} from 'react-router-dom';
-import RoomLayout from '../components/RoomLayout';
+import RoomLayout from './RoomLayout';
 import styles from '../styles/QuestionDetailPage.module.css';
 
 function QuestionDetailPage() {
