@@ -1,6 +1,7 @@
-import React from 'react';
-import { useRef } from 'react' 
+import React, { useRef } from 'react';
 import styles from '../styles/Login.module.css';
+import { FcGoogle } from "react-icons/fc";
+import { RiKakaoTalkFill } from "react-icons/ri";
 import { Link } from 'react-router-dom';
 
 function Login() {
@@ -25,9 +26,17 @@ function Login() {
             <button className={styles.button} type="submit" onClick={handleBoardClick}>Login</button>
         </form>
         <div className={styles.links}>
-                <Link to="/forgot-password" className={styles.link}>비밀번호 찾기</Link>
-                <span className={styles.separator}>|</span>
-                <Link to="/signup" className={styles.link}>회원가입</Link>
+            <Link to="/forgot-password" className={styles.link}>비밀번호 찾기</Link>
+            <span className={styles.separator}>|</span>
+            <Link to="/signup" className={styles.link}>회원가입</Link>
+        </div>
+        <div className={styles.socialLogin}>
+                <button className={`${styles.socialButton} ${styles.googleButton}`} onClick={() => console.log('Login with Google')}>
+                    <FcGoogle className={styles.socialIcon} /> Google
+                </button>
+                <button className={`${styles.socialButton} ${styles.kakaoButton}`} onClick={() => console.log('Login with Kakao')}>
+                    <RiKakaoTalkFill className={styles.socialIcon} /> Kakao
+                </button>
             </div>
     </div>
     );
