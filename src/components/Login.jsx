@@ -21,8 +21,8 @@ function Login() {
         <div className={styles.login}>
         <h2 className={styles.title}>로그인</h2>
         <form className={styles.form}>
-            <input className={styles.input} type="email" placeholder="Email" ref={emailInput} />
-            <input className={styles.input} type="password" placeholder="Password" ref={passwordInput} />
+            <input className={styles.input} type="email" placeholder="이메일" ref={emailInput} />
+            <input className={styles.input} type="password" placeholder="비밀번호" ref={passwordInput} />
             <button className={styles.button} type="submit" onClick={handleBoardClick}>Login</button>
         </form>
         <div className={styles.links}>
