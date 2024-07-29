@@ -1,0 +1,110 @@
+.login {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.title {
+    margin-top: 60px;
+    margin-bottom: 60px;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 450px;
+}
+
+.input {
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.button {
+    padding: 10px 10px;
+    background-color: #9fadff;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.button:hover {
+    background-color: #6b7fff;
+}
+
+.links {
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    margin-top: 40px;
+}
+
+.link {
+    text-decoration: none;
+    color: #5b5b5b;
+    font-size: 16px;
+    margin: 0 5px;
+}
+
+.link:hover {
+    color: #000;
+    text-decoration: none;
+}
+
+.separator {
+    color: #5b5b5b;
+    margin: 0 15px;
+}
+
+.socialLogin {
+    display: flex;
+    justify-content: center;
+    gap: 10px; 
+    margin-top: 40px;
+    width: 100%;
+    max-width: 450px;
+}
+
+.socialButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px; 
+    border: none;
+    border-radius: 5px;
+    color: #333;
+    font-size: 14px; 
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 220px; 
+}
+
+.googleButton {
+    background-color: #eee; 
+}
+
+.googleButton:hover {
+    background-color: #ddd;
+}
+
+.kakaoButton {
+    background-color: #F9E000;
+    color: #333;
+}
+
+.kakaoButton:hover {
+    background-color: #e1c800;
+}
+
+.socialIcon {
+    margin-right: 8px;
+    font-size: 18px; 
+}
