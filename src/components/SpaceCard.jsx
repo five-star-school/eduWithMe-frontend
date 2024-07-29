@@ -11,7 +11,10 @@ const spaces = [
 function SpaceCard() {
   return (
     <div className={styles.container}>
-      <h1 className={styles.heading}>방 목록</h1>
+      <div className={styles.header}>
+        <h1 className={styles.heading}>방 목록</h1>
+        <button className={styles.createButton}>방 생성</button>
+      </div>
       <div className={styles.spaceGrid}>
         {spaces.map((space, index) => (
           <div key={index} className={styles.spaceCard}>

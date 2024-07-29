@@ -1,12 +1,35 @@
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 50px;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
   }
   
   .heading {
     text-align: left;
-    margin-bottom: 20px;
+    margin: 0;
+    flex-grow: 1;
+  }
+  
+  .createButton {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    background-color: #3f51b5;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    margin-left: auto; 
+  }
+  
+  .createButton:hover {
+    background-color: #303f9f;
   }
   
   .spaceGrid {
