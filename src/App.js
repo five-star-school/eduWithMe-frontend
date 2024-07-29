@@ -6,6 +6,7 @@ import MainPage from './pages/MainPage';
 import RoomPage from './pages/RoomPage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
+import ChangePasswordPage from './pages/ChangePasswordPage';
 
 function HomePage() {
   return (
@@ -30,6 +31,7 @@ function App() {
           <Route path="/room/:roomId" element={<RoomPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
+          <Route path="/changepassword" element={<ChangePasswordPage />} />
         </Routes>
       </div>
     </Router>
