@@ -8,6 +8,7 @@ import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import ChangePasswordPage from './pages/ChangePasswordPage';
 import QuestionDetailPage from './pages/QuestionDetailPage';
+import ManageMainPage from './pages/ManageMainPage';
 
 function HomePage() {
     return (
@@ -34,6 +35,7 @@ function App() {
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/changepassword" element={<ChangePasswordPage />} />
           <Route path="/room/:roomId/question/:questionId" element={<QuestionDetailPage/>}/>
+          <Route path="/manageMain" element={<ManageMainPage/>}/>
         </Routes>
       </div>
     </Router>
