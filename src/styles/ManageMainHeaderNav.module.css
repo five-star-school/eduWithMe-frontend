@@ -1,0 +1,33 @@
+.headerNav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background-color: #f0f0f0;
+}
+
+.navButton {
+  padding: 8px 15px;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 14px;
+  color: white;
+}
+
+.activeButton {
+  background-color: #007bff;
+}
+
+.rightButtons {
+  display: flex;
+  gap: 10px;
+}
+
+.editButton {
+  background-color: #6c757d;
+}
+
+.deleteButton {
+  background-color: #dc3545;
+}
