@@ -18,7 +18,7 @@ function ChangePassword() {
         const repeatNewPassword = repeatNewPasswordInput.current?.value;
 
         if (!currentPassword || !newPassword || !repeatNewPassword) {
-            alert('모든 필드를 입력해주세요.');
+            alert('빈 칸을 전부 입력 해주세요.');
             return;
         }
 
@@ -33,7 +33,7 @@ function ChangePassword() {
         }
 
         if (!isPasswordValid(newPassword)) {
-            alert('새 비밀번호가 규정에 맞지 않습니다. 비밀번호는 최소 8자 이상이어야 하며, 대문자, 소문자, 숫자 및 특수문자를 포함해야 합니다.');
+            alert('비밀번호는 최소 8자 이상이어야 하며, 대문자, 소문자, 숫자 및 특수문자를 포함해야 합니다.');
             return;
         }
 
