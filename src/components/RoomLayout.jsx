@@ -2,6 +2,7 @@
 import React from 'react';
 import SidebarComponent from './SidebarComponent';
 import HeaderNavComponent from './HeaderNavComponent';
+import ChatWidget from './ChatWidget';
 import styles from '../styles/RoomLayout.module.css';
 
 function RoomLayout({ children }) {
@@ -14,6 +15,7 @@ function RoomLayout({ children }) {
                     {children}
                 </div>
             </div>
+          <ChatWidget />
         </div>
     );
 }
