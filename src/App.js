@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import './App.css';
 import Header from './components/Header';
 import MainPage from './pages/MainPage';
-import RoomPage from './pages/RoomPage';
+import RoomPage from "./pages/RoomPage";
 
 function HomePage() {
   return (
@@ -25,7 +25,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/main" element={<MainPage />} />
-          <Route path="/room" element={<RoomPage />} />
+          <Route path="/room/:roomId" element={<RoomPage />} />
         </Routes>
       </div>
     </Router>

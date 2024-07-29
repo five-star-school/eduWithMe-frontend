@@ -1,0 +1,53 @@
+.sidebar {
+    width: 200px;
+    padding: 20px;
+    background-color: #f8f9fa;
+}
+
+.roomTitle {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #e9ecef;
+    border-radius: 5px;
+}
+
+.memberList {
+    list-style-type: none;
+    padding: 0;
+}
+
+.memberList li {
+    margin-bottom: 10px;
+    padding: 15px;
+    border-radius: 3px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.roomOwner {
+    font-weight: bold;
+    background-color: #e6f3ff;
+}
+
+.ownerTag {
+    font-size: 0.8em;
+    background-color: #007bff;
+    color: white;
+    padding: 2px 5px;
+    border-radius: 3px;
+}
+
+.student {
+    background-color: #fffde7; /* 연노랑색 배경 */
+}
+
+.studentTag {
+    font-size: 0.8em;
+    background-color: #ffd600; /* 진한 노란색 */
+    color: #000; /* 태그 텍스트 색상을 검정으로 설정 */
+    padding: 2px 5px;
+    border-radius: 3px;
+}
