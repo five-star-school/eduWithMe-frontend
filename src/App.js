@@ -11,6 +11,7 @@ import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import QuestionDetailPage from './pages/QuestionDetailPage';
 import ManageMainPage from './pages/ManageMainPage';
 import ManageCreatePage from './pages/ManageCreatePage';
+import MyPage from './pages/MyPage';
 
 function HomePage() {
     return (
@@ -40,6 +41,7 @@ function App() {
           <Route path="/room/:roomId/question/:questionId" element={<QuestionDetailPage/>}/>
           <Route path="/manageMain" element={<ManageMainPage/>}/>
           <Route path="/manageCreate" element={<ManageCreatePage/>}/>
+          <Route path="/mypage" element={<MyPage />} />
         </Routes>
       </div>
     </Router>
