@@ -5,6 +5,7 @@ import Header from './components/Header';
 import MainPage from './pages/MainPage';
 import RoomPage from './pages/RoomPage';
 import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignupPage';
 
 function HomePage() {
   return (
@@ -26,8 +27,9 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/main" element={<MainPage />} />
-          <Route path="/login" element={<LoginPage />} />
           <Route path="/room/:roomId" element={<RoomPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
         </Routes>
       </div>
     </Router>
