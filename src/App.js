@@ -1,16 +1,30 @@
-import logo from './logo.svg';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import './App.css';
+import Header from './components/Header';
+
+function HomePage() {
+  return (
+    <div>
+      <h1>Home Page</h1>
+      <p>
+        <Link to="/main">메인 페이지로 이동</Link>
+      </p>
+      <p>여기에 웹페이지 소개랑 이용방법 적어도 좋을 것 같아요.</p>
+    </div>
+  );
+}
 
 function App() {
   return (
-    <div className="App">
-        <header className="App-header">
-            <img src={logo} className="App-logo" alt="logo"/>
-            <p>
-                EduWithMe
-            </p>
-        </header>
-    </div>
+    <Router>
+      <div className="App">
+        <Header />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
