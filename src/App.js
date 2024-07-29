@@ -26,8 +26,8 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/main" element={<MainPage />} />
-          <Route path="/room" element={<RoomPage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/room/:roomId" element={<RoomPage />} />
         </Routes>
       </div>
     </Router>
