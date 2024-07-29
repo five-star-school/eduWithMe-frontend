@@ -1,0 +1,48 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .headerTitle {
+    text-decoration: none;
+    color: #000;
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .authButtons {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .loginButton,
+  .signupButton {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px; 
+    cursor: pointer;
+    font-size: 16px; 
+  }
+  
+  .loginButton {
+    background-color: #e0e0e0;
+    color: #333;
+  }
+  
+  .loginButton:hover {
+    background-color: #bebebe; 
+  }
+  
+  .signupButton {
+    background-color: #000;
+    color: #fff;
+  }
+  
+  .signupButton:hover {
+    background-color: #333;
+  }
+  
