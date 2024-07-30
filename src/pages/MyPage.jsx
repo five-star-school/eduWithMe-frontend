@@ -4,12 +4,13 @@ import UserInfo from '../components/MyPage/UserInfo';
 import SolvedProblems from '../components/MyPage/SolvedProblems';
 import WrongAnswers from '../components/MyPage/WrongAnswers';
 import MyComments from '../components/MyPage/MyComments';
+import SideBar from '../components/MyPage/SideBar';
 
 function MyPage() {
     const [activeTab, setActiveTab] = useState('solved');
 
     const renderContent = () => {
-        switch(activeTab) {
+        switch (activeTab) {
             case 'solved':
                 return <SolvedProblems />;
             case 'wrong':
@@ -31,26 +32,7 @@ function MyPage() {
                 </div>
             </header>
             <div className={styles.content}>
-                <aside className={styles.sidebar}>
-                    <button
-                        className={`${styles.sidebarButton} ${activeTab === 'solved' ? styles.active : ''}`}
-                        onClick={() => setActiveTab('solved')}
-                    >
-                        해결한 문제
-                    </button>
-                    <button
-                        className={`${styles.sidebarButton} ${activeTab === 'wrong' ? styles.active : ''}`}
-                        onClick={() => setActiveTab('wrong')}
-                    >
-                        오답 문제
-                    </button>
-                    <button
-                        className={`${styles.sidebarButton} ${activeTab === 'comments' ? styles.active : ''}`}
-                        onClick={() => setActiveTab('comments')}
-                    >
-                        작성한 댓글
-                    </button>
-                </aside>
+                <SideBar activeTab={activeTab} onTabChange={setActiveTab} />
                 <main className={styles.mainContent}>
                     <UserInfo />
                     {renderContent()}
