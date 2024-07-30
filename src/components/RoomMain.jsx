@@ -1,7 +1,51 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import axios from "../util/axiosConfig";
+import { getCookie } from '../util/cookie';
 import styles from '../styles/RoomMainPage.module.css';
 
 function RoomMain() {
+    const [questions, setQuestions] = useState([]);
+    const [page, setPage] = useState(0);
+    const { roomId } = useParams();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const token = getCookie('AccessToken');
+        if (token === null) {
+            navigate('/login');
+        } else {
+            fetchQuestions();
+        }
+    }, [roomId, page, navigate]);
+
+    const fetchQuestions = async () => {
+        try {
+            const response = await axios.get(`/rooms/${roomId}/question?page=${page}`);
+            console.log('API Response:', response.data);  // 추가된 로그
+            if (response.data && response.data.data) {
+                setQuestions(response.data.data);
+            }
+        } catch (error) {
+            console.error('Failed to fetch questions:', error);
+            if (error.response && error.response.status === 403) {
+                navigate('/login');
+            }
+        }
+    };
+
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        if (isNaN(date.getTime())) {
+            return 'Invalid Date';
+        }
+        return date.toLocaleDateString('ko-KR', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+        });
+    };
+
     return (
         <div className={styles.roomMainPage}>
             <div className={styles.mainContent}>
@@ -23,27 +67,15 @@ function RoomMain() {
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
+                        {questions.map((question, index) => (
+                            <tr key={question.questionId}>
+                                <td>{index + 1}</td>
+                                <td>{question.category}</td>
+                                <td>{question.title}</td>
+                                <td>{question.difficulty}</td>
+                                <td>{formatDate(question.updatedAt)}</td>
+                            </tr>
+                        ))}
                         </tbody>
                     </table>
                 </div>
