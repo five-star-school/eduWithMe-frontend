@@ -54,7 +54,7 @@ function Login() {
                 <button className={styles.button} type="submit" onClick={handleBoardClick}>Login</button>
             </form>
             <div className={styles.links}>
-                <Link to="/forgot-password" className={styles.link}>비밀번호 찾기</Link>
+                <Link to="/forgotpassword" className={styles.link}>비밀번호 찾기</Link>
                 <span className={styles.separator}>|</span>
                 <Link to="/signup" className={styles.link}>회원가입</Link>
             </div>
