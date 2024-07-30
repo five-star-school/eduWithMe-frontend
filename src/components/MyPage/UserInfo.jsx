@@ -1,18 +1,22 @@
-// src/components/MyPage/UserInfo.jsx
 import React from 'react';
 import styles from '../../styles/UserInfo.module.css';
+import { IoPersonCircleOutline } from "react-icons/io5";
 
 function UserInfo({ user }) {
     // 기본 프로필 사진 URL
-    const defaultPhotoUrl = 'https://cdn-icons-png.flaticon.com/256/4703/4703650.png';
+    // const defaultPhotoUrl = 'https://cdn-icons-png.flaticon.com/256/4703/4703650.png';
 
     // photoUrl이 null일 경우 기본 프로필 사진 URL을 사용
-    const profilePhotoUrl = user.photoUrl || defaultPhotoUrl;
+    const profilePhotoUrl = user.photoUrl;
 
     return (
         <div className={styles.userInfo}>
             <div className={styles.profileImage}>
-                <img src={profilePhotoUrl} alt="Profile Image" />
+                {user.photoUrl ? (
+                    <img src={profilePhotoUrl} alt="Profile Image" />
+                ) : (
+                    <IoPersonCircleOutline size={100} className={styles.defaultIcon} />
+                )}
                 <button className={styles.editButton}>프로필 사진 편집</button>
             </div>
             <div className={styles.userDetails}>
