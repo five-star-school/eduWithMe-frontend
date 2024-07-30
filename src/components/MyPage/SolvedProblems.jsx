@@ -1,7 +1,13 @@
 import React from 'react';
 import styles from '../../styles/SolvedProblems.module.css';
+import { format } from 'date-fns';
 
 function SolvedProblems({ problems }) {
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return format(date, 'yyyy-MM-dd');  // 원하는 포맷으로 변경
+    };
+
     return (
         <div className={styles.solvedProblems}>
             <h2 className={styles.title}>해결한 문제</h2>
@@ -21,7 +27,7 @@ function SolvedProblems({ problems }) {
                                 <td>{problem.questionNo}</td>
                                 <td>{problem.title}</td>
                                 <td>{problem.difficulty}</td>
-                                <td>{new Date(problem.createdAt).toLocaleDateString()}</td>
+                                <td>{formatDate(problem.createdAt)}</td>
                             </tr>
                         ))}
                     </tbody>
