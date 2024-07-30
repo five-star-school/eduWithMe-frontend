@@ -3,12 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import styles from '../styles/Login.module.css';
 import { FcGoogle } from "react-icons/fc";
 import { RiKakaoTalkFill } from "react-icons/ri";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from "../util/axiosConfig";
+
 
 function Login() {
     const emailInput = useRef();
     const passwordInput = useRef();
+    const navigate = useNavigate();
     const navigate = useNavigate();
 
     const isEmailValid = (email) => {
@@ -60,7 +62,13 @@ function Login() {
             }
         } catch (error) {
             console.error('로그인 오류:', error);
-            alert('로그인 중 오류가 발생했습니다.');
+            if (error.response) {
+                alert(`로그인 실패: ${error.response.data.message || '알 수 없는 오류가 발생했습니다.'}`);
+            } else if (error.request) {
+                alert('서버에서 응답이 없습니다. 네트워크 연결을 확인해주세요.');
+            } else {
+                alert('로그인 요청 중 오류가 발생했습니다.');
+            }
         }
     };
 
