@@ -1,9 +1,9 @@
 import React, { useRef } from 'react';
-import axios from 'axios';
 import styles from '../styles/Login.module.css';
 import { FcGoogle } from "react-icons/fc";
 import { RiKakaoTalkFill } from "react-icons/ri";
 import { Link } from 'react-router-dom';
+import axios from "../util/axiosConfig";
 
 function Login() {
     const emailInput = useRef();
@@ -41,7 +41,7 @@ function Login() {
         }
 
         try {
-            const response = await axios.post('http://localhost:8888/users/login', { email, password });
+            const response = await axios.post('/users/login', { email, password });
 
             if (response.status === 200) {
                 console.log(response);
