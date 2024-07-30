@@ -17,16 +17,36 @@ function Modal({ modalOpen, setModalOpen, isCreateModal, selectedSpace, addNewSp
     setIsPrivate(false);
   };
 
-  const handleAddSpace = () => {
+  const handleAddSpace = async () => {
     if (newTitle.trim()) {
       if (isPrivate && !newPassword.trim()) {
         alert('비밀번호를 입력해야 합니다.');
         return;
       }
-      addNewSpace(newTitle);
-      setNewTitle('');
-      setNewPassword('');
-      setModalOpen(false);
+
+      try {
+        let response;
+        if (isPrivate) {
+          response = await axios.post('/rooms/private', {
+            roomName: newTitle,
+            roomPassword: newPassword,
+          });
+        } else {
+          response = await axios.post('/rooms/public', {
+            roomName: newTitle,
+          });
+        }
+        alert('방이 성공적으로 생성되었습니다.');
+        addNewSpace(newTitle);
+        setNewTitle('');
+        setNewPassword('');
+        setModalOpen(false);
+      } catch (error) {
+        // Extract and display the error message from the response
+        const errorMessage = error.response?.data?.msg || '방 생성에 실패했습니다.';
+        console.error('방 생성 실패:', errorMessage);
+        alert(errorMessage);
+      }
     }
   };
 
@@ -57,13 +77,13 @@ function Modal({ modalOpen, setModalOpen, isCreateModal, selectedSpace, addNewSp
                     />
                     <div className={styles.modalButtonGroup}>
                       <button
-                          className={`${styles.modalButton} ${isPrivate ? styles.modalButtonActive : ''}`}
+                          className={`${styles.modalButton} ${isPrivate ? '' : styles.modalButtonActive}`}
                           onClick={handlePublicClick}
                       >
                         Public
                       </button>
                       <button
-                          className={`${styles.modalButton} ${isPrivate ? '' : styles.modalButtonActive}`}
+                          className={`${styles.modalButton} ${isPrivate ? styles.modalButtonActive : ''}`}
                           onClick={handlePrivateClick}
                       >
                         Private
