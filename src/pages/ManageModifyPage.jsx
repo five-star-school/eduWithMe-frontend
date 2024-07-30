@@ -1,16 +1,16 @@
-// src/pages/ManageCreatePage.jsx
+// src/pages/ManageModifyPage.jsx
 import React from 'react';
 import SidebarComponent from '../components/SidebarComponent';
 import ManageMainHeaderNav from '../components/ManageMainHeaderNav';
-import styles from '../styles/ManageCreatePage.module.css';
+import styles from '../styles/ManageModifyPage.module.css';
 
-function ManageCreatePage() {
+function ManageModifyPage() {
   return (
-      <div className={styles.manageCreatePage}>
+      <div className={styles.manageModifyPage}>
         <SidebarComponent />
         <div className={styles.mainContent}>
           <ManageMainHeaderNav />
-          <div className={styles.createContent}>
+          <div className={styles.modifyContent}>
             <div className={styles.questionSection}>
               <div className={styles.questionTitleSection}>
                 <span className={styles.questionLabel}>문제 제목</span>
@@ -76,4 +76,4 @@ function ManageCreatePage() {
   );
 }
 
-export default ManageCreatePage;
+export default ManageModifyPage;
