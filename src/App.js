@@ -12,6 +12,7 @@ import QuestionDetailPage from './pages/QuestionDetailPage';
 import ManageMainPage from './pages/ManageMainPage';
 import ManageCreatePage from './pages/ManageCreatePage';
 import MyPage from './pages/MyPage';
+import ManageReadPage from './pages/ManageReadPage';
 
 function HomePage() {
     return (
@@ -42,6 +43,7 @@ function App() {
           <Route path="/manageMain" element={<ManageMainPage/>}/>
           <Route path="/manageCreate" element={<ManageCreatePage/>}/>
           <Route path="/mypage" element={<MyPage />} />
+          <Route path="/manageRead" element={<ManageReadPage/>}/>
         </Routes>
       </div>
     </Router>
