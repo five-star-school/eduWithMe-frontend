@@ -17,9 +17,9 @@ function WrongAnswers({ problems = [] }) {
                         </tr>
                     </thead>
                     <tbody>
-                        {problems.map((problem, index) => (
+                        {problems.map((problem) => (
                             <tr key={problem.questionNo}>
-                                <td>{index + 1}</td>
+                                <td>{problem.questionNo}</td>
                                 <td>{problem.title}</td>
                                 <td>{problem.difficulty}</td>
                                 <td>{format(new Date(problem.createdAt), 'yyyy-MM-dd')}</td>
@@ -28,7 +28,7 @@ function WrongAnswers({ problems = [] }) {
                     </tbody>
                 </table>
             ) : (
-                <p>아직 오답 문제가 없습니다. 도전해보세요!</p>
+                <p>아직 오답 문제가 없습니다. 틀린 문제를 다시 풀면서 실력을 키워보세요! 💪</p>
             )}
         </div>
     );
