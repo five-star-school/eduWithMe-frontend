@@ -2,12 +2,14 @@ import React, { useRef } from 'react';
 import styles from '../styles/Login.module.css';
 import { FcGoogle } from "react-icons/fc";
 import { RiKakaoTalkFill } from "react-icons/ri";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from "../util/axiosConfig";
+
 
 function Login() {
     const emailInput = useRef();
     const passwordInput = useRef();
+    const navigate = useNavigate();
 
     const isEmailValid = (email) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -51,13 +53,20 @@ function Login() {
 
                 console.log('로그인 성공, 토큰:', accessToken);
                 document.cookie = `AccessToken=${accessToken}; path=/; secure; SameSite=Strict`;
-                alert('로그인 성공!');
+                alert('로그인 성공!')
+                navigate('/main');
             } else {
                 alert('로그인 실패: ' + response.data.message);
             }
         } catch (error) {
             console.error('로그인 오류:', error);
-            alert('로그인 중 오류가 발생했습니다.');
+            if (error.response) {
+                alert(`로그인 실패: ${error.response.data.message || '알 수 없는 오류가 발생했습니다.'}`);
+            } else if (error.request) {
+                alert('서버에서 응답이 없습니다. 네트워크 연결을 확인해주세요.');
+            } else {
+                alert('로그인 요청 중 오류가 발생했습니다.');
+            }
         }
     };
 
