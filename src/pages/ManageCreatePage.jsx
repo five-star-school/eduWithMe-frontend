@@ -1,7 +1,7 @@
 // src/pages/ManageCreatePage.jsx
 import React from 'react';
 import SidebarComponent from '../components/SidebarComponent';
-import ManageCreateHeaderNav from '../components/ManageCreateHeaderNav';
+import ManageMainHeaderNav from '../components/ManageMainHeaderNav';
 import styles from '../styles/ManageCreatePage.module.css';
 
 function ManageCreatePage() {
@@ -9,7 +9,7 @@ function ManageCreatePage() {
       <div className={styles.manageCreatePage}>
         <SidebarComponent />
         <div className={styles.mainContent}>
-          <ManageCreateHeaderNav />
+          <ManageMainHeaderNav />
           <div className={styles.createContent}>
             <div className={styles.questionSection}>
               <div className={styles.questionTitleSection}>
