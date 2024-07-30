@@ -28,6 +28,12 @@ function CommentSection({ comments }) {
         setEditContent(e.target.value);
     };
 
+    const handleDeleteClick = (commentId) => {
+        if (window.confirm('정말 삭제하시겠습니까?')) {
+            setCommentList(commentList.filter(comment => comment.id !== commentId));
+        }
+    };
+    
     return (
         <div className={styles.commentSection}>
             <div className={styles.commentSort}>
@@ -72,7 +78,12 @@ function CommentSection({ comments }) {
                                     >
                                         댓글 수정
                                     </button>
-                                    <button className={styles.actionButton}>댓글 삭제</button>
+                                    <button
+                                        className={styles.actionButton}
+                                        onClick={() => handleDeleteClick(comment.id)}
+                                    >
+                                        댓글 삭제
+                                    </button>                                
                                 </div>
                             </>
                         )}
