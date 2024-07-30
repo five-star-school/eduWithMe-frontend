@@ -123,12 +123,12 @@
     background: #d0d0d0;
 }
 
-.commentList {
+/* .commentList {
     background-color: #fff;
     padding: 10 10px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
+} */
 
 .commentItem {
     background-color: #f9f9f9;
