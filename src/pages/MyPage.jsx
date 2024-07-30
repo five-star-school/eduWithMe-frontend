@@ -102,21 +102,23 @@ function MyPage() {
                 <main className={styles.mainContent}>
                     {user ? <UserInfo user={user} /> : <p>로딩 중...</p>}
                     {loading ? <p>로딩 중...</p> : renderContent()}
-                    <div className={styles.pagination}>
-                        <button
-                            disabled={page === 0}
-                            onClick={() => setPage(page - 1)}
-                        >
-                            이전
-                        </button>
-                        <span>{page + 1} / {totalPages}</span>
-                        <button
-                            disabled={page >= totalPages - 1}
-                            onClick={() => setPage(page + 1)}
-                        >
-                            다음
-                        </button>
-                    </div>
+                    {solvedProblems.length > 0 && totalPages > 1 && (
+                        <div className={styles.pagination}>
+                            <button
+                                disabled={page === 0}
+                                onClick={() => setPage(page - 1)}
+                            >
+                                이전
+                            </button>
+                            <span>{page + 1} / {totalPages}</span>
+                            <button
+                                disabled={page >= totalPages - 1}
+                                onClick={() => setPage(page + 1)}
+                            >
+                                다음
+                            </button>
+                        </div>
+                    )}
                 </main>
             </div>
         </div>

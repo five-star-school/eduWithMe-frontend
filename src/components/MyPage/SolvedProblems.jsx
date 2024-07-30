@@ -33,7 +33,7 @@ function SolvedProblems({ problems }) {
                     </tbody>
                 </table>
             ) : (
-                <p>해결한 문제가 없습니다.</p>
+                <p>해결한 문제가 없습니다. 한 문제씩 차근차근 해결해 나가며 지식을 쌓아보세요! ☺️</p>
             )}
         </div>
     );
