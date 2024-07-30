@@ -13,6 +13,7 @@ import ManageMainPage from './pages/ManageMainPage';
 import ManageCreatePage from './pages/ManageCreatePage';
 import MyPage from './pages/MyPage';
 import ManageReadPage from './pages/ManageReadPage';
+import ManageModifyPage from './pages/ManageModifyPage';
 
 function HomePage() {
     return (
@@ -44,6 +45,7 @@ function App() {
           <Route path="/manageCreate" element={<ManageCreatePage/>}/>
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/manageRead" element={<ManageReadPage/>}/>
+          <Route path="/manageModify" element={<ManageModifyPage/>}/>
         </Routes>
       </div>
     </Router>
