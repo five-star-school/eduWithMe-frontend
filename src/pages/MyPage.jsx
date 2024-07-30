@@ -1,15 +1,62 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from '../styles/MyPage.module.css';
-import UserInfo from '../components/UserInfo';
-import SolvedProblems from '../components/SolvedProblems';
-import WrongAnswers from '../components/WrongAnswers';
-import MyComments from '../components/MyComments';
+import UserInfo from '../components/MyPage/UserInfo';
+import SolvedProblems from '../components/MyPage/SolvedProblems';
+import WrongAnswers from '../components/MyPage/WrongAnswers';
+import MyComments from '../components/MyPage/MyComments';
+import SideBar from '../components/MyPage/SideBar';
+import axios from '../util/axiosConfig';
 
 function MyPage() {
     const [activeTab, setActiveTab] = useState('solved');
+    const [user, setUser] = useState(null);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchUserProfile = async () => {
+            try {
+                // 쿠키에서 AccessToken 가져오기
+                const token = document.cookie.split('; ').find(row => row.startsWith('AccessToken='))?.split('=')[1];
+                console.log('AccessToken:', token);  // 디버깅용 로그
+
+                if (!token) {
+                    throw new Error('AccessToken이 없습니다.');
+                }
+
+                // API 요청
+                const response = await axios.get('/profiles', {
+                    headers: {
+                        'AccessToken': token  // Authorization 헤더 대신 AccessToken 헤더를 사용
+                    }
+                });
+
+                console.log('Response:', response);  // 디버깅용 로그
+
+                if (response.status === 200 && response.data.data) {
+                    setUser(response.data.data);
+                } else {
+                    throw new Error(response.data.message || '프로필 조회에 실패했습니다.');
+                }
+            } catch (error) {
+                console.error('프로필 조회 오류:', error);
+                setError(error.message || '알 수 없는 오류가 발생했습니다.');
+
+                if (error.response) {
+                    console.error('Error status:', error.response.status);
+                    console.error('Error data:', JSON.stringify(error.response.data, null, 2));
+                } else if (error.request) {
+                    console.error('No response received:', error.request);
+                } else {
+                    console.error('Error details:', error.message);
+                }
+            }
+        };
+
+        fetchUserProfile();
+    }, []);
 
     const renderContent = () => {
-        switch(activeTab) {
+        switch (activeTab) {
             case 'solved':
                 return <SolvedProblems />;
             case 'wrong':
@@ -21,6 +68,10 @@ function MyPage() {
         }
     };
 
+    if (error) {
+        return <div className={styles.error}>에러: {error}</div>;
+    }
+
     return (
         <div className={styles.myPage}>
             <header className={styles.header}>
@@ -31,28 +82,9 @@ function MyPage() {
                 </div>
             </header>
             <div className={styles.content}>
-                <aside className={styles.sidebar}>
-                    <button
-                        className={`${styles.sidebarButton} ${activeTab === 'solved' ? styles.active : ''}`}
-                        onClick={() => setActiveTab('solved')}
-                    >
-                        해결한 문제
-                    </button>
-                    <button
-                        className={`${styles.sidebarButton} ${activeTab === 'wrong' ? styles.active : ''}`}
-                        onClick={() => setActiveTab('wrong')}
-                    >
-                        오답 문제
-                    </button>
-                    <button
-                        className={`${styles.sidebarButton} ${activeTab === 'comments' ? styles.active : ''}`}
-                        onClick={() => setActiveTab('comments')}
-                    >
-                        작성한 댓글
-                    </button>
-                </aside>
+                <SideBar activeTab={activeTab} onTabChange={setActiveTab} />
                 <main className={styles.mainContent}>
-                    <UserInfo />
+                    {user ? <UserInfo user={user} /> : <p>로딩 중...</p>}
                     {renderContent()}
                 </main>
             </div>

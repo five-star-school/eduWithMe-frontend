@@ -1,16 +1,16 @@
 import React from 'react';
-import styles from '../styles/SolvedProblems.module.css';
+import styles from '../../styles/SolvedProblems.module.css';
 
-function SolvedProblems() {
-    const solvedProblems = [
-        { id: 1, title: '문제 1', difficulty: '상', solvedDate: '2024-07-18' },
-        { id: 2, title: '문제 2', difficulty: '중', solvedDate: '2024-07-19' },
-        { id: 3, title: '문제 3', difficulty: '하', solvedDate: '2024-07-20' },
+function WrongAnswers() {
+    const wrongAnswers = [
+        { id: 1, title: '문제 1', difficulty: '상', wrongDate: '2024-07-18' },
+        { id: 2, title: '문제 2', difficulty: '중', wrongDate: '2024-07-19' },
+        { id: 3, title: '문제 3', difficulty: '하', wrongDate: '2024-07-20' },
     ];
 
     return (
         <div className={styles.solvedProblems}>
-            <h2 className={styles.title}>해결한 문제</h2>
+            <h2>오답 문제</h2>
             <table className={styles.problemTable}>
                 <thead>
                 <tr>
@@ -21,12 +21,12 @@ function SolvedProblems() {
                 </tr>
                 </thead>
                 <tbody>
-                {solvedProblems.map((problem) => (
+                {wrongAnswers.map((problem, index) => (
                     <tr key={problem.id}>
-                        <td>{problem.id}</td>
+                        <td>{index + 1}</td>
                         <td>{problem.title}</td>
                         <td>{problem.difficulty}</td>
-                        <td>{problem.solvedDate}</td>
+                        <td>{problem.wrongDate}</td>
                     </tr>
                 ))}
                 </tbody>
@@ -35,4 +35,4 @@ function SolvedProblems() {
     );
 }
 
-export default SolvedProblems;
+export default WrongAnswers;

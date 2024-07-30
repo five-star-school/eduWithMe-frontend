@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from '../styles/SolvedProblems.module.css';
+import styles from '../../styles/SolvedProblems.module.css';
 
 function MyComments() {
     const myComments = [
