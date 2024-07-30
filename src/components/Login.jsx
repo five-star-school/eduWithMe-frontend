@@ -1,5 +1,4 @@
 import React, { useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
 import styles from '../styles/Login.module.css';
 import { FcGoogle } from "react-icons/fc";
 import { RiKakaoTalkFill } from "react-icons/ri";
@@ -10,7 +9,6 @@ import axios from "../util/axiosConfig";
 function Login() {
     const emailInput = useRef();
     const passwordInput = useRef();
-    const navigate = useNavigate();
     const navigate = useNavigate();
 
     const isEmailValid = (email) => {
@@ -50,13 +48,13 @@ function Login() {
             if (response.status === 200) {
                 console.log(response);
                 console.log(response.headers);
+                // 헤더 키는 소문자로 접근합니다.
                 const accessToken = response.headers['accesstoken'];
 
                 console.log('로그인 성공, 토큰:', accessToken);
                 document.cookie = `AccessToken=${accessToken}; path=/; secure; SameSite=Strict`;
-                alert('로그인 성공!');
-
-                navigate('/main', { state: { email, accessToken } });
+                alert('로그인 성공!')
+                navigate('/main');
             } else {
                 alert('로그인 실패: ' + response.data.message);
             }
@@ -81,7 +79,7 @@ function Login() {
                 <button className={styles.button} type="submit" onClick={handleLoginClick}>Login</button>
             </form>
             <div className={styles.links}>
-                <Link to="/forgotpassword" className={styles.link}>비밀번호 찾기</Link>
+                <Link to="/forgot-password" className={styles.link}>비밀번호 찾기</Link>
                 <span className={styles.separator}>|</span>
                 <Link to="/signup" className={styles.link}>회원가입</Link>
             </div>
@@ -98,3 +96,5 @@ function Login() {
 }
 
 export default Login;
+
+
