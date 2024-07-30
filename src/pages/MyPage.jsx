@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import styles from '../styles/MyPage.module.css';
-import UserInfo from '../components/UserInfo';
-import SolvedProblems from '../components/SolvedProblems';
-import WrongAnswers from '../components/WrongAnswers';
-import MyComments from '../components/MyComments';
+import UserInfo from '../components/MyPage/UserInfo';
+import SolvedProblems from '../components/MyPage/SolvedProblems';
+import WrongAnswers from '../components/MyPage/WrongAnswers';
+import MyComments from '../components/MyPage/MyComments';
 
 function MyPage() {
     const [activeTab, setActiveTab] = useState('solved');
