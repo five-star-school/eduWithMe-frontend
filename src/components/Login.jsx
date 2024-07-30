@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import axios from 'axios';
 import styles from '../styles/Login.module.css';
 import { FcGoogle } from "react-icons/fc";
 import { RiKakaoTalkFill } from "react-icons/ri";
@@ -9,18 +10,16 @@ function Login() {
     const passwordInput = useRef();
 
     const isEmailValid = (email) => {
-        // 이메일 유효성 검사를 위한 정규 표현식
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
     };
 
     const isPasswordValid = (password) => {
-        // 비밀번호 규정: 최소 8자, 대문자, 소문자, 숫자, 특수문자 포함
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
         return passwordRegex.test(password);
     };
 
-    const handleBoardClick = async (e) => {
+    const handleLoginClick = async (e) => {
         e.preventDefault();
 
         const email = emailInput.current?.value;
@@ -41,8 +40,25 @@ function Login() {
             return;
         }
 
-        // 여기에 로그인 로직 추가
-        alert('로그인 시도');
+        try {
+            const response = await axios.post('http://localhost:8888/users/login', { email, password });
+
+            if (response.status === 200) {
+                console.log(response);
+                console.log(response.headers);
+                // 헤더 키는 소문자로 접근합니다.
+                const accessToken = response.headers['accesstoken'];
+
+                console.log('로그인 성공, 토큰:', accessToken);
+                document.cookie = `AccessToken=${accessToken}; path=/; secure; SameSite=Strict`;
+                alert('로그인 성공!');
+            } else {
+                alert('로그인 실패: ' + response.data.message);
+            }
+        } catch (error) {
+            console.error('로그인 오류:', error);
+            alert('로그인 중 오류가 발생했습니다.');
+        }
     };
 
     return (
@@ -51,7 +67,7 @@ function Login() {
             <form className={styles.form}>
                 <input className={styles.input} type="email" placeholder="이메일" ref={emailInput} />
                 <input className={styles.input} type="password" placeholder="비밀번호" ref={passwordInput} />
-                <button className={styles.button} type="submit" onClick={handleBoardClick}>Login</button>
+                <button className={styles.button} type="submit" onClick={handleLoginClick}>Login</button>
             </form>
             <div className={styles.links}>
                 <Link to="/forgot-password" className={styles.link}>비밀번호 찾기</Link>
@@ -71,3 +87,6 @@ function Login() {
 }
 
 export default Login;
+
+
+
