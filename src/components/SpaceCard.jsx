@@ -1,5 +1,6 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from '../styles/SpaceCard.module.css';
+import axios from "../util/axiosConfig";
 
 function Modal({ modalOpen, setModalOpen, isCreateModal, selectedSpace, addNewSpace }) {
   const [isPrivate, setIsPrivate] = useState(false);
@@ -85,18 +86,20 @@ function Modal({ modalOpen, setModalOpen, isCreateModal, selectedSpace, addNewSp
                   </>
               ) : (
                   <>
-                    <p>Private</p>
+                    <p>{selectedSpace?.roomPassword ? 'Private' : 'Public'}</p>
                     <input
                         className={styles.modalInput}
                         type="text"
                         readOnly
-                        defaultValue={selectedSpace?.title || ''}
+                        defaultValue={selectedSpace?.roomName || ''}
                     />
-                    <input
-                        className={styles.modalInput}
-                        type="password"
-                        placeholder="방 패스워드"
-                    />
+                    {selectedSpace?.roomPassword && (
+                        <input
+                            className={styles.modalInput}
+                            type="password"
+                            placeholder="방 패스워드"
+                        />
+                    )}
                     <div className={styles.modalFooter}>
                       <button className={styles.modalSubmitBtn}>입장하기</button>
                     </div>
@@ -112,13 +115,27 @@ function SpaceCard() {
   const [modalOpen, setModalOpen] = useState(false);
   const [isCreateModal, setIsCreateModal] = useState(true);
   const [selectedSpace, setSelectedSpace] = useState(null);
-  const [spaces, setSpaces] = useState([
-    { icon: '🏢', title: '방 제목1', description: '총 20명' },
-    { icon: '🎓', title: '방 제목2', description: '총 2명' },
-    { icon: '🛋️', title: '방 제목3', description: '총 2명' },
-    { icon: '💼', title: '방 제목4', description: '총 2명' },
-    // 추가 공간 정보
-  ]);
+  const [spaces, setSpaces] = useState([]);  // Initialize as an empty array
+
+  useEffect(() => {
+    const fetchSpaces = async () => {
+      try {
+        const response = await axios.get('/rooms?page=0');
+        console.log('API response:', response.data);
+        // Assuming response.data.data is an array of spaces
+        if (Array.isArray(response.data.data)) {
+          console.log('Setting spaces:', response.data.data);
+          setSpaces(response.data.data);
+        } else {
+          console.error('Unexpected response format:', response.data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch spaces:', error);
+      }
+    };
+
+    fetchSpaces();
+  }, []);
 
   const handleCreateClick = () => {
     setIsCreateModal(true);
@@ -135,7 +152,7 @@ function SpaceCard() {
   const addNewSpace = (title) => {
     setSpaces([
       ...spaces,
-      { icon: '🆕', title, description: '새로 생성된 방' }, // 새 방의 기본 아이콘과 설명
+      { icon: '🆕', roomName: title, description: '새로 생성된 방', userCount: 0 }, // Default user count
     ]);
   };
 
@@ -154,10 +171,11 @@ function SpaceCard() {
                   className={styles.spaceCard}
                   onClick={() => handleCardClick(space)}
               >
-                <div className={styles.spaceIcon}>{space.icon}</div>
+                <div className={styles.spaceIcon}>{space.icon || '🔵'}</div>
                 <div className={styles.spaceInfo}>
-                  <h2 className={styles.spaceTitle}>{space.title}</h2>
-                  <p className={styles.spaceDescription}>{space.description}</p>
+                  <h2 className={styles.spaceTitle}>{space.roomName}</h2>
+                  <p className={styles.spaceDescription}>{space.description || '방 설명'}</p>
+                  <p className={styles.spaceUserCount}>인원수: {space.userCount || 0}</p> {/* Display user count */}
                 </div>
               </div>
           ))}
