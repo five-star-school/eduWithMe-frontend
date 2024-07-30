@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styles from '../styles/MyPage.module.css';
 import UserInfo from '../components/MyPage/UserInfo';
 import SolvedProblems from '../components/MyPage/SolvedProblems';
@@ -11,26 +12,25 @@ function MyPage() {
     const [activeTab, setActiveTab] = useState('solved');
     const [user, setUser] = useState(null);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchUserProfile = async () => {
             try {
-                // 쿠키에서 AccessToken 가져오기
                 const token = document.cookie.split('; ').find(row => row.startsWith('AccessToken='))?.split('=')[1];
-                console.log('AccessToken:', token);  // 디버깅용 로그
+                console.log('AccessToken:', token);
 
                 if (!token) {
                     throw new Error('AccessToken이 없습니다.');
                 }
 
-                // API 요청
                 const response = await axios.get('/profiles', {
                     headers: {
-                        'AccessToken': token  // Authorization 헤더 대신 AccessToken 헤더를 사용
+                        'AccessToken': token
                     }
                 });
 
-                console.log('Response:', response);  // 디버깅용 로그
+                console.log('Response:', response);
 
                 if (response.status === 200 && response.data.data) {
                     setUser(response.data.data);
@@ -68,6 +68,10 @@ function MyPage() {
         }
     };
 
+    const handleChangePassword = () => {
+        navigate('/changepassword');
+    };
+
     if (error) {
         return <div className={styles.error}>에러: {error}</div>;
     }
@@ -79,6 +83,7 @@ function MyPage() {
                 <div className={styles.headerButtons}>
                     <button className={styles.headerButton}>문제 목록</button>
                     <button className={styles.headerButton}>관리자 페이지</button>
+                    <button className={styles.headerButton} onClick={handleChangePassword}>비밀번호 변경</button>
                 </div>
             </header>
             <div className={styles.content}>
