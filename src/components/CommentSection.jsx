@@ -1,7 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from '../styles/QuestionDetail.module.css';
 
 function CommentSection({ comments }) {
+    const [commentList, setCommentList] = useState(comments);
+    const [editingCommentId, setEditingCommentId] = useState(null);
+    const [editContent, setEditContent] = useState('');
+
+    const handleEditClick = (commentId, content) => {
+        setEditingCommentId(commentId);
+        setEditContent(content);
+    };
+
+    const handleSaveClick = (commentId) => {
+        setCommentList(commentList.map(comment =>
+            comment.id === commentId ? { ...comment, content: editContent } : comment
+        ));
+        setEditingCommentId(null);
+        setEditContent('');
+    };
+
+    const handleCancelClick = () => {
+        setEditingCommentId(null);
+        setEditContent('');
+    };
+
+    const handleChange = (e) => {
+        setEditContent(e.target.value);
+    };
+
     return (
         <div className={styles.commentSection}>
             <div className={styles.commentSort}>
@@ -10,17 +36,46 @@ function CommentSection({ comments }) {
             </div>
 
             <div className={styles.commentList}>
-                {comments.map(comment => (
+                {commentList.map(comment => (
                     <div key={comment.id} className={styles.commentItem}>
                         <div className={styles.commentHeader}>
                             <span className={styles.commentAuthor}>{comment.author}</span>
                             <span className={styles.commentDate}>{comment.date}</span>
                         </div>
-                        <p className={styles.commentContent}>{comment.content}</p>
-                        <div className={styles.commentActions}>
-                            <button className={styles.actionButton}>댓글 수정</button>
-                            <button className={styles.actionButton}>댓글 삭제</button>
-                        </div>
+                        {editingCommentId === comment.id ? (
+                            <div className={styles.editingComment}>
+                                <textarea
+                                    value={editContent}
+                                    onChange={handleChange}
+                                    className={styles.editCommentInput}
+                                />
+                                <button
+                                    className={styles.saveButton}
+                                    onClick={() => handleSaveClick(comment.id)}
+                                >
+                                    저장
+                                </button>
+                                <button
+                                    className={styles.cancelButton}
+                                    onClick={handleCancelClick}
+                                >
+                                    취소
+                                </button>
+                            </div>
+                        ) : (
+                            <>
+                                <p className={styles.commentContent}>{comment.content}</p>
+                                <div className={styles.commentActions}>
+                                    <button
+                                        className={styles.actionButton}
+                                        onClick={() => handleEditClick(comment.id, comment.content)}
+                                    >
+                                        댓글 수정
+                                    </button>
+                                    <button className={styles.actionButton}>댓글 삭제</button>
+                                </div>
+                            </>
+                        )}
                     </div>
                 ))}
             </div>
