@@ -2,8 +2,9 @@
   width: 200px;
   padding: 0px 20px;
   background-color: #f8f9fa;
-  height: 100vh;
+  height: calc(100vh - 20px); /* 전체 높이에서 20px 줄임 */
   overflow-y: auto;
+  margin-top: -20px; /* 위로 20px 올림 */
 }
 
 .roomTitle {
@@ -12,8 +13,10 @@
   padding: 18px;
   background-color: #e9ecef;
   border-radius: 5px;
-  margin: 10px 0;
+  margin: 20px 0;
 }
+
+/* 나머지 스타일은 그대로 유지 */
 
 .memberList {
   list-style-type: none;
