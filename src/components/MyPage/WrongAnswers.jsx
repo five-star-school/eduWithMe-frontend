@@ -17,9 +17,9 @@ function WrongAnswers({ problems = [] }) {
                         </tr>
                     </thead>
                     <tbody>
-                        {problems.map((problem, index) => (
+                        {problems.map((problem) => (
                             <tr key={problem.questionNo}>
-                                <td>{index + 1}</td>
+                                <td>{problem.questionNo}</td>
                                 <td>{problem.title}</td>
                                 <td>{problem.difficulty}</td>
                                 <td>{format(new Date(problem.createdAt), 'yyyy-MM-dd')}</td>
