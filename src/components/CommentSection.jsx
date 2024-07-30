@@ -5,12 +5,36 @@ function CommentSection({ comments }) {
     const [commentList, setCommentList] = useState(comments);
     const [editingCommentId, setEditingCommentId] = useState(null);
     const [editContent, setEditContent] = useState('');
+    const [newComment, setNewComment] = useState('');
 
+    // 댓글 입력 변경 핸들러
+    const handleNewCommentChange = (e) => {
+        setNewComment(e.target.value);
+    };
+
+    // 댓글 등록 핸들러
+    const handleAddComment = () => {
+        if (!newComment.trim()) {
+            alert('댓글 내용을 입력해 주세요.');
+            return;
+        }
+        const newCommentObj = {
+            id: commentList.length ? Math.max(commentList.map(comment => comment.id)) + 1 : 1,
+            author: '작성자', // 기본 작성자 이름
+            content: newComment,
+            date: new Date().toISOString().slice(0, 19).replace('T', ' ')
+        };
+        setCommentList([...commentList, newCommentObj]);
+        setNewComment('');
+    };
+
+    // 댓글 수정 클릭 핸들러
     const handleEditClick = (commentId, content) => {
         setEditingCommentId(commentId);
         setEditContent(content);
     };
 
+    // 댓글 저장 핸들러
     const handleSaveClick = (commentId) => {
         setCommentList(commentList.map(comment =>
             comment.id === commentId ? { ...comment, content: editContent } : comment
@@ -19,21 +43,24 @@ function CommentSection({ comments }) {
         setEditContent('');
     };
 
+    // 댓글 수정 취소 핸들러
     const handleCancelClick = () => {
         setEditingCommentId(null);
         setEditContent('');
     };
 
+    // 댓글 내용 변경 핸들러
     const handleChange = (e) => {
         setEditContent(e.target.value);
     };
 
+    // 댓글 삭제 핸들러
     const handleDeleteClick = (commentId) => {
         if (window.confirm('정말 삭제하시겠습니까?')) {
             setCommentList(commentList.filter(comment => comment.id !== commentId));
         }
     };
-    
+
     return (
         <div className={styles.commentSection}>
             <div className={styles.commentSort}>
@@ -83,7 +110,7 @@ function CommentSection({ comments }) {
                                         onClick={() => handleDeleteClick(comment.id)}
                                     >
                                         댓글 삭제
-                                    </button>                                
+                                    </button>
                                 </div>
                             </>
                         )}
@@ -92,8 +119,18 @@ function CommentSection({ comments }) {
             </div>
 
             <div className={styles.commentInput}>
-                <textarea placeholder="댓글을 입력하세요"></textarea>
-                <button className={styles.submitComment}>댓글 등록</button>
+                <textarea
+                    placeholder="댓글을 입력하세요"
+                    value={newComment}
+                    onChange={handleNewCommentChange}
+                    className={styles.newCommentInput}
+                />
+                <button
+                    className={styles.submitComment}
+                    onClick={handleAddComment}
+                >
+                    댓글 등록
+                </button>
             </div>
         </div>
     );
