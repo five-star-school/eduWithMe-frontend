@@ -22,7 +22,7 @@ function CommentSection({ comments }) {
             id: commentList.length ? Math.max(commentList.map(comment => comment.id)) + 1 : 1,
             author: '작성자', // 기본 작성자 이름
             content: newComment,
-            date: new Date().toISOString().slice(0, 19).replace('T', ' ')
+            date: formatDate(new Date())
         };
         setCommentList([...commentList, newCommentObj]);
         setNewComment('');
@@ -59,6 +59,20 @@ function CommentSection({ comments }) {
         if (window.confirm('정말 삭제하시겠습니까?')) {
             setCommentList(commentList.filter(comment => comment.id !== commentId));
         }
+    };
+
+    // 날짜 포맷팅 함수
+    const formatDate = (date) => {
+        const options = {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false
+        };
+        return new Intl.DateTimeFormat('ko-KR', options).format(date);
     };
 
     return (
