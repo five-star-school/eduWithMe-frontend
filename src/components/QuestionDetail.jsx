@@ -1,10 +1,8 @@
 import React from 'react';
-import {useParams} from 'react-router-dom';
 import RoomLayout from './RoomLayout';
 import styles from '../styles/QuestionDetailPage.module.css';
 
 function QuestionDetailPage() {
-    const {roomId, questionId} = useParams();
     const comments = [
         { id: 1, author: '준범2', content: '안녕하세요 여러분들!', date: '2024.07.18 08:12' },
         { id: 2, author: '성훈', content: '반갑습니다.', date: '2024.07.18' },
