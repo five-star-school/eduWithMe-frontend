@@ -47,6 +47,10 @@
   background-color: #6c757d;
 }
 
+.searchButton:hover {
+  background-color: #333;
+}
+
 .actionButtons {
   display: flex;
   gap: 10px;
@@ -60,15 +64,24 @@
   background-color: #ffa500;
 }
 
+.solvedProblems {
+  text-align: left;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
 .problemTable {
   width: 100%;
   border-collapse: collapse;
-  table-layout: fixed;
+  margin-top: 20px;
+  font-size: 16px;
+  table-layout: fixed; 
 }
 
 .problemTable th, .problemTable td {
-  border: 1px solid #dee2e6;
-  padding: 6px;
+  padding: 15px 20px;
   text-align: left;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -76,36 +89,50 @@
 }
 
 .problemTable th {
-  background-color: #f8f9fa;
+  background-color: #4CAF50; 
+  color: white;
   font-weight: bold;
-  color: #495057;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-.problemTable tr:nth-child(even) {
-  background-color: #f8f9fa;
+.problemTable td {
+  border-bottom: 1px solid #ddd;
+  color: #333;
+}
+
+.problemTable tr:hover {
+  background-color: #f1f1f1; 
 }
 
 .problemTable th:nth-child(1),
 .problemTable td:nth-child(1) {
-  width: 8%;
+  width: 8%; 
 }
 
 .problemTable th:nth-child(2),
 .problemTable td:nth-child(2) {
-  width: 12%;
+  width: 12%; 
 }
 
-.problemTable th:nth-child(3),
 .problemTable td:nth-child(3) {
-  width: 50%;
+  width: 50%; 
+  font-weight: 600;
+  color: #3697ff; 
 }
 
 .problemTable th:nth-child(4),
 .problemTable td:nth-child(4) {
-  width: 15%;
+  width: 15%; 
 }
 
 .problemTable th:nth-child(5),
 .problemTable td:nth-child(5) {
-  width: 15%;
+  width: 15%; 
+}
+
+.solvedProblems h2 {
+  color: #4CAF50;
+  font-size: 24px;
+  margin-bottom: 20px;
 }
