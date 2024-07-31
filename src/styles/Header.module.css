@@ -1,50 +1,84 @@
 .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-    background-color: #f8f8f8;
-    border-bottom: 1px solid #ddd;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-bottom: none;
-  }
-  
-  .headerTitle {
-    text-decoration: none;
-    color: #000;
-    font-size: 24px;
-    font-weight: bold;
-  }
-  
-  .authButtons {
-    display: flex;
-    gap: 20px;
-  }
-  
-  .loginButton,
-  .signupButton {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 25px; 
-    cursor: pointer;
-    font-size: 16px; 
-  }
-  
-  .loginButton {
-    background-color: #e0e0e0;
-    color: #333;
-  }
-  
-  .loginButton:hover {
-    background-color: #bebebe; 
-  }
-  
-  .signupButton {
-    background-color: #000;
-    color: #fff;
-  }
-  
-  .signupButton:hover {
-    background-color: #333;
-  }
-  
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: #f8f8f8;
+  border-bottom: 1px solid #ddd;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-bottom: none;
+}
+
+.headerTitle {
+  text-decoration: none;
+  color: #000;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.authButtons {
+  display: flex;
+  gap: 20px;
+}
+
+.loginButton,
+.signupButton {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.loginButton {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.loginButton:hover {
+  background-color: #bebebe;
+}
+
+.signupButton {
+  background-color: #000;
+  color: #fff;
+}
+
+.signupButton:hover {
+  background-color: #333;
+}
+
+/* 추가된 스타일 */
+.nickName {
+  margin-right: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+
+.myPageButton,
+.logoutButton {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.myPageButton {
+  background-color: #007bff;
+  color: white;
+}
+
+.myPageButton:hover {
+  background-color: #0056b3;
+}
+
+.logoutButton {
+  background-color: #dc3545;
+  color: white;
+}
+
+.logoutButton:hover {
+  background-color: #c82333;
+}
