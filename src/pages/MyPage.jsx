@@ -22,6 +22,7 @@ function MyPage() {
     const [totalPages, setTotalPages] = useState(0);
     const [loading, setLoading] = useState(true);
     
+    
     useEffect(() => {
         const fetchUserProfile = async () => {
             try {
@@ -147,6 +148,10 @@ function MyPage() {
         navigate('/changepassword');
     };
 
+    const handleAdminPageClick = () => {
+        navigate('/manageMain'); 
+    };
+
     if (error) {
         return <div className={styles.error}>에러: {error}</div>;
     }
@@ -157,7 +162,7 @@ function MyPage() {
                 <h1 className={styles.title}>마이페이지</h1>
                 <div className={styles.headerButtons}>
                     <button className={styles.headerButton}>문제 목록</button>
-                    <button className={styles.headerButton}>관리자 페이지</button>
+                    <button className={styles.headerButton} onClick={handleAdminPageClick}>관리자 페이지</button>
                     <button className={styles.headerButton} onClick={handleChangePassword}>비밀번호 변경</button>
                 </div>
             </header>
