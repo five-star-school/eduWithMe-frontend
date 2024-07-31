@@ -5,8 +5,8 @@ import axios from '../../util/axiosConfig';
 
 function UserInfo({ user }) {
     const [isEditing, setIsEditing] = useState(false);
-    const [email, setEmail] = useState(user.email);
     const [nickName, setNickName] = useState(user.nickName);
+    const [email] = useState(user.email); // 이메일은 수정할 수 없으므로 상태에 저장만 합니다.
 
     const handleEditClick = () => {
         setIsEditing(true);
@@ -15,7 +15,7 @@ function UserInfo({ user }) {
     const handleSaveClick = async () => {
         try {
             const response = await axios.put('/profiles', {
-                email,
+                email, // 이메일은 수정하지 않습니다.
                 nickName
             });
 
@@ -41,14 +41,13 @@ function UserInfo({ user }) {
                 )}
                 <button className={styles.editButton}>프로필 사진 편집</button>
             </div>
-            <div className={styles.userDetails}>
+            <div className={`${styles.userDetails} ${isEditing ? styles.editing : ''}`}>
                 <div className={styles.detailRow}>
                     <span className={styles.label}>이메일</span>
                     <input
                         type="text"
                         value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        readOnly={!isEditing}
+                        readOnly
                     />
                     <span className={styles.label}>랭크</span>
                     <input type="text" value={user.ranking} readOnly />
