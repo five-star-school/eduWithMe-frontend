@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';  // Import useNavigate
 import styles from '../styles/SpaceCard.module.css';
 import axios from "../util/axiosConfig";
 
@@ -6,8 +7,11 @@ function Modal({ modalOpen, setModalOpen, isCreateModal, selectedSpace, addNewSp
   const [isPrivate, setIsPrivate] = useState(false);
   const [newTitle, setNewTitle] = useState('');
   const [newPassword, setNewPassword] = useState('');
+  const [enteredPassword, setEnteredPassword] = useState('');
 
   const modalBackground = useRef();
+
+  const navigate = useNavigate();  // Initialize navigate function
 
   const handlePrivateClick = () => {
     setIsPrivate(true);
@@ -42,9 +46,33 @@ function Modal({ modalOpen, setModalOpen, isCreateModal, selectedSpace, addNewSp
         setNewPassword('');
         setModalOpen(false);
       } catch (error) {
-        // Extract and display the error message from the response
         const errorMessage = error.response?.data?.msg || '방 생성에 실패했습니다.';
         console.error('방 생성 실패:', errorMessage);
+        alert(errorMessage);
+      }
+    }
+  };
+
+  const handleEnterSpace = async () => {
+    if (selectedSpace) {
+      try {
+        if (selectedSpace.roomPassword) {
+          if (!enteredPassword.trim()) {
+            alert('비밀번호를 입력해야 합니다.');
+            return;
+          }
+          await axios.post(`/rooms/${selectedSpace.roomId}/private`, {
+            roomPassword: enteredPassword,
+          });
+        } else {
+          await axios.post(`/rooms/${selectedSpace.roomId}/public`);
+        }
+        alert('방에 성공적으로 입장했습니다.');
+        setModalOpen(false);
+        navigate(`/room/${selectedSpace.roomId}`);  // Redirect to the room main page
+      } catch (error) {
+        const errorMessage = error.response?.data?.msg || '방 입장에 실패했습니다.';
+        console.error('방 입장 실패:', errorMessage);
         alert(errorMessage);
       }
     }
@@ -118,10 +146,14 @@ function Modal({ modalOpen, setModalOpen, isCreateModal, selectedSpace, addNewSp
                             className={styles.modalInput}
                             type="password"
                             placeholder="방 패스워드"
+                            value={enteredPassword}
+                            onChange={(e) => setEnteredPassword(e.target.value)}
                         />
                     )}
                     <div className={styles.modalFooter}>
-                      <button className={styles.modalSubmitBtn}>입장하기</button>
+                      <button className={styles.modalSubmitBtn} onClick={handleEnterSpace}>
+                        입장하기
+                      </button>
                     </div>
                   </>
               )}
@@ -172,7 +204,7 @@ function SpaceCard() {
   const addNewSpace = (title) => {
     setSpaces([
       ...spaces,
-      { icon: '🆕', roomName: title, description: '새로 생성된 방', userCount: 0 }, // Default user count
+      { icon: '🆕', roomName: title, description: '새로 생성된 방', userCount: 0, roomId: Date.now() }, // Add a unique roomId
     ]);
   };
 
