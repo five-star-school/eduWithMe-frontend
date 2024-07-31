@@ -21,8 +21,8 @@ function MyPage() {
     const [page, setPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [loading, setLoading] = useState(true);
-    
-    
+
+
     useEffect(() => {
         const fetchUserProfile = async () => {
             try {
@@ -149,7 +149,7 @@ function MyPage() {
     };
 
     const handleAdminPageClick = () => {
-        navigate('/manageMain'); 
+        navigate('/manageMain');
     };
 
     if (error) {
