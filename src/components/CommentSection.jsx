@@ -1,95 +1,176 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useParams } from 'react-router-dom';
+import axios from "../util/axiosConfig";
 import styles from '../styles/QuestionDetail.module.css';
 
-function CommentSection({ comments }) {
-    const [commentList, setCommentList] = useState(comments);
+function CommentSection() {
+    const [commentList, setCommentList] = useState([]);
     const [editingCommentId, setEditingCommentId] = useState(null);
     const [editContent, setEditContent] = useState('');
     const [newComment, setNewComment] = useState('');
+    const [sortOrder, setSortOrder] = useState('asc');
+    const [currentPage, setCurrentPage] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
+    const [totalComments, setTotalComments] = useState(0);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const { questionId } = useParams();
 
-    // 댓글 입력 변경 핸들러
+    const fetchComments = useCallback(async (page) => {
+        setIsLoading(true);
+        setError(null);
+        try {
+            const response = await axios.get(`/question/${questionId}/comments`, {
+                params: {
+                    page: page,
+                    sort: `createdAt,${sortOrder}`
+                }
+            });
+            console.log('Server response:', response.data);
+            if (response.data && response.data.data) {
+                setCommentList(response.data.data.content);
+                setCurrentPage(response.data.data.number);
+                setTotalPages(response.data.data.totalPages);
+                setTotalComments(response.data.data.totalElements);
+            } else {
+                setCommentList([]);
+                setTotalPages(0);
+                setTotalComments(0);
+            }
+        } catch (error) {
+            console.error('Failed to fetch comments:', error);
+            setCommentList([]);
+            setError('댓글을 불러오는 중 오류가 발생했습니다.');
+        } finally {
+            setIsLoading(false);
+        }
+    }, [questionId, sortOrder]);
+
+    useEffect(() => {
+        fetchComments(0);
+    }, [fetchComments]);
+
+    const handleSort = (order) => {
+        setSortOrder(order);
+        fetchComments(0);
+    };
+
+    const handlePageChange = (page) => {
+        fetchComments(page);
+    };
+
     const handleNewCommentChange = (e) => {
         setNewComment(e.target.value);
     };
 
-    // 댓글 등록 핸들러
-    const handleAddComment = () => {
+    const handleAddComment = async () => {
         if (!newComment.trim()) {
             alert('댓글 내용을 입력해 주세요.');
             return;
         }
-        const newCommentObj = {
-            id: commentList.length ? Math.max(commentList.map(comment => comment.id)) + 1 : 1,
-            author: '작성자', // 기본 작성자 이름
-            content: newComment,
-            date: formatDate(new Date())
-        };
-        setCommentList([...commentList, newCommentObj]);
-        setNewComment('');
+        try {
+            await axios.post(`/question/${questionId}/comments`, { comment: newComment });
+            setNewComment('');
+            fetchComments(0);
+        } catch (error) {
+            console.error('Failed to add comment:', error);
+        }
     };
 
-    // 댓글 수정 클릭 핸들러
     const handleEditClick = (commentId, content) => {
         setEditingCommentId(commentId);
         setEditContent(content);
     };
 
-    // 댓글 저장 핸들러
-    const handleSaveClick = (commentId) => {
-        setCommentList(commentList.map(comment =>
-            comment.id === commentId ? { ...comment, content: editContent } : comment
-        ));
-        setEditingCommentId(null);
-        setEditContent('');
+    const handleSaveClick = async (commentId) => {
+        try {
+            await axios.put(`/question/${questionId}/comments/${commentId}`, { comment: editContent });
+            setEditingCommentId(null);
+            setEditContent('');
+            fetchComments(currentPage);
+        } catch (error) {
+            console.error('Failed to update comment:', error);
+        }
     };
 
-    // 댓글 수정 취소 핸들러
     const handleCancelClick = () => {
         setEditingCommentId(null);
         setEditContent('');
     };
 
-    // 댓글 내용 변경 핸들러
     const handleChange = (e) => {
         setEditContent(e.target.value);
     };
 
-    // 댓글 삭제 핸들러
-    const handleDeleteClick = (commentId) => {
+    const handleDeleteClick = async (commentId) => {
         if (window.confirm('정말 삭제하시겠습니까?')) {
-            setCommentList(commentList.filter(comment => comment.id !== commentId));
+            try {
+                await axios.delete(`/question/${questionId}/comments/${commentId}`);
+                fetchComments(currentPage);
+            } catch (error) {
+                console.error('Failed to delete comment:', error);
+            }
         }
     };
 
-    // 날짜 포맷팅 함수
-    const formatDate = (date) => {
-        const options = {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            hour12: false
-        };
-        return new Intl.DateTimeFormat('ko-KR', options).format(date);
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+
+        return `${year}-${month}-${day} ${hours}:${minutes}`;
+    };
+
+    const renderPagination = () => {
+        const pageNumbers = [];
+        for (let i = 0; i < totalPages; i++) {
+            pageNumbers.push(
+                <button
+                    key={i}
+                    onClick={() => handlePageChange(i)}
+                    className={`${styles.pageButton} ${currentPage === i ? styles.activePage : ''}`}
+                >
+                    {i + 1}
+                </button>
+            );
+        }
+        return pageNumbers.length > 1 ? (
+            <div className={styles.pagination}>
+                {pageNumbers}
+            </div>
+        ) : null;
     };
 
     return (
         <div className={styles.commentSection}>
             <div className={styles.commentSort}>
-                <button className={`${styles.sortButton} ${styles.active}`}>등록순</button>
-                <button className={styles.sortButton}>최신순</button>
+                <button
+                    className={`${styles.sortButton} ${sortOrder === 'asc' ? styles.active : ''}`}
+                    onClick={() => handleSort('asc')}
+                >
+                    등록순
+                </button>
+                <button
+                    className={`${styles.sortButton} ${sortOrder === 'desc' ? styles.active : ''}`}
+                    onClick={() => handleSort('desc')}
+                >
+                    최신순
+                </button>
             </div>
 
+            {error && <p className={styles.errorMessage}>{error}</p>}
+
             <div className={styles.commentList}>
-                {commentList.map(comment => (
-                    <div key={comment.id} className={styles.commentItem}>
+                {commentList.length > 0 ? commentList.map(comment => (
+                    <div key={comment.commentId} className={styles.commentItem}>
                         <div className={styles.commentHeader}>
-                            <span className={styles.commentAuthor}>{comment.author}</span>
-                            <span className={styles.commentDate}>{comment.date}</span>
+                            <span className={styles.commentAuthor}>{comment.nickName}</span>
+                            <span className={styles.commentDate}>{formatDate(comment.updatedAt)}</span>
                         </div>
-                        {editingCommentId === comment.id ? (
+                        {editingCommentId === comment.commentId ? (
                             <div className={styles.editingComment}>
                                 <textarea
                                     value={editContent}
@@ -98,7 +179,7 @@ function CommentSection({ comments }) {
                                 />
                                 <button
                                     className={styles.saveButton}
-                                    onClick={() => handleSaveClick(comment.id)}
+                                    onClick={() => handleSaveClick(comment.commentId)}
                                 >
                                     저장
                                 </button>
@@ -111,17 +192,17 @@ function CommentSection({ comments }) {
                             </div>
                         ) : (
                             <>
-                                <p className={styles.commentContent}>{comment.content}</p>
+                                <p className={styles.commentContent}>{comment.comment}</p>
                                 <div className={styles.commentActions}>
                                     <button
                                         className={styles.actionButton}
-                                        onClick={() => handleEditClick(comment.id, comment.content)}
+                                        onClick={() => handleEditClick(comment.commentId, comment.comment)}
                                     >
                                         댓글 수정
                                     </button>
                                     <button
                                         className={styles.actionButton}
-                                        onClick={() => handleDeleteClick(comment.id)}
+                                        onClick={() => handleDeleteClick(comment.commentId)}
                                     >
                                         댓글 삭제
                                     </button>
@@ -129,8 +210,14 @@ function CommentSection({ comments }) {
                             </>
                         )}
                     </div>
-                ))}
+                )) : (
+                    !isLoading && <p>댓글이 없습니다.</p>
+                )}
             </div>
+
+            {isLoading && <p>댓글을 불러오는 중...</p>}
+
+            {renderPagination()}
 
             <div className={styles.commentInput}>
                 <textarea
