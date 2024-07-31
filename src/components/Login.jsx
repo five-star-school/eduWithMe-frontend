@@ -1,15 +1,16 @@
-import React, { useRef } from 'react';
+import React, { useRef, useContext } from 'react';
 import styles from '../styles/Login.module.css';
 import { FcGoogle } from "react-icons/fc";
 import { RiKakaoTalkFill } from "react-icons/ri";
 import { Link, useNavigate } from 'react-router-dom';
 import axios from "../util/axiosConfig";
-
+import { AuthContext } from '../util/AuthContext';
 
 function Login() {
     const emailInput = useRef();
     const passwordInput = useRef();
     const navigate = useNavigate();
+    const { login } = useContext(AuthContext);
 
     const isEmailValid = (email) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -46,14 +47,13 @@ function Login() {
             const response = await axios.post('/users/login', { email, password });
 
             if (response.status === 200) {
-                console.log(response);
-                console.log(response.headers);
-                // 헤더 키는 소문자로 접근합니다.
                 const accessToken = response.headers['accesstoken'];
+                const { nickName } = response.data; // assuming the response contains the nickName
 
-                console.log('로그인 성공, 토큰:', accessToken);
                 document.cookie = `AccessToken=${accessToken}; path=/; secure; SameSite=Strict`;
-                alert('로그인 성공!')
+
+                login({ nickName }); // Login action with user data
+                alert('로그인 성공!');
                 navigate('/main');
             } else {
                 alert('로그인 실패: ' + response.data.message);
@@ -96,5 +96,3 @@ function Login() {
 }
 
 export default Login;
-
-
