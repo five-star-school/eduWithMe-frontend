@@ -1,10 +1,13 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
+import axios from 'axios';
 import styles from '../../styles/ChangePassword.module.css';
 
 function ChangePassword() {
     const currentPasswordInput = useRef();
     const newPasswordInput = useRef();
     const repeatNewPasswordInput = useRef();
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
 
     const isPasswordValid = (password) => {
         // 비밀번호가 최소 8자 이상이고, 대문자, 소문자, 숫자, 특수문자를 포함해야 함
@@ -12,7 +15,7 @@ function ChangePassword() {
         return passwordRegex.test(password);
     };
 
-    const handleConfirmClick = () => {
+    const handleConfirmClick = async () => {
         const currentPassword = currentPasswordInput.current?.value;
         const newPassword = newPasswordInput.current?.value;
         const repeatNewPassword = repeatNewPasswordInput.current?.value;
@@ -37,7 +40,32 @@ function ChangePassword() {
             return;
         }
 
-        alert('비밀번호가 성공적으로 변경되었습니다.');
+        try {
+            setLoading(true);
+            setError(null);
+
+            const response = await axios.put('/profiles/password', {
+                currentPassword,
+                newPassword,
+            }, {
+                headers: {
+                    'AccessToken': document.cookie.split('; ').find(row => row.startsWith('AccessToken='))?.split('=')[1]
+                }
+            });
+
+            if (response.status === 200) {
+                alert('비밀번호가 성공적으로 변경되었습니다.');
+                currentPasswordInput.current.value = '';
+                newPasswordInput.current.value = '';
+                repeatNewPasswordInput.current.value = '';
+            } else {
+                throw new Error('비밀번호 변경에 실패했습니다.');
+            }
+        } catch (error) {
+            setError(error.response?.data?.message || '비밀번호 변경에 실패했습니다.');
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -47,7 +75,10 @@ function ChangePassword() {
                 <input className={styles.input} type="password" placeholder="기존 비밀번호" ref={currentPasswordInput} />
                 <input className={styles.input} type="password" placeholder="새 비밀번호" ref={newPasswordInput} />
                 <input className={styles.input} type="password" placeholder="새 비밀번호 확인" ref={repeatNewPasswordInput} />
-                <button className={styles.button} onClick={handleConfirmClick}>확인</button>
+                <button className={styles.button} onClick={handleConfirmClick} disabled={loading}>
+                    {loading ? '변경 중...' : '확인'}
+                </button>
+                {error && <p className={styles.error}>{error}</p>}
             </div>
         </div>
     );
