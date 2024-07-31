@@ -16,17 +16,16 @@ function CommentSection() {
     const [error, setError] = useState(null);
     const { questionId } = useParams();
 
-    const fetchComments = useCallback(async (page) => {
+    const fetchComments = useCallback(async (page, order) => {
         setIsLoading(true);
         setError(null);
         try {
             const response = await axios.get(`/question/${questionId}/comments`, {
                 params: {
                     page: page,
-                    sort: `createdAt,${sortOrder}`
+                    sort: `createdAt,${order}`
                 }
             });
-            console.log('Server response:', response.data);
             if (response.data && response.data.data) {
                 setCommentList(response.data.data.content);
                 setCurrentPage(response.data.data.number);
@@ -44,19 +43,18 @@ function CommentSection() {
         } finally {
             setIsLoading(false);
         }
-    }, [questionId, sortOrder]);
+    }, [questionId]);
 
     useEffect(() => {
-        fetchComments(0);
-    }, [fetchComments]);
+        fetchComments(0, sortOrder);
+    }, [fetchComments, sortOrder]);
 
     const handleSort = (order) => {
         setSortOrder(order);
-        fetchComments(0);
     };
 
     const handlePageChange = (page) => {
-        fetchComments(page);
+        fetchComments(page, sortOrder);
     };
 
     const handleNewCommentChange = (e) => {
@@ -226,6 +224,7 @@ function CommentSection() {
                     onChange={handleNewCommentChange}
                     className={styles.newCommentInput}
                 />
+                <div className={styles.submitCommentWrapper}>
                 <button
                     className={styles.submitComment}
                     onClick={handleAddComment}
@@ -233,6 +232,7 @@ function CommentSection() {
                     댓글 등록
                 </button>
             </div>
+        </div>
         </div>
     );
 }
