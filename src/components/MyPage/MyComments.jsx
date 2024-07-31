@@ -22,8 +22,8 @@ function MyComments({ comments }) {
                     </thead>
                     <tbody>
                         {comments.map((comment) => (
-                            <tr key={comment.commentNo}>
-                                <td>{comment.commentNo}</td>
+                            <tr key={comment.commentId}>
+                                <td>{comment.commentId}</td>
                                 <td>{comment.comment}</td>
                                 <td>{formatDate(comment.updatedAt)}</td>
                             </tr>
