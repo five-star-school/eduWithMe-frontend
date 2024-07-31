@@ -22,9 +22,10 @@ function RoomMain() {
     const fetchQuestions = async () => {
         try {
             const response = await axios.get(`/rooms/${roomId}/question?page=${page}`);
-            console.log('API Response:', response.data);  // 추가된 로그
             if (response.data && response.data.data) {
-                setQuestions(response.data.data);
+                // Sort questions by their id
+                const sortedQuestions = response.data.data.sort((a, b) => a.questionId - b.questionId);
+                setQuestions(sortedQuestions);
             }
         } catch (error) {
             console.error('Failed to fetch questions:', error);
@@ -44,6 +45,10 @@ function RoomMain() {
             month: '2-digit',
             day: '2-digit'
         });
+    };
+
+    const handleQuestionClick = (questionId) => {
+        navigate(`/room/${roomId}/question/${questionId}`);
     };
 
     return (
@@ -67,13 +72,13 @@ function RoomMain() {
                         </tr>
                         </thead>
                         <tbody>
-                        {questions.map((question, index) => (
-                            <tr key={question.questionId}>
-                                <td>{index + 1}</td>
+                        {questions.map((question) => (
+                            <tr key={question.questionId} onClick={() => handleQuestionClick(question.questionId)} style={{cursor: 'pointer'}}>
+                                <td>{question.questionId}</td>
                                 <td>{question.category}</td>
                                 <td>{question.title}</td>
                                 <td>{question.difficulty}</td>
-                                <td>{formatDate(question.updatedAt)}</td>
+                                <td>{question.updatedAt ? formatDate(question.updatedAt) : 'N/A'}</td>
                             </tr>
                         ))}
                         </tbody>

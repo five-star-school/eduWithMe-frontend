@@ -1,46 +1,149 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import axios from "../util/axiosConfig";
+import { getCookie } from '../util/cookie';
 import styles from '../styles/QuestionDetail.module.css';
 
 function QuestionDetail() {
+    const [question, setQuestion] = useState(null);
+    const [selectedAnswer, setSelectedAnswer] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+    const [modalContent, setModalContent] = useState({ title: '', message: '', points: '' });
+    const { roomId, questionId } = useParams();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const token = getCookie('AccessToken');
+        if (token === null) {
+            navigate('/login');
+        } else {
+            fetchQuestionDetail();
+        }
+    }, [roomId, questionId, navigate]);
+
+    const fetchQuestionDetail = async () => {
+        try {
+            const response = await axios.get(`/rooms/${roomId}/question/${questionId}`);
+            console.log('Question detail:', response.data); // 데이터 구조 확인용
+            if (response.data && response.data.data) {
+                setQuestion(response.data.data);
+            }
+        } catch (error) {
+            console.error('Failed to fetch question detail:', error);
+            if (error.response && error.response.status === 403) {
+                navigate('/login');
+            }
+        }
+    };
+
+    const handleAnswerClick = (index) => {
+        setSelectedAnswer(index);
+    };
+
+    const handleSubmit = async () => {
+        if (selectedAnswer !== null && question) {
+            try {
+                const response = await axios.post(`/rooms/${roomId}/question/${questionId}/submit`, {
+                    selectedAnswer: selectedAnswer + 1
+                });
+
+                const result = response.data.data;
+                setModalContent({
+                    title: result.correct ? '정답입니다!' : '오답입니다.',
+                    message: result.message,
+                    points: `획득한 포인트: ${result.earnedPoints}`
+                });
+                setShowModal(true);
+            } catch (error) {
+                console.error('Failed to submit answer:', error);
+                setModalContent({
+                    title: '오류',
+                    message: '답안 제출 중 오류가 발생했습니다.',
+                    points: ''
+                });
+                setShowModal(true);
+            }
+        }
+    };
+
+    const handleShowAnswer = () => {
+        if (question && question.answerOption) {
+            const correctAnswer = question.answerOption.answered;
+            setModalContent({
+                title: '정답',
+                message: ` ${correctAnswer}번`,
+                points: ''
+            });
+            setShowModal(true);
+        }
+    };
+
+    const closeModal = () => {
+        setShowModal(false);
+    };
+
+    if (!question) {
+        return <div>Loading...</div>;
+    }
+
     return (
         <div className={styles.questionSection}>
             <div className={styles.questionTitleSection}>
                 <span className={styles.questionLabel}>문제 제목</span>
-                <input type="text" className={styles.questionTitleInput} placeholder="문제 제목"/>
+                <input type="text" className={styles.questionTitleInput} value={question.title} readOnly/>
             </div>
 
             <div className={styles.questionContentSection}>
                 <span className={styles.questionLabel}>객관식 문제</span>
-                <textarea className={styles.questionContentInput} placeholder="진짜 문제가 들어갑니다."></textarea>
+                <textarea className={styles.questionContentInput} value={question.content} readOnly></textarea>
             </div>
 
             <div className={styles.answerOptions}>
-                <div className={styles.answerOption}>
-                    <span className={styles.optionNumber}>1</span>
-                    <span className={styles.optionContent}>문제1</span>
-                </div>
-                <div className={styles.answerOption}>
-                    <span className={styles.optionNumber}>2</span>
-                    <span className={styles.optionContent}>문제2</span>
-                </div>
-                <div className={styles.answerOption}>
-                    <span className={styles.optionNumber}>3</span>
-                    <span className={styles.optionContent}>문제3</span>
-                </div>
-                <div className={styles.answerOption}>
-                    <span className={styles.optionNumber}>4</span>
-                    <span className={styles.optionContent}>문제4</span>
-                </div>
+                {question.answerOption && [
+                    question.answerOption.first,
+                    question.answerOption.second,
+                    question.answerOption.third,
+                    question.answerOption.fourth
+                ].map((option, index) => (
+                    <div key={index} className={styles.answerOption}>
+                        <span className={styles.optionNumber}>{index + 1}</span>
+                        <span
+                            className={`${styles.optionContent} ${selectedAnswer === index ? styles.selectedAnswer : ''}`}
+                            onClick={() => handleAnswerClick(index)}
+                        >
+                            {option}
+                        </span>
+                    </div>
+                ))}
             </div>
 
             <div className={styles.questionInfo}>
                 <span className={styles.difficulty}>
-                    <span className={styles.infoLabel}>난이도:</span> 중
+                    <span className={styles.infoLabel}>난이도:</span> {question.difficulty}
                 </span>
                 <span className={styles.points}>
-                    <span className={styles.infoLabel}>포인트:</span> 100
+                    <span className={styles.infoLabel}>포인트:</span> {question.point}
                 </span>
+                <button
+                    className={styles.showAnswerButton}
+                    onClick={handleShowAnswer}
+                >
+                    정답 확인
+                </button>
             </div>
+
+            <button className={styles.submitButton} onClick={handleSubmit}>제출</button>
+
+            {showModal && (
+                <div className={styles.modal}>
+                    <div className={styles.modalContent}>
+                        <h2>{modalContent.title}</h2>
+                        <p>{modalContent.message}</p>
+                        {modalContent.points && <p>{modalContent.points}</p>}
+                        <button onClick={closeModal}>닫기</button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
