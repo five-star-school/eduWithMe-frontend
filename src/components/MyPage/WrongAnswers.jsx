@@ -9,17 +9,19 @@ function WrongAnswers({ problems = [] }) {
             {Array.isArray(problems) && problems.length > 0 ? (
                 <table className={styles.problemTable}>
                     <thead>
-                        <tr>
-                            <th>번호</th>
-                            <th>문제 제목</th>
-                            <th>난이도</th>
-                            <th>오답 날짜</th>
-                        </tr>
+                    <tr>
+                        <th>번호</th>
+                        <th>카테고리</th>
+                        <th>문제 제목</th>
+                        <th>난이도</th>
+                        <th>오답 날짜</th>
+                    </tr>
                     </thead>
                     <tbody>
                         {problems.map((problem) => (
                             <tr key={problem.questionNo}>
                                 <td>{problem.questionNo}</td>
+                                <td>{problem.category}</td>
                                 <td>{problem.title}</td>
                                 <td>{problem.difficulty}</td>
                                 <td>{format(new Date(problem.createdAt), 'yyyy-MM-dd')}</td>
