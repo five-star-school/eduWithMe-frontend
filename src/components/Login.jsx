@@ -1,15 +1,15 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from '../util/axiosConfig';
 import styles from '../styles/Login.module.css';
 import { FcGoogle } from "react-icons/fc";
 import { RiKakaoTalkFill } from "react-icons/ri";
-import { Link, useNavigate } from 'react-router-dom';
-import axios from "../util/axiosConfig";
-
 
 function Login() {
+    const navigate = useNavigate();
     const emailInput = useRef();
     const passwordInput = useRef();
-    const navigate = useNavigate();
+    const [loginError, setLoginError] = useState('');
 
     const isEmailValid = (email) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -23,22 +23,21 @@ function Login() {
 
     const handleLoginClick = async (e) => {
         e.preventDefault();
-
         const email = emailInput.current?.value;
         const password = passwordInput.current?.value;
 
         if (!email || !password) {
-            alert('빈 칸을 전부 입력 해주세요.');
+            setLoginError('빈 칸을 전부 입력 해주세요.');
             return;
         }
 
         if (!isEmailValid(email)) {
-            alert('유효한 이메일 주소를 입력해주세요.');
+            setLoginError('유효한 이메일 주소를 입력해주세요.');
             return;
         }
 
         if (!isPasswordValid(password)) {
-            alert('비밀번호는 최소 8자 이상이어야 하며, 대문자, 소문자, 숫자 및 특수문자를 포함해야 합니다.');
+            setLoginError('이메일과 비밀번호를 확인해주세요.');
             return;
         }
 
@@ -48,46 +47,58 @@ function Login() {
             if (response.status === 200) {
                 console.log(response);
                 console.log(response.headers);
-                // 헤더 키는 소문자로 접근합니다.
                 const accessToken = response.headers['accesstoken'];
-
                 console.log('로그인 성공, 토큰:', accessToken);
                 document.cookie = `AccessToken=${accessToken}; path=/; secure; SameSite=Strict`;
-                alert('로그인 성공!')
+                alert('로그인 성공!');
                 navigate('/main');
             } else {
-                alert('로그인 실패: ' + response.data.message);
+                setLoginError('로그인 실패: ' + response.data.message);
             }
         } catch (error) {
             console.error('로그인 오류:', error);
-            if (error.response) {
-                alert(`로그인 실패: ${error.response.data.message || '알 수 없는 오류가 발생했습니다.'}`);
-            } else if (error.request) {
-                alert('서버에서 응답이 없습니다. 네트워크 연결을 확인해주세요.');
-            } else {
-                alert('로그인 요청 중 오류가 발생했습니다.');
+            setLoginError('일치하는 회원이 없습니다.');
+        }
+    };
+
+    const handleKakaoLogin = async () => {
+        try {
+            const keyResponse = await axios.get('/users/key-value');
+            const { redirectUri, appKey } = keyResponse.data;
+            // Kakao SDK 초기화
+            if (!window.Kakao.isInitialized()) {
+                window.Kakao.init(appKey);
             }
+            // Kakao 로그인 요청
+            window.Kakao.Auth.authorize({
+                redirectUri: redirectUri,
+                scope: 'profile_nickname, account_email',
+            });
+        } catch (error) {
+            console.error('Error fetching key values:', error);
+            setLoginError('카카오 로그인을 시작할 수 없습니다.');
         }
     };
 
     return (
         <div className={styles.login}>
             <h2 className={styles.title}>로그인</h2>
-            <form className={styles.form}>
+            <form className={styles.form} onSubmit={handleLoginClick}>
                 <input className={styles.input} type="email" placeholder="이메일" ref={emailInput} />
                 <input className={styles.input} type="password" placeholder="비밀번호" ref={passwordInput} />
-                <button className={styles.button} type="submit" onClick={handleLoginClick}>Login</button>
+                <button className={styles.button} type="submit">Login</button>
             </form>
+            {loginError && <p className={styles.errorMessage}>{loginError}</p>}
             <div className={styles.links}>
                 <Link to="/forgot-password" className={styles.link}>비밀번호 찾기</Link>
                 <span className={styles.separator}>|</span>
                 <Link to="/signup" className={styles.link}>회원가입</Link>
             </div>
             <div className={styles.socialLogin}>
-                <button className={`${styles.socialButton} ${styles.googleButton}`} onClick={() => console.log('Login with Google')}>
+                <button className={`${styles.socialButton} ${styles.googleButton}`}>
                     <FcGoogle className={styles.socialIcon} /> Google
                 </button>
-                <button className={`${styles.socialButton} ${styles.kakaoButton}`} onClick={() => console.log('Login with Kakao')}>
+                <button className={`${styles.socialButton} ${styles.kakaoButton}`} onClick={handleKakaoLogin}>
                     <RiKakaoTalkFill className={styles.socialIcon} /> Kakao
                 </button>
             </div>
@@ -96,5 +107,3 @@ function Login() {
 }
 
 export default Login;
-
-
