@@ -15,6 +15,7 @@ function MyPage() {
     // 문제 목록 관련 상태
     const [solvedProblems, setSolvedProblems] = useState([]);
     const [wrongAnswers, setWrongAnswers] = useState([]);
+    const [myComments, setMyComments] = useState([]);
     const [page, setPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [loading, setLoading] = useState(true);
@@ -93,12 +94,37 @@ function MyPage() {
             }
         };
 
+        const fetchMyComments = async () => {
+            try {
+                setLoading(true);
+                const response = await axios.get(`/profiles/comments?page=${page}&size=5`, {
+                    headers: {
+                        'AccessToken': document.cookie.split('; ').find(row => row.startsWith('AccessToken='))?.split('=')[1]
+                    }
+                });
+
+                if (response.status === 200) {
+                    setMyComments(response.data.data);
+                    setTotalPages(Math.ceil(response.data.data.length / 5)); // 페이지 수 계산 (한 페이지당 5개 항목)
+                } else {
+                    throw new Error('댓글 목록 조회에 실패했습니다.');
+                }
+            } catch (error) {
+                console.error('댓글 목록 조회 오류:', error);
+                setError(error.message || '알 수 없는 오류가 발생했습니다.');
+            } finally {
+                setLoading(false);
+            }
+        };
+
         fetchUserProfile();
 
         if (activeTab === 'solved') {
             fetchSolvedProblems();
         } else if (activeTab === 'wrong') {
             fetchWrongAnswers();
+        } else if (activeTab === 'comments') {
+            fetchMyComments();
         }
     }, [page, activeTab]);
 
@@ -109,7 +135,7 @@ function MyPage() {
             case 'wrong':
                 return <WrongAnswers problems={wrongAnswers} />;
             case 'comments':
-                return <MyComments />;
+                return <MyComments comments={myComments} />;
             default:
                 return <SolvedProblems problems={solvedProblems} />;
         }
@@ -133,7 +159,7 @@ function MyPage() {
                 <main className={styles.mainContent}>
                     {user ? <UserInfo user={user} /> : <p>로딩 중...</p>}
                     {loading ? <p>로딩 중...</p> : renderContent()}
-                    {(solvedProblems.length > 0 || wrongAnswers.length > 0) && totalPages > 1 && (
+                    {(solvedProblems.length > 0 || wrongAnswers.length > 0 || myComments.length > 0) && totalPages > 1 && (
                         <div className={styles.pagination}>
                             <button
                                 disabled={page === 0}
