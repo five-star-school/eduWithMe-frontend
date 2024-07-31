@@ -1,11 +1,11 @@
 import React from 'react';
-import styles from '../../styles/SolvedProblems.module.css';
+import styles from '../../styles/SolvedAnswers.module.css';
 import { format } from 'date-fns';
 
-function SolvedProblems({ problems }) {
+function SolvedAnswers({ problems }) {
     const formatDate = (dateString) => {
         const date = new Date(dateString);
-        return format(date, 'yyyy-MM-dd');  // 원하는 포맷으로 변경
+        return format(date, 'yyyy-MM-dd HH:mm'); 
     };
 
     return (
@@ -41,4 +41,4 @@ function SolvedProblems({ problems }) {
     );
 }
 
-export default SolvedProblems;
+export default SolvedAnswers;

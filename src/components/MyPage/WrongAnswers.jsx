@@ -1,8 +1,13 @@
 import React from 'react';
-import styles from '../../styles/SolvedProblems.module.css';
+import styles from '../../styles/SolvedAnswers.module.css';
 import { format } from 'date-fns';
 
 function WrongAnswers({ problems = [] }) {
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return format(date, 'yyyy-MM-dd HH:mm'); 
+    };
+
     return (
         <div className={styles.solvedProblems}>
             <h2 className={styles.title}>오답 문제</h2>
@@ -24,7 +29,7 @@ function WrongAnswers({ problems = [] }) {
                                 <td>{problem.category}</td>
                                 <td>{problem.title}</td>
                                 <td>{problem.difficulty}</td>
-                                <td>{format(new Date(problem.createdAt), 'yyyy-MM-dd')}</td>
+                                <td>{formatDate(problem.createdAt)}</td>
                             </tr>
                         ))}
                     </tbody>
