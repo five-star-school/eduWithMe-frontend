@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from '../styles/MyPage.module.css';
 import UserInfo from '../components/MyPage/UserInfo';
-import SolvedProblems from '../components/MyPage/SolvedProblems';
+import SolvedProblems from '../components/MyPage/SolvedAnswers';
 import WrongAnswers from '../components/MyPage/WrongAnswers';
 import MyComments from '../components/MyPage/MyComments';
 import SideBar from '../components/MyPage/SideBar';

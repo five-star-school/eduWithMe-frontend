@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from '../../styles/SolvedProblems.module.css';
+import styles from '../../styles/SolvedAnswers.module.css';
 import { format } from 'date-fns';
 
 function WrongAnswers({ problems = [] }) {
