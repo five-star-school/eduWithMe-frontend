@@ -1,69 +1,61 @@
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-    background-color: #f0f0f0;
-    border-bottom: 1px solid #ddd;
-}
-
-.title {
-    margin: 0;
-    font-size: 24px;
-}
-
-.headerButtons {
-    display: flex;
-    gap: 10px;
-}
-
-.headerButton {
-    padding: 8px 16px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.headerButton:hover {
-    background-color: #45a049;
-}
-
-.content {
-    display: flex;
-    flex: 1;
-}
-
-.sidebar {
-    width: 200px;
-    padding: 20px;
-    background-color: #f8f8f8;
-    border-right: 1px solid #ddd;
-}
-
-.sidebarButton {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    background-color: #e0e0e0;
-    border: none;
-    border-radius: 4px;
+.solvedProblems {
     text-align: left;
-    cursor: pointer;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
 }
 
-.sidebarButton:hover {
-    background-color: #d0d0d0;
+.problemTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 16px;
 }
 
-.sidebarButton.active {
+.problemTable th, .problemTable td {
+    padding: 15px 20px;
+    text-align: left;
+}
+
+.problemTable th {
     background-color: #4CAF50;
     color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
-.mainContent {
-    flex: 1;
-    padding: 20px;
+.problemTable td {
+    border-bottom: 1px solid #ddd;
+    color: #333;
+}
+
+.problemTable tr:hover {
+    background-color: #f1f1f1;
+}
+
+.problemTable tr td:nth-child(1) {
+    text-align: left;
+    width: 10%;
+}
+
+.problemTable tr td:nth-child(2) { /* 댓글 내용 */
+    font-weight: 600;
+    color: #3697ff; 
+    width: 40%;
+}
+
+.problemTable tr td:nth-child(3) { /* 작성일 */
+    text-align: left;
+    width: 30%;
+}
+
+
+
+.solvedProblems h2 {
+    color: #4CAF50;
+    font-size: 24px;
+    margin-bottom: 20px;
 }
