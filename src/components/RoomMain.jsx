@@ -7,6 +7,7 @@ import styles from '../styles/RoomMainPage.module.css';
 function RoomMain() {
     const [questions, setQuestions] = useState([]);
     const [page, setPage] = useState(0);
+    const [searchKeyword, setSearchKeyword] = useState('');
     const { roomId } = useParams();
     const navigate = useNavigate();
 
@@ -22,6 +23,7 @@ function RoomMain() {
     const fetchQuestions = async () => {
         try {
             const response = await axios.get(`/rooms/${roomId}/question?page=${page}`);
+            console.log('API Response:', response.data);
             if (response.data && response.data.data) {
                 // Sort questions by their id
                 const sortedQuestions = response.data.data.sort((a, b) => a.questionId - b.questionId);
@@ -33,6 +35,21 @@ function RoomMain() {
                 navigate('/login');
             }
         }
+    };
+
+    const handleSearch = async () => {
+        try {
+            const response = await axios.get(`/search/rooms/${roomId}/question/title?keyword=${encodeURIComponent(searchKeyword)}&page=0`);
+            if (response.data && response.data.data) {
+                setQuestions(response.data.data);
+            }
+        } catch (error) {
+            console.error('Failed to search questions:', error);
+        }
+    };
+
+    const handleSearchInputChange = (e) => {
+        setSearchKeyword(e.target.value);
     };
 
     const formatDate = (dateString) => {
@@ -57,8 +74,14 @@ function RoomMain() {
                 <div className={styles.roomContent}>
                     <div className={styles.contentHeader}>
                         <div className={styles.searchContainer}>
-                            <input type="text" className={styles.searchInput} placeholder="검색어 ( 제목 )"/>
-                            <button className={styles.searchButton}>검색</button>
+                            <input
+                                type="text"
+                                className={styles.searchInput}
+                                placeholder="검색어 ( 제목 )"
+                                value={searchKeyword}
+                                onChange={handleSearchInputChange}
+                            />
+                            <button className={styles.searchButton} onClick={handleSearch}>검색</button>
                         </div>
                     </div>
                     <table className={styles.problemTable}>
