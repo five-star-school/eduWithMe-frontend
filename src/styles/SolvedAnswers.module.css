@@ -1,28 +1,68 @@
 .solvedProblems {
     text-align: left;
     padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .problemTable {
     width: 100%;
     border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 16px;
 }
 
 .problemTable th, .problemTable td {
-    border: 1px solid #ddd;
-    padding: 12px;
+    padding: 15px 20px;
     text-align: left;
 }
 
 .problemTable th {
-    background-color: #f2f2f2;
+    background-color: #4CAF50; /* 헤더 배경색 */
+    color: white;
     font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
-.problemTable tr:nth-child(even) {
-    background-color: #f9f9f9;
+.problemTable td {
+    border-bottom: 1px solid #ddd;
+    color: #333;
 }
 
 .problemTable tr:hover {
-    background-color: #f5f5f5;
+    background-color: #f1f1f1; 
+}
+
+.problemTable tr td:nth-child(1) {
+    text-align: left;
+    width: 10%;
+}
+
+.problemTable tr td:nth-child(4) {
+    text-align: left;
+    width: 10%;
+} 
+
+.problemTable tr td:nth-child(5) { /* 해결 날짜 */
+    text-align: left;
+    width: 30%;
+}
+
+.problemTable tr td:nth-child(2) { /* 카테고리 */
+    text-align: left;
+    width: 10%; 
+}
+
+.problemTable tr td:nth-child(3) { /* 문제 제목 */
+    font-weight: 600;
+    color: #3697ff; 
+    width: 40%; 
+}
+
+.solvedProblems h2 {
+    color: #4CAF50;
+    font-size: 24px;
+    margin-bottom: 20px;
 }
