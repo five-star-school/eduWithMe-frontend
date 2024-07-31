@@ -1,15 +1,17 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from '../util/axiosConfig';
 import styles from '../styles/Login.module.css';
 import { FcGoogle } from "react-icons/fc";
 import { RiKakaoTalkFill } from "react-icons/ri";
+import axios from "../util/axiosConfig";
+import { AuthContext } from '../util/AuthContext';
 
 function Login() {
     const navigate = useNavigate();
     const emailInput = useRef();
     const passwordInput = useRef();
     const [loginError, setLoginError] = useState('');
+    const { login } = useContext(AuthContext);
 
     const isEmailValid = (email) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -45,11 +47,11 @@ function Login() {
             const response = await axios.post('/users/login', { email, password });
 
             if (response.status === 200) {
-                console.log(response);
-                console.log(response.headers);
                 const accessToken = response.headers['accesstoken'];
-                console.log('로그인 성공, 토큰:', accessToken);
+                const { nickName } = response.data; // assuming the response contains the nickName
+
                 document.cookie = `AccessToken=${accessToken}; path=/; secure; SameSite=Strict`;
+                login({ nickName }); // Login action with user data
                 alert('로그인 성공!');
                 navigate('/main');
             } else {
@@ -65,11 +67,11 @@ function Login() {
         try {
             const keyResponse = await axios.get('/users/key-value');
             const { redirectUri, appKey } = keyResponse.data;
-            // Kakao SDK 초기화
+
             if (!window.Kakao.isInitialized()) {
                 window.Kakao.init(appKey);
             }
-            // Kakao 로그인 요청
+
             window.Kakao.Auth.authorize({
                 redirectUri: redirectUri,
                 scope: 'profile_nickname, account_email',
