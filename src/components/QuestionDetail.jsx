@@ -50,7 +50,6 @@ function QuestionDetail() {
                 const result = response.data.data;
                 setModalContent({
                     title: result.correct ? '정답입니다!' : '오답입니다.',
-                    message: result.message,
                     points: `획득한 포인트: ${result.earnedPoints}`
                 });
                 setShowModal(true);
