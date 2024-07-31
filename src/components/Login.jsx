@@ -7,7 +7,6 @@ import axios from "../util/axiosConfig";
 import { AuthContext } from '../util/AuthContext';
 
 function Login() {
-
     const navigate = useNavigate();
     const emailInput = useRef();
     const passwordInput = useRef();
@@ -48,14 +47,10 @@ function Login() {
             const response = await axios.post('/users/login', { email, password });
 
             if (response.status === 200) {
-                console.log(response);
-                console.log(response.headers);
                 const accessToken = response.headers['accesstoken'];
                 const { nickName } = response.data; // assuming the response contains the nickName
 
-                console.log('로그인 성공, 토큰:', accessToken);
                 document.cookie = `AccessToken=${accessToken}; path=/; secure; SameSite=Strict`;
-
                 login({ nickName }); // Login action with user data
                 alert('로그인 성공!');
                 navigate('/main');
@@ -72,12 +67,11 @@ function Login() {
         try {
             const keyResponse = await axios.get('/users/key-value');
             const { redirectUri, appKey } = keyResponse.data;
-            // Kakao SDK 초기화
+
             if (!window.Kakao.isInitialized()) {
                 window.Kakao.init(appKey);
             }
 
-            // Kakao 로그인 요청
             window.Kakao.Auth.authorize({
                 redirectUri: redirectUri,
                 scope: 'profile_nickname, account_email',
