@@ -48,11 +48,17 @@ function Login() {
 
             if (response.status === 200) {
                 const accessToken = response.headers['accesstoken'];
-                const { nickName, userId } = response.data; // Extract both userId and nickName
-                console.log(response.data.nickName);
-                console.log(response.data.userId);
-                document.cookie = `AccessToken=${accessToken}; path=/; secure; SameSite=Strict`;
-                login({ userId, nickName }); // Login action with user data
+                const { nickName, userId } = response.data;
+                console.log('NickName:', response.data.nickName);
+                console.log('UserID:', response.data.userId);
+
+                const expires = new Date(Date.now() + 60 * 60 * 1000).toUTCString(); // 1시간 후 만료
+                document.cookie = `AccessToken=${accessToken}; path=/; Expires=${expires}; Secure; SameSite=Strict`;
+                document.cookie = `userId=${userId}; path=/; Expires=${expires}; Secure; SameSite=Strict`;
+
+                console.log('Cookies after login:', document.cookie); // 쿠키 설정 확인용
+
+                login({ userId, nickName });
                 alert('로그인 성공!');
                 navigate('/main');
             } else {
@@ -63,6 +69,7 @@ function Login() {
             setLoginError('일치하는 회원이 없습니다.');
         }
     };
+
 
     const handleKakaoLogin = async () => {
         try {
