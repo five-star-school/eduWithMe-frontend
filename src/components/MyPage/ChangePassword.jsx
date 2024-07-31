@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import styles from '../styles/ChangePassword.module.css';
+import styles from '../../styles/ChangePassword.module.css';
 
 function ChangePassword() {
     const currentPasswordInput = useRef();
