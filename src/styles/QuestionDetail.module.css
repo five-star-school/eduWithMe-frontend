@@ -184,19 +184,24 @@
 
 .commentInput {
     display: flex;
-    align-items: flex-end;
+    flex-direction: column;
+    align-items: stretch;
     margin-top: 15px;
 }
 
 .commentInput textarea {
-    flex: 1;
     padding: 15px;
     height: 35px;
-    margin-right: 10px;
     border: 1px solid #ddd;
     border-radius: 4px;
     resize: vertical;
-    margin-top: 15px;
+    margin-bottom: 10px;
+}
+
+.submitCommentWrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
 }
 
 .submitComment {

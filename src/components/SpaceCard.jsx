@@ -29,14 +29,13 @@ function Modal({ modalOpen, setModalOpen, isCreateModal, selectedSpace, addNewSp
       }
 
       try {
-        let response;
         if (isPrivate) {
-          response = await axios.post('/rooms/private', {
+          await axios.post('/rooms/private', {
             roomName: newTitle,
             roomPassword: newPassword,
           });
         } else {
-          response = await axios.post('/rooms/public', {
+          await axios.post('/rooms/public', {
             roomName: newTitle,
           });
         }
