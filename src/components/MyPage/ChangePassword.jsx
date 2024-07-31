@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
-import axios from 'axios';
+import axios from '../../util/axiosConfig'; 
+import { useNavigate } from 'react-router-dom';
 import styles from '../../styles/ChangePassword.module.css';
 
 function ChangePassword() {
@@ -8,12 +9,7 @@ function ChangePassword() {
     const repeatNewPasswordInput = useRef();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-
-    const isPasswordValid = (password) => {
-        // 비밀번호가 최소 8자 이상이고, 대문자, 소문자, 숫자, 특수문자를 포함해야 함
-        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-        return passwordRegex.test(password);
-    };
+    const navigate = useNavigate();  
 
     const handleConfirmClick = async () => {
         const currentPassword = currentPasswordInput.current?.value;
@@ -35,11 +31,6 @@ function ChangePassword() {
             return;
         }
 
-        if (!isPasswordValid(newPassword)) {
-            alert('비밀번호는 최소 8자 이상이어야 하며, 대문자, 소문자, 숫자 및 특수문자를 포함해야 합니다.');
-            return;
-        }
-
         try {
             setLoading(true);
             setError(null);
@@ -47,10 +38,6 @@ function ChangePassword() {
             const response = await axios.put('/profiles/password', {
                 currentPassword,
                 newPassword,
-            }, {
-                headers: {
-                    'AccessToken': document.cookie.split('; ').find(row => row.startsWith('AccessToken='))?.split('=')[1]
-                }
             });
 
             if (response.status === 200) {
@@ -58,6 +45,7 @@ function ChangePassword() {
                 currentPasswordInput.current.value = '';
                 newPasswordInput.current.value = '';
                 repeatNewPasswordInput.current.value = '';
+                navigate('/mypage');
             } else {
                 throw new Error('비밀번호 변경에 실패했습니다.');
             }
