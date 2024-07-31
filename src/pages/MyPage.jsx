@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styles from '../styles/MyPage.module.css';
 import UserInfo from '../components/MyPage/UserInfo';
 import SolvedProblems from '../components/MyPage/SolvedAnswers';
@@ -11,6 +12,7 @@ function MyPage() {
     const [activeTab, setActiveTab] = useState('solved');
     const [user, setUser] = useState(null);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     // 문제 목록 관련 상태
     const [solvedProblems, setSolvedProblems] = useState([]);
@@ -141,6 +143,10 @@ function MyPage() {
         }
     };
 
+    const handleChangePassword = () => {
+        navigate('/changepassword');
+    };
+
     if (error) {
         return <div className={styles.error}>에러: {error}</div>;
     }
@@ -152,6 +158,7 @@ function MyPage() {
                 <div className={styles.headerButtons}>
                     <button className={styles.headerButton}>문제 목록</button>
                     <button className={styles.headerButton}>관리자 페이지</button>
+                    <button className={styles.headerButton} onClick={handleChangePassword}>비밀번호 변경</button>
                 </div>
             </header>
             <div className={styles.content}>

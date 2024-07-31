@@ -3,7 +3,7 @@ import {BrowserRouter as Router, Routes, Route, Link} from 'react-router-dom';
 import './App.css';
 import Header from './components/Header';
 import MainPage from './pages/MainPage';
-import RoomPage from './pages/RoomPage';
+import RoomMainPage from './pages/RoomMainPage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import ChangePasswordPage from './pages/ChangePasswordPage';
@@ -35,7 +35,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/main" element={<MainPage />} />
-          <Route path="/room/:roomId" element={<RoomPage />} />
+          <Route path="/room/:roomId" element={<RoomMainPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/changepassword" element={<ChangePasswordPage />} />
