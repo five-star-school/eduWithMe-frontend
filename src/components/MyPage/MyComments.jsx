@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from '../../styles/SolvedAnswers.module.css';
+import styles from '../../styles/MyComments.module.css';
 import { format } from 'date-fns';
 
 function MyComments({ comments }) {
