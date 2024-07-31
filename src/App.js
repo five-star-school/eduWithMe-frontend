@@ -15,6 +15,7 @@ import MyPage from './pages/MyPage';
 import ManageReadPage from './pages/ManageReadPage';
 import ManageModifyPage from './pages/ManageModifyPage';
 import { AuthProvider } from './util/AuthContext';
+import ForgotPassword from './components/ForgotPassword';
 
 function HomePage() {
   return (
@@ -48,6 +49,7 @@ function App() {
               <Route path="/mypage" element={<MyPage />} />
               <Route path="/manageRead" element={<ManageReadPage/>}/>
               <Route path="/manageModify" element={<ManageModifyPage/>}/>
+              <Route path="/forgot-password" element={<ForgotPassword />} />
             </Routes>
           </div>
         </Router>
