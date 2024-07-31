@@ -5,7 +5,7 @@ import { format } from 'date-fns';
 function SolvedAnswers({ problems }) {
     const formatDate = (dateString) => {
         const date = new Date(dateString);
-        return format(date, 'yyyy-MM-dd');  // 원하는 포맷으로 변경
+        return format(date, 'yyyy-MM-dd HH:mm'); 
     };
 
     return (
