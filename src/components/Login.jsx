@@ -48,10 +48,11 @@ function Login() {
 
             if (response.status === 200) {
                 const accessToken = response.headers['accesstoken'];
-                const { nickName } = response.data; // assuming the response contains the nickName
-
+                const { nickName, userId } = response.data; // Extract both userId and nickName
+                console.log(response.data.nickName);
+                console.log(response.data.userId);
                 document.cookie = `AccessToken=${accessToken}; path=/; secure; SameSite=Strict`;
-                login({ nickName }); // Login action with user data
+                login({ userId, nickName }); // Login action with user data
                 alert('로그인 성공!');
                 navigate('/main');
             } else {
