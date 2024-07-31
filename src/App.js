@@ -43,7 +43,7 @@ function App() {
               <Route path="/changepassword" element={<ChangePasswordPage />} />
               <Route path="/forgotpassword" element={<ForgotPasswordPage />} />
               <Route path="/room/:roomId/question/:questionId" element={<QuestionDetailPage/>}/>
-              <Route path="/manageMain" element={<ManageMainPage/>}/>
+              <Route path="/room/:roomId/manageMain" element={<ManageMainPage/>}/>
               <Route path="/manageCreate" element={<ManageCreatePage/>}/>
               <Route path="/mypage" element={<MyPage />} />
               <Route path="/manageRead" element={<ManageReadPage/>}/>
