@@ -29,9 +29,13 @@ function UserInfo({ user }) {
                     <span className={styles.label}>포인트</span>
                     <input type="text" value={user.points} readOnly />
                 </div>
+                {/* 프로필 수정 버튼 추가 */}
+                <div className={styles.buttonRow}>
+                    <button className={styles.profileEditButton}>프로필 수정</button>
+                </div>
             </div>
         </div>
     );
 }
 
-export default UserInfo; // default export로 변경
+export default UserInfo;
