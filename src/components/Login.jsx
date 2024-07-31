@@ -11,30 +11,53 @@ function Login() {
     const passwordInput = useRef();
     const [loginError, setLoginError] = useState('');
 
+    const isEmailValid = (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
+
+    const isPasswordValid = (password) => {
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        return passwordRegex.test(password);
+    };
+
     const handleLoginClick = async (e) => {
         e.preventDefault();
         const email = emailInput.current?.value;
         const password = passwordInput.current?.value;
 
         if (!email || !password) {
-            setLoginError('이메일과 비밀번호를 모두 입력해주세요.');
+            setLoginError('빈 칸을 전부 입력 해주세요.');
+            return;
+        }
+
+        if (!isEmailValid(email)) {
+            setLoginError('유효한 이메일 주소를 입력해주세요.');
+            return;
+        }
+
+        if (!isPasswordValid(password)) {
+            setLoginError('이메일과 비밀번호를 확인해주세요.');
             return;
         }
 
         try {
             const response = await axios.post('/users/login', { email, password });
 
-            if (response.headers['accesstoken']) {
-                const token = response.headers['accesstoken'];
-                localStorage.setItem('token', token);
-                alert('로그인 성공');  // 일반 로그인 성공 시 알럿창 표시
+            if (response.status === 200) {
+                console.log(response);
+                console.log(response.headers);
+                const accessToken = response.headers['accesstoken'];
+                console.log('로그인 성공, 토큰:', accessToken);
+                document.cookie = `AccessToken=${accessToken}; path=/; secure; SameSite=Strict`;
+                alert('로그인 성공!');
                 navigate('/main');
             } else {
-                setLoginError('로그인에 실패했습니다.');
+                setLoginError('로그인 실패: ' + response.data.message);
             }
         } catch (error) {
-            console.error('Login error:', error);
-            setLoginError('로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요.');
+            console.error('로그인 오류:', error);
+            setLoginError('일치하는 회원이 없습니다.');
         }
     };
 
