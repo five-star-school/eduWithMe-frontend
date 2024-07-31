@@ -25,8 +25,14 @@ export const AuthProvider = ({ children }) => {
     checkLoginStatus();
   }, []);
 
-  const login = (userData) => {
+  const login = async (userData) => {
     setUser(userData);
+    try {
+      const response = await axios.get('/profiles'); 
+      setUser(response.data.data);
+    } catch (error) {
+      console.error('Failed to fetch user profile after login:', error);
+    }
   };
 
   const logout = () => {
