@@ -105,7 +105,7 @@ function MyPage() {
 
                 if (response.status === 200) {
                     setMyComments(response.data.data);
-                    setTotalPages(Math.ceil(response.data.data.length / 5)); // 페이지 수 계산 (한 페이지당 5개 항목)
+                    console.table(response.data.data);
                 } else {
                     throw new Error('댓글 목록 조회에 실패했습니다.');
                 }
