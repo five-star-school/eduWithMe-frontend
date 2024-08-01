@@ -1,13 +1,14 @@
 .roomMainPage {
-    display: flex;
-    height: 100vh;
+    text-align: left;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .mainContent {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .roomContent {
@@ -17,7 +18,6 @@
 .contentHeader {
     display: flex;
     justify-content: space-between;
-    align-items: center;
     margin-bottom: 20px;
 }
 
@@ -27,72 +27,85 @@
 }
 
 .searchInput {
-    padding: 8px 15px;
-    border: 1px solid #ced4da;
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ddd;
     border-radius: 4px;
     margin-right: 10px;
-    font-size: 14px;
-}
-
-.searchButton, .filterButton, .createButton {
-    padding: 8px 15px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    color: white;
 }
 
 .searchButton {
-    background-color: #6c757d;
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.searchButton:hover {
+    background-color: #0056b3;
 }
 
 .problemTable {
     width: 100%;
     border-collapse: collapse;
-    table-layout: fixed;
+    margin-top: 20px;
+    font-size: 16px;
 }
 
-.problemTable th, .problemTable td {
-    border: 1px solid #dee2e6;
-    padding: 6px;
+.problemTable th,
+.problemTable td {
+    padding: 15px 20px;
     text-align: left;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
 }
 
 .problemTable th {
-    background-color: #f8f9fa;
+    background-color: #4CAF50;
+    color: white;
     font-weight: bold;
-    color: #495057;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
-.problemTable tr:nth-child(even) {
-    background-color: #f8f9fa;
+.problemTable td {
+    border-bottom: 1px solid #ddd;
+    color: #333;
 }
 
-.problemTable th:nth-child(1),
-.problemTable td:nth-child(1) {
-    width: 8%;
+.problemTable tr:hover {
+    background-color: #f1f1f1;
 }
 
-.problemTable th:nth-child(2),
-.problemTable td:nth-child(2) {
-    width: 12%;
+.problemTable tr td:nth-child(1) {
+    text-align: left;
+    width: 10%;
 }
 
-.problemTable th:nth-child(3),
-.problemTable td:nth-child(3) {
-    width: 50%;
+.problemTable tr td:nth-child(4) {
+    text-align: left;
+    width: 10%;
 }
 
-.problemTable th:nth-child(4),
-.problemTable td:nth-child(4) {
-    width: 15%;
+.problemTable tr td:nth-child(5) {
+    text-align: left;
+    width: 30%;
 }
 
-.problemTable th:nth-child(5),
-.problemTable td:nth-child(5) {
-    width: 15%;
+.problemTable tr td:nth-child(2) {
+    text-align: left;
+    width: 10%;
+}
+
+.problemTable tr td:nth-child(3) {
+    font-weight: 600;
+    color: #3697ff;
+    width: 40%;
+}
+
+.roomMainPage h2 {
+    color: #4CAF50;
+    font-size: 24px;
+    margin-bottom: 20px;
 }
