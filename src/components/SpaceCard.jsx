@@ -36,11 +36,11 @@ function Modal({ modalOpen, setModalOpen, isCreateModal, selectedSpace, addNewSp
           });
         }
 
-        // Use the room's managerUserId to get the nickname if needed
-        const nickName = response.data.nickName || '방 설명';
+        // Assuming the response includes room details including nickName
+        const { roomName, nickName } = response.data;  // Adjust according to actual API response structure
 
         alert('방이 성공적으로 생성되었습니다.');
-        addNewSpace(newTitle, isPrivate, newPassword, nickName);
+        addNewSpace(roomName, isPrivate, newPassword, nickName);
         setNewTitle('');
         setNewPassword('');
         setModalOpen(false);
