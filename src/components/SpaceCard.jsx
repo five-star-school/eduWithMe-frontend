@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import styles from '../styles/SpaceCard.module.css';
 import axios from "../util/axiosConfig";
 
+// Modal Component
 function Modal({ modalOpen, setModalOpen, isCreateModal, selectedSpace, addNewSpace, fetchSpaces }) {
   const [isPrivate, setIsPrivate] = useState(false);
   const [newTitle, setNewTitle] = useState('');
@@ -10,16 +11,10 @@ function Modal({ modalOpen, setModalOpen, isCreateModal, selectedSpace, addNewSp
   const [enteredPassword, setEnteredPassword] = useState('');
 
   const modalBackground = useRef();
-
   const navigate = useNavigate();
 
-  const handlePrivateClick = () => {
-    setIsPrivate(true);
-  };
-
-  const handlePublicClick = () => {
-    setIsPrivate(false);
-  };
+  const handlePrivateClick = () => setIsPrivate(true);
+  const handlePublicClick = () => setIsPrivate(false);
 
   const handleAddSpace = async () => {
     if (newTitle.trim()) {
@@ -29,18 +24,23 @@ function Modal({ modalOpen, setModalOpen, isCreateModal, selectedSpace, addNewSp
       }
 
       try {
+        let response;
         if (isPrivate) {
-          await axios.post('/rooms/private', {
+          response = await axios.post('/rooms/private', {
             roomName: newTitle,
             roomPassword: newPassword,
           });
         } else {
-          await axios.post('/rooms/public', {
+          response = await axios.post('/rooms/public', {
             roomName: newTitle,
           });
         }
+
+        // Use the room's managerUserId to get the nickname if needed
+        const nickName = response.data.nickName || '방 설명';
+
         alert('방이 성공적으로 생성되었습니다.');
-        addNewSpace(newTitle, isPrivate, newPassword);
+        addNewSpace(newTitle, isPrivate, newPassword, nickName);
         setNewTitle('');
         setNewPassword('');
         setModalOpen(false);
@@ -163,6 +163,7 @@ function Modal({ modalOpen, setModalOpen, isCreateModal, selectedSpace, addNewSp
   );
 }
 
+// SpaceCard Component
 function SpaceCard() {
   const [modalOpen, setModalOpen] = useState(false);
   const [isCreateModal, setIsCreateModal] = useState(true);
@@ -175,7 +176,11 @@ function SpaceCard() {
       console.log('API response:', response.data);
       if (Array.isArray(response.data.data)) {
         console.log('Setting spaces:', response.data.data);
-        setSpaces(response.data.data);
+        const updatedSpaces = response.data.data.map(space => ({
+          ...space,
+          description: space.nickName || '방 설명', // Use nickName or default to '방 설명'
+        }));
+        setSpaces(updatedSpaces);
       } else {
         console.error('Unexpected response format:', response.data);
       }
@@ -200,13 +205,13 @@ function SpaceCard() {
     setModalOpen(true);
   };
 
-  const addNewSpace = (title, isPrivate, roomPassword) => {
+  const addNewSpace = (title, isPrivate, roomPassword, nickName) => {
     setSpaces([
       ...spaces,
       { 
         icon: isPrivate ? '🔒' : '🏠', 
         roomName: title, 
-        description: '새로 생성된 방', 
+        description: nickName || '방 설명', // Use nickName or default description
         userCount: 0, 
         roomId: Date.now(),  
         roomPassword: isPrivate ? roomPassword : null  
