@@ -114,8 +114,7 @@ function MyPage() {
             <header className={styles.header}>
                 <h1 className={styles.title}>마이페이지</h1>
                 <div className={styles.headerButtons}>
-                    <button className={styles.headerButton}>문제 목록</button>
-                    <button className={styles.headerButton} onClick={handleAdminPageClick}>관리자 페이지</button>
+                    <button className={styles.headerButton}>마이룸</button>
                     <button className={styles.headerButton} onClick={handleChangePassword}>비밀번호 변경</button>
                 </div>
             </header>
