@@ -66,7 +66,7 @@ function UserInfo({ user }) {
                 <div className={styles.buttonRow}>
                     {isEditing ? (
                         <button className={styles.profileSaveButton} onClick={handleSaveClick}>
-                            프로필 저장
+                            닉네임 저장
                         </button>
                     ) : (
                         <button className={styles.profileEditButton} onClick={handleEditClick}>

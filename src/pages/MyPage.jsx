@@ -14,14 +14,36 @@ function MyPage() {
     const [error, setError] = useState(null);
     const navigate = useNavigate();
 
-    // 문제 목록 관련 상태
     const [solvedProblems, setSolvedProblems] = useState([]);
     const [wrongAnswers, setWrongAnswers] = useState([]);
     const [myComments, setMyComments] = useState([]);
     const [page, setPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
 
+    const fetchData = async (url, setData, setError, setLoading, setTotalPages) => {
+        try {
+            setLoading(true);
+            const response = await axios.get(url, {
+                headers: {
+                    'AccessToken': document.cookie.split('; ').find(row => row.startsWith('AccessToken='))?.split('=')[1]
+                }
+            });
+
+            if (response.status === 200) {
+                setData(response.data.data.content);
+                setTotalPages(response.data.data.totalPages);
+                console.table(response.data.data.content);
+            } else {
+                throw new Error('데이터 조회에 실패했습니다.');
+            }
+        } catch (error) {
+            console.error('데이터 조회 오류:', error);
+            setError(error.message || '알 수 없는 오류가 발생했습니다.');
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
         const fetchUserProfile = async () => {
@@ -49,87 +71,18 @@ function MyPage() {
             }
         };
 
-        const fetchSolvedProblems = async () => {
-            try {
-                setLoading(true);
-                const response = await axios.get(`/profiles/solve?page=${page}&size=5`, {
-                    headers: {
-                        'AccessToken': document.cookie.split('; ').find(row => row.startsWith('AccessToken='))?.split('=')[1]
-                    }
-                });
-
-                if (response.status === 200) {
-                    setSolvedProblems(response.data.data.content);
-                    setTotalPages(response.data.data.totalPages);
-                    console.table(response.data.data.content);
-                } else {
-                    throw new Error('문제 목록 조회에 실패했습니다.');
-                }
-            } catch (error) {
-                console.error('문제 목록 조회 오류:', error);
-                setError(error.message || '알 수 없는 오류가 발생했습니다.');
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        const fetchWrongAnswers = async () => {
-            try {
-                setLoading(true);
-                const response = await axios.get(`/profiles/wrong?page=${page}&size=5`, {
-                    headers: {
-                        'AccessToken': document.cookie.split('; ').find(row => row.startsWith('AccessToken='))?.split('=')[1]
-                    }
-                });
-
-                if (response.status === 200) {
-                    setWrongAnswers(response.data.data.content);
-                    setTotalPages(response.data.data.totalPages);
-                    console.table(response.data.data.content);
-                } else {
-                    throw new Error('오답 문제 목록 조회에 실패했습니다.');
-                }
-            } catch (error) {
-                console.error('오답 문제 목록 조회 오류:', error);
-                setError(error.message || '알 수 없는 오류가 발생했습니다.');
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        const fetchMyComments = async () => {
-            try {
-                setLoading(true);
-                const response = await axios.get(`/profiles/comments?page=${page}&size=5`, {
-                    headers: {
-                        'AccessToken': document.cookie.split('; ').find(row => row.startsWith('AccessToken='))?.split('=')[1]
-                    }
-                });
-
-                if (response.status === 200) {
-                    setMyComments(response.data.data);
-                    console.table(response.data.data);
-                } else {
-                    throw new Error('댓글 목록 조회에 실패했습니다.');
-                }
-            } catch (error) {
-                console.error('댓글 목록 조회 오류:', error);
-                setError(error.message || '알 수 없는 오류가 발생했습니다.');
-            } finally {
-                setLoading(false);
-            }
-        };
-
         fetchUserProfile();
+    }, []);
 
+    useEffect(() => {
         if (activeTab === 'solved') {
-            fetchSolvedProblems();
+            fetchData(`/profiles/solve?page=${page}&size=5`, setSolvedProblems, setError, setLoading, setTotalPages);
         } else if (activeTab === 'wrong') {
-            fetchWrongAnswers();
+            fetchData(`/profiles/wrong?page=${page}&size=5`, setWrongAnswers, setError, setLoading, setTotalPages);
         } else if (activeTab === 'comments') {
-            fetchMyComments();
+            fetchData(`/profiles/comments?page=${page}&size=5`, setMyComments, setError, setLoading, setTotalPages);
         }
-    }, [page, activeTab]);
+    }, [activeTab, page]);
 
     const renderContent = () => {
         switch (activeTab) {

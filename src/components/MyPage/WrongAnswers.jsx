@@ -15,7 +15,8 @@ function WrongAnswers({ problems = [] }) {
                 <table className={styles.problemTable}>
                     <thead>
                     <tr>
-                        <th>번호</th>
+                        <th>방 이름</th>
+                        <th>문제 번호</th>
                         <th>카테고리</th>
                         <th>문제 제목</th>
                         <th>난이도</th>
@@ -25,11 +26,12 @@ function WrongAnswers({ problems = [] }) {
                     <tbody>
                         {problems.map((problem) => (
                             <tr key={problem.questionId}>
+                                <td>{problem.roomName}</td>
                                 <td>{problem.questionId}</td>
                                 <td>{problem.category}</td>
                                 <td>{problem.title}</td>
                                 <td>{problem.difficulty}</td>
-                                <td>{formatDate(problem.createdAt)}</td>
+                                <td>{formatDate(problem.updatedAt)}</td>
                             </tr>
                         ))}
                     </tbody>

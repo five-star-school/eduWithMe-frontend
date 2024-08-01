@@ -14,15 +14,17 @@ function MyComments({ comments }) {
             {comments.length > 0 ? (
                 <table className={styles.problemTable}>
                     <thead>
-                        <tr>
-                            <th>번호</th>
-                            <th>댓글 내용</th>
-                            <th>작성일</th>
-                        </tr>
+                    <tr>
+                        <th>방 이름</th>
+                        <th>댓글 번호</th>
+                        <th>댓글 내용</th>
+                        <th>작성일</th>
+                    </tr>
                     </thead>
                     <tbody>
                         {comments.map((comment) => (
                             <tr key={comment.commentId}>
+                                <td>{comment.roomName || 'N/A'}</td>
                                 <td>{comment.commentId}</td>
                                 <td>{comment.comment}</td>
                                 <td>{formatDate(comment.updatedAt)}</td>
