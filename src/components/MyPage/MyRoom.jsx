@@ -2,6 +2,8 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from '../../styles/SpaceCard.module.css';
 import axios from "../../util/axiosConfig";
+import { useAuth } from '../../util/useAuth'; // useAuth 훅 가져오기
+import { getCookie } from '../../util/cookie';
 
 // 모달 컴포넌트
 function Modal({ modalOpen, setModalOpen, selectedSpace }) {
@@ -83,34 +85,42 @@ function MyRoom() {
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedSpace, setSelectedSpace] = useState(null);
     const [spaces, setSpaces] = useState([]);
-
-    // 로그인한 사용자의 ID를 가져오는 방법에 따라 이 부분을 수정해야 합니다.
-    const userId = 5; // 로그인한 사용자의 실제 ID로 교체
-
-    // 방 목록을 가져오는 함수
-    const fetchSpaces = async () => {
-        try {
-            const response = await axios.get(`/rooms/${userId}`);
-            console.log('API response:', response.data);
-
-            // 응답 데이터에서 방 목록을 추출
-            const userSpaces = response.data.data || []; // 데이터가 없을 경우 빈 배열로 처리
-
-            // 상태 업데이트
-            if (Array.isArray(userSpaces)) {
-                console.log('Setting spaces:', userSpaces);
-                setSpaces(userSpaces);
-            } else {
-                console.error('Unexpected response format:', response.data);
-            }
-        } catch (error) {
-            console.error('Failed to fetch spaces:', error);
-        }
-    };
+    const { user } = useAuth();
 
     useEffect(() => {
         fetchSpaces();
-    }, []);
+    }, [user]);
+
+    const fetchSpaces = async () => {
+        const userId = getCookie('userId');
+        if (!userId) {
+            console.log("User ID not found in cookie");
+            return;
+        }
+
+        try {
+            const response = await axios.get(`/rooms/${userId}`);
+            console.log('API response:', response);
+
+            if (response.data && response.data.data) {
+                const userSpaces = response.data.data;
+                if (Array.isArray(userSpaces)) {
+                    console.log('Setting spaces:', userSpaces);
+                    setSpaces(userSpaces);
+                } else {
+                    console.error('Unexpected response format:', response.data);
+                }
+            } else {
+                console.error('No data in response:', response);
+            }
+        } catch (error) {
+            console.error('Failed to fetch spaces:', error.response || error);
+            if (error.response) {
+                console.error('Error status:', error.response.status);
+                console.error('Error data:', error.response.data);
+            }
+        }
+    };
 
     const handleCardClick = (space) => {
         setSelectedSpace(space);

@@ -15,6 +15,7 @@ export const AuthProvider = ({ children }) => {
       if (token) {
         try {
           const response = await axios.get('/profiles');
+          console.log('User profile fetched:', response.data); // 로그 추가
           setUser(response.data.data);
         } catch (error) {
           console.error('Failed to fetch user profile:', error);
@@ -28,7 +29,8 @@ export const AuthProvider = ({ children }) => {
   const login = async (userData) => {
     setUser(userData);
     try {
-      const response = await axios.get('/profiles'); 
+      const response = await axios.get('/profiles');
+      console.log('User profile fetched after login:', response.data); // 로그 추가
       setUser(response.data.data);
     } catch (error) {
       console.error('Failed to fetch user profile after login:', error);
