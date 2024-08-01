@@ -8,9 +8,12 @@ import { format } from 'date-fns';
 function RoomMain() {
     const [questions, setQuestions] = useState([]);
     const [page, setPage] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
+    const [loading, setLoading] = useState(true);
     const [searchKeyword, setSearchKeyword] = useState('');
     const { roomId } = useParams();
     const navigate = useNavigate();
+    const questionsPerPage = 5;
 
     useEffect(() => {
         const token = getCookie('AccessToken');
@@ -23,29 +26,57 @@ function RoomMain() {
 
     const fetchQuestions = async () => {
         try {
-            const response = await axios.get(`/rooms/${roomId}/question?page=${page}`);
-            console.log('API Response:', response.data);
+            setLoading(true);
+            const response = await axios.get(`/rooms/${roomId}/question`, {
+                params: {
+                    page: page,
+                    size: questionsPerPage,
+                }
+            });
+            console.log('API Response:', response.data); // 응답 데이터 확인
             if (response.data && response.data.data) {
-                // Sort questions by their id
-                const sortedQuestions = response.data.data.sort((a, b) => a.questionId - b.questionId);
-                setQuestions(sortedQuestions);
+                const questionsData = response.data.data.content;
+                setQuestions(questionsData);
+
+                // Update total pages based on API response
+                setTotalPages(response.data.data.totalPages);
+            } else {
+                console.error('Unexpected data format:', response.data);
             }
         } catch (error) {
             console.error('Failed to fetch questions:', error);
             if (error.response && error.response.status === 403) {
                 navigate('/login');
             }
+        } finally {
+            setLoading(false);
         }
     };
 
     const handleSearch = async () => {
         try {
-            const response = await axios.get(`/search/rooms/${roomId}/question/title?keyword=${encodeURIComponent(searchKeyword)}&page=0`);
+            setLoading(true);
+            const response = await axios.get(`/search/rooms/${roomId}/question/title`, {
+                params: {
+                    keyword: searchKeyword,
+                    page: 0, // Always start search from page 0
+                    size: questionsPerPage,
+                }
+            });
+            console.log('Search API Response:', response.data); // 검색 응답 데이터 확인
             if (response.data && response.data.data) {
-                setQuestions(response.data.data);
+                setQuestions(response.data.data.content);
+
+                // Update total pages based on search results
+                setTotalPages(response.data.data.totalPages);
+                setPage(0); // 검색 후 페이지를 첫 페이지로 초기화
+            } else {
+                console.error('Unexpected search data format:', response.data);
             }
         } catch (error) {
             console.error('Failed to search questions:', error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -55,7 +86,7 @@ function RoomMain() {
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
-        return format(date, 'yyyy-MM-dd HH:mm'); 
+        return format(date, 'yyyy-MM-dd HH:mm');
     };
 
     const handleQuestionClick = (questionId) => {
@@ -78,28 +109,51 @@ function RoomMain() {
                             <button className={styles.searchButton} onClick={handleSearch}>검색</button>
                         </div>
                     </div>
-                    <table className={styles.problemTable}>
-                        <thead>
-                        <tr>
-                            <th>문제 번호</th>
-                            <th>카테고리</th>
-                            <th>문제 제목</th>
-                            <th>난이도</th>
-                            <th>출제일</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {questions.map((question) => (
-                            <tr key={question.questionId} onClick={() => handleQuestionClick(question.questionId)} style={{cursor: 'pointer'}}>
-                                <td>{question.questionId}</td>
-                                <td>{question.category}</td>
-                                <td>{question.title}</td>
-                                <td>{question.difficulty}</td>
-                                <td>{question.updatedAt ? formatDate(question.updatedAt) : 'N/A'}</td>
-                            </tr>
-                        ))}
-                        </tbody>
-                    </table>
+                    {loading ? (
+                        <p>로딩 중...</p>
+                    ) : (
+                        <>
+                            <table className={styles.problemTable}>
+                                <thead>
+                                    <tr>
+                                        <th>문제 번호</th>
+                                        <th>카테고리</th>
+                                        <th>문제 제목</th>
+                                        <th>난이도</th>
+                                        <th>출제일</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {questions.map((question) => (
+                                        <tr key={question.questionId} onClick={() => handleQuestionClick(question.questionId)} style={{ cursor: 'pointer' }}>
+                                            <td>{question.questionId}</td>
+                                            <td>{question.category}</td>
+                                            <td>{question.title}</td>
+                                            <td>{question.difficulty}</td>
+                                            <td>{question.updatedAt ? formatDate(question.updatedAt) : 'N/A'}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                            {totalPages > 1 && (
+                                <div className={styles.pagination}>
+                                    <button
+                                        disabled={page === 0}
+                                        onClick={() => setPage(prev => Math.max(0, prev - 1))}
+                                    >
+                                        이전
+                                    </button>
+                                    <span>{page + 1} / {totalPages}</span>
+                                    <button
+                                        disabled={page >= totalPages - 1}
+                                        onClick={() => setPage(prev => Math.min(totalPages - 1, prev + 1))}
+                                    >
+                                        다음
+                                    </button>
+                                </div>
+                            )}
+                        </>
+                    )}
                 </div>
             </div>
         </div>
