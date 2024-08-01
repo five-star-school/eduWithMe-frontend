@@ -13,6 +13,7 @@ function ManageMainPage() {
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(true);
   const [searchKeyword, setSearchKeyword] = useState('');
+  const [roomName, setRoomName] = useState('');
   const { roomId } = useParams();
   const navigate = useNavigate();
   const questionsPerPage = 10;
@@ -40,6 +41,7 @@ function ManageMainPage() {
         const questionsData = response.data.data.content;
         setQuestions(questionsData);
         setTotalPages(response.data.data.totalPages);
+        setRoomName(response.data.roomName); // 추가
       } else {
         console.error('Unexpected data format:', response.data);
       }
@@ -95,7 +97,7 @@ function ManageMainPage() {
       <div className={styles.managePage}>
         <SidebarComponent />
         <div className={styles.mainContent}>
-          <ManageMainHeaderNav roomId={roomId} />
+          <ManageMainHeaderNav roomId={roomId} roomName={roomName} /> {/* 수정 */}
           <div className={styles.manageContent}>
             <div className={styles.contentHeader}>
               <div className={styles.searchContainer}>
