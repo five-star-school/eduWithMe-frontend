@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styles from '../styles/SpaceCard.module.css';
 import axios from "../util/axiosConfig";
-import Modal from './Modal'; 
+import Modal from './Modal';
 
 function SpaceCard() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -15,7 +15,11 @@ function SpaceCard() {
       console.log('API response:', response.data);
       if (Array.isArray(response.data.data)) {
         console.log('Setting spaces:', response.data.data);
-        setSpaces(response.data.data);
+        const updatedSpaces = response.data.data.map(space => ({
+          ...space,
+          description: space.nickName || '방 설명', // Use nickName or default to '방 설명'
+        }));
+        setSpaces(updatedSpaces);
       } else {
         console.error('Unexpected response format:', response.data);
       }
@@ -40,13 +44,13 @@ function SpaceCard() {
     setModalOpen(true);
   };
 
-  const addNewSpace = (title, isPrivate, roomPassword) => {
+  const addNewSpace = (title, isPrivate, roomPassword, nickName) => {
     setSpaces([
       ...spaces,
       { 
         icon: isPrivate ? '🔒' : '🏠', 
         roomName: title, 
-        description: '새로 생성된 방', 
+        description: nickName || '방 설명', // Use nickName or default description
         userCount: 0, 
         roomId: Date.now(),  
         roomPassword: isPrivate ? roomPassword : null  

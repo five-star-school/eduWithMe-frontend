@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from '../styles/SpaceCard.module.css';
 import axios from "../util/axiosConfig";
@@ -12,13 +12,8 @@ function Modal({ modalOpen, setModalOpen, isCreateModal, selectedSpace, addNewSp
   const modalBackground = useRef();
   const navigate = useNavigate();
 
-  const handlePrivateClick = () => {
-    setIsPrivate(true);
-  };
-
-  const handlePublicClick = () => {
-    setIsPrivate(false);
-  };
+  const handlePrivateClick = () => setIsPrivate(true);
+  const handlePublicClick = () => setIsPrivate(false);
 
   const handleAddSpace = async () => {
     if (newTitle.trim()) {
@@ -28,18 +23,22 @@ function Modal({ modalOpen, setModalOpen, isCreateModal, selectedSpace, addNewSp
       }
 
       try {
+        let response;
         if (isPrivate) {
-          await axios.post('/rooms/private', {
+          response = await axios.post('/rooms/private', {
             roomName: newTitle,
             roomPassword: newPassword,
           });
         } else {
-          await axios.post('/rooms/public', {
+          response = await axios.post('/rooms/public', {
             roomName: newTitle,
           });
         }
+
+        const nickName = response.data.nickName || '방 설명';
+
         alert('방이 성공적으로 생성되었습니다.');
-        addNewSpace(newTitle, isPrivate, newPassword);
+        addNewSpace(newTitle, isPrivate, newPassword, nickName);
         setNewTitle('');
         setNewPassword('');
         setModalOpen(false);
