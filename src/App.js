@@ -47,7 +47,7 @@ function App() {
               <Route path="/room/:roomId/manageMain" element={<ManageMainPage/>}/>
               <Route path="/manageCreate" element={<ManageCreatePage/>}/>
               <Route path="/mypage" element={<MyPage />} />
-              <Route path="/manageRead" element={<ManageReadPage/>}/>
+              <Route path="/room/:roomId/question/:questionId/manageRead" element={<ManageReadPage/>}/>
               <Route path="/manageModify" element={<ManageModifyPage/>}/>
               <Route path="/forgot-password" element={<ForgotPassword />} />
             </Routes>
