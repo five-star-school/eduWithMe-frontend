@@ -13,7 +13,7 @@ function RoomMain() {
     const [searchKeyword, setSearchKeyword] = useState('');
     const { roomId } = useParams();
     const navigate = useNavigate();
-    const questionsPerPage = 5;
+    const questionsPerPage = 10;
 
     useEffect(() => {
         const token = getCookie('AccessToken');
