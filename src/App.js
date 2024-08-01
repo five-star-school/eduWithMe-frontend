@@ -16,6 +16,7 @@ import ManageReadPage from './pages/ManageReadPage';
 import ManageModifyPage from './pages/ManageModifyPage';
 import { AuthProvider } from './util/AuthContext';
 import ForgotPassword from './components/ForgotPassword';
+import MyRoomPage from './pages/MyRoomPage';
 
 function HomePage() {
   return (
@@ -50,6 +51,7 @@ function App() {
               <Route path="/room/:roomId/question/:questionId/manageRead" element={<ManageReadPage/>}/>
               <Route path="/manageModify" element={<ManageModifyPage/>}/>
               <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/myroom" element={<MyRoomPage />} />
             </Routes>
           </div>
         </Router>
