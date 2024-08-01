@@ -6,9 +6,9 @@ function QuestionTable({ problems, roomId }) {
   const navigate = useNavigate();
 
   const handleQuestionClick = (questionId) => {
-    navigate(`/room/${roomId}/question/${questionId}/manage`);
+    navigate(`/room/${roomId}/question/${questionId}/manageRead`);
   };
-
+  
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     if (isNaN(date.getTime())) {
