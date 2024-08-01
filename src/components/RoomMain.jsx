@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from "../util/axiosConfig";
 import { getCookie } from '../util/cookie';
 import styles from '../styles/RoomMainPage.module.css';
+import { format } from 'date-fns';
 
 function RoomMain() {
     const [questions, setQuestions] = useState([]);
@@ -54,14 +55,7 @@ function RoomMain() {
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
-        if (isNaN(date.getTime())) {
-            return 'Invalid Date';
-        }
-        return date.toLocaleDateString('ko-KR', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit'
-        });
+        return format(date, 'yyyy-MM-dd HH:mm'); 
     };
 
     const handleQuestionClick = (questionId) => {
