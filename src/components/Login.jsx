@@ -1,5 +1,5 @@
-import React, { useRef, useState, useContext } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useRef, useState, useContext, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import styles from '../styles/Login.module.css';
 import { FcGoogle } from "react-icons/fc";
 import { RiKakaoTalkFill } from "react-icons/ri";
@@ -8,20 +8,18 @@ import { AuthContext } from '../util/AuthContext';
 
 function Login() {
     const navigate = useNavigate();
+    const location = useLocation();
     const emailInput = useRef();
     const passwordInput = useRef();
     const [loginError, setLoginError] = useState('');
     const { login } = useContext(AuthContext);
 
-    const isEmailValid = (email) => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-    };
-
-    const isPasswordValid = (password) => {
-        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-        return passwordRegex.test(password);
-    };
+    useEffect(() => {
+        if (location.state?.email && location.state?.tempPassword) {
+            emailInput.current.value = location.state.email;
+            passwordInput.current.value = location.state.tempPassword;
+        }
+    }, [location]);
 
     const handleLoginClick = async (e) => {
         e.preventDefault();
@@ -29,17 +27,7 @@ function Login() {
         const password = passwordInput.current?.value;
 
         if (!email || !password) {
-            setLoginError('빈 칸을 전부 입력 해주세요.');
-            return;
-        }
-
-        if (!isEmailValid(email)) {
-            setLoginError('유효한 이메일 주소를 입력해주세요.');
-            return;
-        }
-
-        if (!isPasswordValid(password)) {
-            setLoginError('이메일과 비밀번호를 확인해주세요.');
+            setLoginError('이메일과 비밀번호를 모두 입력해주세요.');
             return;
         }
 
@@ -66,7 +54,7 @@ function Login() {
             }
         } catch (error) {
             console.error('로그인 오류:', error);
-            setLoginError('일치하는 회원이 없습니다.');
+            setLoginError('이메일 또는 비밀번호가 올바르지 않습니다.');
         }
     };
 

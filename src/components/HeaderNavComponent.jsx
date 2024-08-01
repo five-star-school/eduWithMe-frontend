@@ -16,7 +16,7 @@ function HeaderNavComponent({ isRoomManager }) {
     };
 
     const handleAdminPageClick = () => {
-        navigate('/manageMain');
+        navigate(`/room/${roomId}/manageMain`);
     };
 
     return (
