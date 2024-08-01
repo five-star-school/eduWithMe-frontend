@@ -95,7 +95,7 @@ function ManageMainPage() {
       <div className={styles.managePage}>
         <SidebarComponent />
         <div className={styles.mainContent}>
-          <ManageMainHeaderNav />
+          <ManageMainHeaderNav roomId={roomId} />
           <div className={styles.manageContent}>
             <div className={styles.contentHeader}>
               <div className={styles.searchContainer}>
