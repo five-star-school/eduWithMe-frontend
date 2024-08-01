@@ -70,7 +70,7 @@ function UserInfo({ user }) {
                         </button>
                     ) : (
                         <button className={styles.profileEditButton} onClick={handleEditClick}>
-                            프로필 수정
+                            닉네임 수정
                         </button>
                     )}
                 </div>
