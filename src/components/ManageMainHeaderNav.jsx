@@ -4,7 +4,7 @@ import styles from '../styles/ManageMainHeaderNav.module.css';
 import axios from '../util/axiosConfig';
 import { getCookie } from '../util/cookie';
 
-function ManageMainHeaderNav({ roomId, roomName }) { // 수정
+function ManageMainHeaderNav({ roomId, roomName }) {
   const navigate = useNavigate();
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [newRoomName, setNewRoomName] = useState('');
@@ -82,7 +82,7 @@ function ManageMainHeaderNav({ roomId, roomName }) { // 수정
                 <h2>방 수정</h2>
                 <div className={styles.formGroup}>
                   <label>현재 방 이름</label>
-                  <input type="text" value={roomName} disabled />
+                  <input type="text" value={roomName || '로딩 중...'} disabled />
                 </div>
                 <div className={styles.formGroup}>
                   <label>새 방 이름</label>
