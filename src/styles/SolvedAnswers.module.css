@@ -37,28 +37,28 @@
 
 .problemTable tr td:nth-child(1) {
     text-align: left;
-    width: 10%;
+    width: 15%;
 }
 
-.problemTable tr td:nth-child(4) {
-    text-align: left;
-    width: 10%;
-} 
-
-.problemTable tr td:nth-child(5) { /* 해결 날짜 */
-    text-align: left;
-    width: 30%;
-}
-
-.problemTable tr td:nth-child(2) { /* 카테고리 */
+.problemTable tr td:nth-child(2) { 
     text-align: left;
     width: 10%; 
 }
 
-.problemTable tr td:nth-child(3) { /* 문제 제목 */
-    font-weight: 600;
+.problemTable tr td:nth-child(3) { 
+    width: 10%; 
+}
+
+.problemTable tr td:nth-child(4) {
+    text-align: left;
     color: #3697ff; 
-    width: 40%; 
+    font-weight: 600;
+    width: 40%;
+} 
+
+.problemTable tr td:nth-child(5) { 
+    text-align: left;
+    width: 10%;
 }
 
 .solvedProblems h2 {

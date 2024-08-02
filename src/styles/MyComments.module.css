@@ -38,18 +38,18 @@
 
 .problemTable tr td:nth-child(1) {
     text-align: left;
+    width: 15%;
+}
+
+.problemTable tr td:nth-child(2) { 
     width: 10%;
 }
 
-.problemTable tr td:nth-child(2) { /* 댓글 내용 */
+.problemTable tr td:nth-child(3) { 
+    text-align: left;
     font-weight: 600;
     color: #3697ff; 
-    width: 40%;
-}
-
-.problemTable tr td:nth-child(3) { /* 작성일 */
-    text-align: left;
-    width: 30%;
+    width: 60%;
 }
 
 
