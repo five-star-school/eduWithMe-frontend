@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import ManageMainHeaderNav from '../components/ManageMainHeaderNav';
+import HeaderNavComponent from '../components/HeaderNavComponent';
 import SidebarComponent from '../components/SidebarComponent';
 import axios from "../util/axiosConfig";
 import { getCookie } from '../util/cookie';
 import styles from '../styles/ManageMainPage.module.css';
 import { format } from 'date-fns';
+import ManageMainHeaderNav from "../components/ManageMainHeaderNav";
 
 function ManageMainPage() {
     const [questions, setQuestions] = useState([]);
@@ -15,6 +16,7 @@ function ManageMainPage() {
     const [searchKeyword, setSearchKeyword] = useState('');
     const [roomName, setRoomName] = useState('');
     const [isPrivate, setIsPrivate] = useState(false);
+    const [isManager, setIsManager] = useState(false);
     const { roomId } = useParams();
     const navigate = useNavigate();
     const location = useLocation();
@@ -27,21 +29,20 @@ function ManageMainPage() {
         if (token === null) {
             navigate('/login');
         } else {
-            fetchQuestions();
             fetchRoomInfo();
+            fetchQuestions();
         }
     }, [roomId, page, sortField, sortDirection]);
 
     const fetchRoomInfo = async () => {
         try {
-            const response = await axios.get(`/rooms/${roomId}`);
+            const response = await axios.get(`/rooms/one/${roomId}`);
             if (response.data && response.data.data) {
-                const rooms = response.data.data;
-                const room = rooms.find(r => r.roomId === parseInt(roomId, 10));
-                if (room) {
-                    setRoomName(room.roomName);
-                    setIsPrivate(room.roomPassword !== null && room.roomPassword !== '');
-                }
+                const roomData = response.data.data;
+                setRoomName(roomData.roomName);
+                setIsPrivate(roomData.roomPassword !== null && roomData.roomPassword !== '');
+                const currentUserId = parseInt(getCookie('userId'), 10);
+                setIsManager(roomData.managerUserId === currentUserId);
             }
         } catch (error) {
             console.error('Failed to fetch room info:', error);
@@ -135,94 +136,125 @@ function ManageMainPage() {
     };
 
     const handleSortByDate = () => {
+        setSortField('createdAt');
+        setSortDirection(prevDirection => prevDirection === 'asc' ? 'desc' : 'asc');
+        setPage(0);
+    };
+
+    const handleSortByDifficulty = () => {
+        setSortField('difficulty');
         setSortDirection(prevDirection => prevDirection === 'asc' ? 'desc' : 'asc');
         setPage(0);
     };
 
     const sortedQuestions = useMemo(() => {
         return [...questions].sort((a, b) => {
-            const dateA = new Date(a.createdAt);
-            const dateB = new Date(b.createdAt);
-            return sortDirection === 'asc' ? dateA - dateB : dateB - dateA;
+            if (sortField === 'createdAt') {
+                const dateA = new Date(a.createdAt);
+                const dateB = new Date(b.createdAt);
+                return sortDirection === 'asc' ? dateA - dateB : dateB - dateA;
+            } else if (sortField === 'difficulty') {
+                return sortDirection === 'asc'
+                    ? a.difficulty.localeCompare(b.difficulty)
+                    : b.difficulty.localeCompare(a.difficulty);
+            }
+            return 0;
         });
-    }, [questions, sortDirection]);
+    }, [questions, sortField, sortDirection]);
 
     return (
         <div className={styles.managePage}>
             <SidebarComponent />
             <div className={styles.mainContent}>
-                <ManageMainHeaderNav roomId={roomId} roomName={roomName} roomIsPrivate={isPrivate} onQuestionListClick={handleQuestionListClick} />
-                <div className={styles.manageContent}>
-                    <div className={styles.contentHeader}>
-                        <div className={styles.searchContainer}>
-                            <input
-                                type="text"
-                                className={styles.searchInput}
-                                placeholder="검색어 ( 제목 )"
-                                value={searchKeyword}
-                                onChange={handleSearchInputChange}
-                            />
-                            <button className={styles.searchButton} onClick={handleSearch}>검색</button>
+                <ManageMainHeaderNav
+                    roomId={roomId}
+                    roomName={roomName}
+                    roomIsPrivate={isPrivate}
+                    onQuestionListClick={handleQuestionListClick}
+                    isManager={isManager}
+                />
+                {isManager ? (
+                    <div className={styles.manageContent}>
+                        <div className={styles.contentHeader}>
+                            <div className={styles.searchContainer}>
+                                <input
+                                    type="text"
+                                    className={styles.searchInput}
+                                    placeholder="검색어 ( 제목 )"
+                                    value={searchKeyword}
+                                    onChange={handleSearchInputChange}
+                                />
+                                <button className={styles.searchButton} onClick={handleSearch}>검색</button>
+                            </div>
+                            <div className={styles.actionButtons}>
+                                <button
+                                    className={styles.filterButton}
+                                    onClick={handleSortByDifficulty}
+                                >
+                                    난이도 {sortField === 'difficulty' && (sortDirection === 'asc' ? '(쉬운 순)' : '(어려운 순)')}
+                                </button>
+                                <button
+                                    className={styles.filterButton}
+                                    onClick={handleSortByDate}
+                                >
+                                    출제일 {sortField === 'createdAt' && (sortDirection === 'asc' ? '(오래된 순)' : '(최신 순)')}
+                                </button>
+                                <button className={styles.createButton} onClick={handleCreateClick}>생성</button>
+                            </div>
                         </div>
-                        <div className={styles.actionButtons}>
-                            <button className={styles.filterButton}>난이도</button>
-                            <button
-                                className={styles.filterButton}
-                                onClick={handleSortByDate}
-                            >
-                                출제일 {sortDirection === 'asc' ? '(오래된 순)' : '(최신 순)'}
-                            </button>
-                            <button className={styles.createButton} onClick={handleCreateClick}>생성</button>
-                        </div>
-                    </div>
-                    {loading ? (
-                        <p>로딩 중...</p>
-                    ) : (
-                        sortedQuestions.length > 0 ? (
-                            <table className={styles.problemTable}>
-                                <thead>
-                                <tr>
-                                    <th>문제 번호</th>
-                                    <th>카테고리</th>
-                                    <th>문제 제목</th>
-                                    <th>난이도</th>
-                                    <th>출제일</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {sortedQuestions.map((question) => (
-                                    <tr key={question.questionId} onClick={() => handleQuestionClick(question.questionId)} style={{ cursor: 'pointer' }}>
-                                        <td>{question.roomQuestionNumber}</td>
-                                        <td>{question.category}</td>
-                                        <td>{question.title}</td>
-                                        <td>{question.difficulty}</td>
-                                        <td>{question.createdAt ? formatDate(question.createdAt) : 'N/A'}</td>
-                                    </tr>
-                                ))}
-                                </tbody>
-                            </table>
+                        {loading ? (
+                            <p>로딩 중...</p>
                         ) : (
-                            <p>검색 결과가 없습니다.</p>
-                        )
-                    )}
-                    {totalPages > 1 && (
-                        <div className={styles.pagination}>
-                            <button
-                                disabled={page === 0}
-                                onClick={() => setPage(prev => Math.max(0, prev - 1))}
-                            >
-                                이전
-                            </button>
-                            <span>{page + 1} / {totalPages}</span>
-                            <button
-                                disabled={page >= totalPages - 1}
-                                onClick={() => setPage(prev => Math.min(totalPages - 1, prev + 1))}
-                            >
-                                다음
-                            </button>
-                        </div>
-                    )}
-                </div>
+                            sortedQuestions.length > 0 ? (
+                                <table className={styles.problemTable}>
+                                    <thead>
+                                    <tr>
+                                        <th>문제 번호</th>
+                                        <th>카테고리</th>
+                                        <th>문제 제목</th>
+                                        <th>난이도</th>
+                                        <th>출제일</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {sortedQuestions.map((question) => (
+                                        <tr key={question.questionId} onClick={() => handleQuestionClick(question.questionId)} style={{ cursor: 'pointer' }}>
+                                            <td>{question.roomQuestionNumber}</td>
+                                            <td>{question.category}</td>
+                                            <td>{question.title}</td>
+                                            <td>{question.difficulty}</td>
+                                            <td>{question.createdAt ? formatDate(question.createdAt) : 'N/A'}</td>
+                                        </tr>
+                                    ))}
+                                    </tbody>
+                                </table>
+                            ) : (
+                                <p>검색 결과가 없습니다.</p>
+                            )
+                        )}
+                        {totalPages > 1 && (
+                            <div className={styles.pagination}>
+                                <button
+                                    disabled={page === 0}
+                                    onClick={() => setPage(prev => Math.max(0, prev - 1))}
+                                >
+                                    이전
+                                </button>
+                                <span>{page + 1} / {totalPages}</span>
+                                <button
+                                    disabled={page >= totalPages - 1}
+                                    onClick={() => setPage(prev => Math.min(totalPages - 1, prev + 1))}
+                                >
+                                    다음
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                ) : (
+                    <div className={styles.studentContent}>
+                        <p>이 페이지에 대한 접근 권한이 없습니다.</p>
+                    </div>
+                )}
             </div>
         </div>
     );

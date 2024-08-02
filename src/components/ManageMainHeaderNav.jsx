@@ -1,40 +1,20 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from '../styles/ManageMainHeaderNav.module.css';
 import axios from '../util/axiosConfig';
 import { getCookie } from '../util/cookie';
 
-function ManageMainHeaderNav({ roomId, roomName, roomIsPrivate, onQuestionListClick }) {
+function ManageMainHeaderNav({ roomId, roomName, roomIsPrivate, onQuestionListClick, isRoomInfoLoading, isManager }) {
   const navigate = useNavigate();
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [newRoomName, setNewRoomName] = useState('');
-  const [isPrivate, setIsPrivate] = useState(roomIsPrivate);
-
-  const fetchRoomInfo = useCallback(async () => {
-    if (!roomId) return;
-
-    try {
-      const response = await axios.get(`/rooms/${roomId}`);
-      if (response.data && Array.isArray(response.data.data)) {
-        const room = response.data.data.find(r => r.roomId === parseInt(roomId, 10));
-        if (room) {
-          setIsPrivate(room.roomPassword !== null);
-        }
-      }
-    } catch (error) {
-      console.error('Failed to fetch room info:', error);
-      // 알림창을 제거하고 콘솔에만 오류를 기록합니다.
-    }
-  }, [roomId]);
-
-  useEffect(() => {
-    fetchRoomInfo();
-  }, [fetchRoomInfo]);
 
   const handleDeleteRoom = async () => {
     const confirmDelete = window.confirm('정말로 이 방을 삭제하시겠습니까? 삭제한 데이터는 복구할 수 없습니다.');
 
-    if (!confirmDelete) return;
+    if (!confirmDelete) {
+      return;
+    }
 
     try {
       const token = getCookie('AccessToken');
@@ -44,7 +24,9 @@ function ManageMainHeaderNav({ roomId, roomName, roomIsPrivate, onQuestionListCl
       }
 
       await axios.delete(`/rooms/${roomId}`, {
-        headers: { 'AccessToken': token }
+        headers: {
+          'AccessToken': token,
+        }
       });
 
       alert('방이 삭제되었습니다.');
@@ -72,7 +54,9 @@ function ManageMainHeaderNav({ roomId, roomName, roomIsPrivate, onQuestionListCl
         roomId: roomId,
         roomName: newRoomName,
       }, {
-        headers: { 'AccessToken': token }
+        headers: {
+          'AccessToken': token,
+        }
       });
 
       alert('방 이름이 수정되었습니다.');
@@ -87,8 +71,8 @@ function ManageMainHeaderNav({ roomId, roomName, roomIsPrivate, onQuestionListCl
   return (
       <nav className={styles.headerNav}>
         <div className={styles.leftButtons}>
-        <span className={`${styles.visibilityIndicator} ${isPrivate ? styles.private : styles.public}`}>
-          {isPrivate ? 'Private' : 'Public'}
+        <span className={`${styles.visibilityIndicator} ${roomIsPrivate ? styles.private : styles.public}`}>
+          {roomIsPrivate ? 'Private' : 'Public'}
         </span>
           <button
               className={`${styles.navButton} ${styles.activeButton}`}
@@ -98,8 +82,15 @@ function ManageMainHeaderNav({ roomId, roomName, roomIsPrivate, onQuestionListCl
           </button>
         </div>
         <div className={styles.rightButtons}>
-          <button className={`${styles.navButton} ${styles.editButton}`} onClick={() => setEditModalOpen(true)}>방 수정</button>
-          <button className={`${styles.navButton} ${styles.deleteButton}`} onClick={handleDeleteRoom}>방 삭제</button>
+          <button
+              className={`${styles.navButton} ${styles.editButton}`}
+              onClick={() => setEditModalOpen(true)}
+          >
+            방 수정
+          </button>
+          <button className={`${styles.navButton} ${styles.deleteButton}`} onClick={handleDeleteRoom}>
+            방 삭제
+          </button>
         </div>
 
         {isEditModalOpen && (
@@ -108,7 +99,7 @@ function ManageMainHeaderNav({ roomId, roomName, roomIsPrivate, onQuestionListCl
                 <h2>방 수정</h2>
                 <div className={styles.formGroup}>
                   <label>현재 방 이름</label>
-                  <input type="text" value={roomName || '로딩 중...'} disabled />
+                  <input type="text" value={roomName || ''} disabled />
                 </div>
                 <div className={styles.formGroup}>
                   <label>새 방 이름</label>

@@ -3,6 +3,7 @@ import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import styles from '../styles/HeaderNavComponent.module.css';
 
 function HeaderNavComponent({ isRoomManager, roomName, isPrivate }) {
+    console.log('HeaderNavComponent props:', { isRoomManager, roomName, isPrivate }); // 디버깅 로그 추가
     const navigate = useNavigate();
     const { roomId } = useParams();
     const location = useLocation();
