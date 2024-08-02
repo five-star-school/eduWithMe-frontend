@@ -61,7 +61,7 @@ function ManageMainPage() {
       setLoading(false);
     }
   };
-  
+
   const handleSearch = async () => {
     try {
       setLoading(true);
@@ -89,7 +89,7 @@ function ManageMainPage() {
     } finally {
       setLoading(false);
     }
-  };  
+  };
 
   const handleSearchInputChange = (e) => {
     setSearchKeyword(e.target.value);
@@ -102,6 +102,10 @@ function ManageMainPage() {
 
   const handleQuestionClick = (questionId) => {
     navigate(`/room/${roomId}/question/${questionId}/manageRead`);
+  };
+
+  const handleCreateClick = () => {
+    navigate(`/room/${roomId}/manageCreate`);
   };
 
   return (
@@ -124,7 +128,7 @@ function ManageMainPage() {
             <div className={styles.actionButtons}>
               <button className={styles.filterButton}>난이도</button>
               <button className={styles.filterButton}>출제일</button>
-              <button className={styles.createButton} onClick={() => navigate(`/manageCreate`)}>생성</button>
+              <button className={styles.createButton} onClick={handleCreateClick}>생성</button>
             </div>
           </div>
           {loading ? (
