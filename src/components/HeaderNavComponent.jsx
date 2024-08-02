@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import styles from '../styles/HeaderNavComponent.module.css';
 
-function HeaderNavComponent({ isRoomManager }) {
+function HeaderNavComponent({ isRoomManager, roomName, isPrivate }) {
     const navigate = useNavigate();
     const { roomId } = useParams();
     const location = useLocation();
@@ -21,11 +21,16 @@ function HeaderNavComponent({ isRoomManager }) {
 
     return (
         <nav className={styles.headerNav}>
-            <button className={styles.navButton} onClick={handleQuestionListClick}>문제 목록</button>
-            <button className={styles.navButton}>AI 아바 만들 예정</button>
-            {isRoomManager && (
-                <button className={styles.navButton} onClick={handleAdminPageClick}>관리자 페이지</button>
-            )}
+            <span className={`${styles.visibilityIndicator} ${isPrivate ? styles.private : styles.public}`}>
+                {isPrivate ? 'Private' : 'Public'}
+            </span>
+            <div className={styles.navButtons}>
+                <button className={styles.navButton} onClick={handleQuestionListClick}>문제 목록</button>
+                <button className={styles.navButton}>AI 아바 만들 예정</button>
+                {isRoomManager && (
+                    <button className={styles.navButton} onClick={handleAdminPageClick}>관리자 페이지</button>
+                )}
+            </div>
         </nav>
     );
 }
