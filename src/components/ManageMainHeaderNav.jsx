@@ -95,7 +95,7 @@ function ManageMainHeaderNav({ roomId, roomName, onQuestionListClick }) {
                   <input type="text" value={newRoomName} onChange={(e) => setNewRoomName(e.target.value)} />
                 </div>
                 <div className={styles.modalActions}>
-                  <button className={styles.saveButton} onClick={handleEditRoom}>수정</button>
+                  <button className={styles.saveButton} onClick={handleEditRoom}>저장</button>
                   <button className={styles.cancelButton} onClick={() => setEditModalOpen(false)}>취소</button>
                 </div>
               </div>
