@@ -122,11 +122,8 @@ function ManageMainPage() {
       <div className={styles.managePage}>
         <SidebarComponent />
         <div className={styles.mainContent}>
-<<<<<<< HEAD
           <ManageMainHeaderNav roomId={roomId} roomName={roomName} /> {/* 수정 */}
-=======
-          <ManageMainHeaderNav roomId={roomId} onQuestionListClick={handleQuestionListClick} />
->>>>>>> 7f4388da408607c3c49f5144ad7808cd43b17009
+          <ManageMainHeaderNav roomId={roomId} onQuestionListClick={handleQuestionListClick}  />
           <div className={styles.manageContent}>
           <div className={styles.contentHeader}>
             <div className={styles.searchContainer}>
