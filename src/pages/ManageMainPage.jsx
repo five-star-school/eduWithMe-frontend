@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import ManageMainHeaderNav from '../components/ManageMainHeaderNav';
 import SidebarComponent from '../components/SidebarComponent';
 import axios from "../util/axiosConfig";
@@ -16,6 +16,7 @@ function ManageMainPage() {
   const [roomName, setRoomName] = useState('');
   const { roomId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const questionsPerPage = 10;
 
   useEffect(() => {
@@ -25,7 +26,7 @@ function ManageMainPage() {
     } else {
       fetchQuestions();
     }
-  }, [roomId, page, navigate]);
+  }, [roomId, page]);
 
   const fetchQuestions = async () => {
     try {
@@ -36,17 +37,23 @@ function ManageMainPage() {
           size: questionsPerPage,
         }
       });
-      console.log('API Response:', response.data);
       if (response.data && response.data.data) {
-        const questionsData = response.data.data.content;
-        setQuestions(questionsData);
+        const questionsData = response.data.data.content || [];
+        // 각 질문에 roomQuestionNumber 추가
+        const questionsWithNumber = questionsData.map((question, index) => ({
+          ...question,
+          roomQuestionNumber: page * questionsPerPage + index + 1
+        }));
+        setQuestions(questionsWithNumber);
         setTotalPages(response.data.data.totalPages);
         setRoomName(response.data.roomName); // 추가
       } else {
         console.error('Unexpected data format:', response.data);
+        setQuestions([]);
       }
     } catch (error) {
       console.error('Failed to fetch questions:', error);
+      setQuestions([]);
       if (error.response && error.response.status === 403) {
         navigate('/login');
       }
@@ -65,16 +72,22 @@ function ManageMainPage() {
           size: questionsPerPage,
         }
       });
-      console.log('Search API Response:', response.data);
-      if (response.data && response.data.data) {
-        setQuestions(response.data.data.content);
-        setTotalPages(response.data.data.totalPages);
+
+      if (response.data && Array.isArray(response.data.data)) {
+        const questionsWithNumber = response.data.data.map((question, index) => ({
+          ...question,
+          roomQuestionNumber: index + 1
+        }));
+        setQuestions(questionsWithNumber);
+        setTotalPages(Math.ceil(response.data.data.length / questionsPerPage));
         setPage(0);
       } else {
         console.error('Unexpected search data format:', response.data);
+        setQuestions([]);
       }
     } catch (error) {
       console.error('Failed to search questions:', error);
+      setQuestions([]);
     } finally {
       setLoading(false);
     }
@@ -93,33 +106,49 @@ function ManageMainPage() {
     navigate(`/room/${roomId}/question/${questionId}/manageRead`);
   };
 
+  const handleCreateClick = () => {
+    navigate(`/room/${roomId}/manageCreate`);
+  };
+
+  const handleQuestionListClick = () => {
+    if (location.pathname.includes('/question/')) {
+      navigate(`/room/${roomId}/manageMain`);
+    } else {
+      window.location.reload();
+    }
+  };
+
   return (
       <div className={styles.managePage}>
         <SidebarComponent />
         <div className={styles.mainContent}>
+<<<<<<< HEAD
           <ManageMainHeaderNav roomId={roomId} roomName={roomName} /> {/* 수정 */}
+=======
+          <ManageMainHeaderNav roomId={roomId} onQuestionListClick={handleQuestionListClick} />
+>>>>>>> 7f4388da408607c3c49f5144ad7808cd43b17009
           <div className={styles.manageContent}>
-            <div className={styles.contentHeader}>
-              <div className={styles.searchContainer}>
-                <input
-                    type="text"
-                    className={styles.searchInput}
-                    placeholder="검색어 ( 제목 )"
-                    value={searchKeyword}
-                    onChange={handleSearchInputChange}
-                />
-                <button className={styles.searchButton} onClick={handleSearch}>검색</button>
-              </div>
-              <div className={styles.actionButtons}>
-                <button className={styles.filterButton}>난이도</button>
-                <button className={styles.filterButton}>출제일</button>
-                <button className={styles.createButton} onClick={() => navigate(`/manageCreate`)}>생성</button>
-              </div>
+          <div className={styles.contentHeader}>
+            <div className={styles.searchContainer}>
+              <input
+                type="text"
+                className={styles.searchInput}
+                placeholder="검색어 ( 제목 )"
+                value={searchKeyword}
+                onChange={handleSearchInputChange}
+              />
+              <button className={styles.searchButton} onClick={handleSearch}>검색</button>
             </div>
-            {loading ? (
-                <p>로딩 중...</p>
-            ) : (
-                <>
+            <div className={styles.actionButtons}>
+              <button className={styles.filterButton}>난이도</button>
+              <button className={styles.filterButton}>출제일</button>
+              <button className={styles.createButton} onClick={handleCreateClick}>생성</button>
+            </div>
+          </div>
+          {loading ? (
+            <p>로딩 중...</p>
+          ) : (
+              questions.length > 0 ? (
                   <table className={styles.problemTable}>
                     <thead>
                     <tr>
@@ -133,7 +162,7 @@ function ManageMainPage() {
                     <tbody>
                     {questions.map((question) => (
                         <tr key={question.questionId} onClick={() => handleQuestionClick(question.questionId)} style={{ cursor: 'pointer' }}>
-                          <td>{question.questionId}</td>
+                          <td>{question.roomQuestionNumber}</td>
                           <td>{question.category}</td>
                           <td>{question.title}</td>
                           <td>{question.difficulty}</td>
@@ -142,28 +171,30 @@ function ManageMainPage() {
                     ))}
                     </tbody>
                   </table>
-                  {totalPages > 1 && (
-                      <div className={styles.pagination}>
-                        <button
-                            disabled={page === 0}
-                            onClick={() => setPage(prev => Math.max(0, prev - 1))}
-                        >
-                          이전
-                        </button>
-                        <span>{page + 1} / {totalPages}</span>
-                        <button
-                            disabled={page >= totalPages - 1}
-                            onClick={() => setPage(prev => Math.min(totalPages - 1, prev + 1))}
-                        >
-                          다음
-                        </button>
-                      </div>
-                  )}
-                </>
-            )}
-          </div>
+              ) : (
+                  <p>검색 결과가 없습니다.</p>
+              )
+          )}
+          {totalPages > 1 && (
+            <div className={styles.pagination}>
+              <button
+                disabled={page === 0}
+                onClick={() => setPage(prev => Math.max(0, prev - 1))}
+              >
+                이전
+              </button>
+              <span>{page + 1} / {totalPages}</span>
+              <button
+                disabled={page >= totalPages - 1}
+                onClick={() => setPage(prev => Math.min(totalPages - 1, prev + 1))}
+              >
+                다음
+              </button>
+            </div>
+          )}
         </div>
       </div>
+    </div>
   );
 }
 

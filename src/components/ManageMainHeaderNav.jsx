@@ -4,7 +4,9 @@ import styles from '../styles/ManageMainHeaderNav.module.css';
 import axios from '../util/axiosConfig';
 import { getCookie } from '../util/cookie';
 
-function ManageMainHeaderNav({ roomId, roomName }) {
+
+function ManageMainHeaderNav({ roomId, roomName, onQuestionListClick }) {
+
   const navigate = useNavigate();
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [newRoomName, setNewRoomName] = useState('');
@@ -70,10 +72,23 @@ function ManageMainHeaderNav({ roomId, roomName }) {
 
   return (
       <nav className={styles.headerNav}>
-        <button className={`${styles.navButton} ${styles.activeButton}`}>문제 목록</button>
+        <button
+            className={`${styles.navButton} ${styles.activeButton}`}
+            onClick={onQuestionListClick}
+        >
+          문제 목록
+        </button>
         <div className={styles.rightButtons}>
           <button className={`${styles.navButton} ${styles.editButton}`} onClick={() => setEditModalOpen(true)}>방 수정</button>
           <button className={`${styles.navButton} ${styles.deleteButton}`} onClick={handleDeleteRoom}>방 삭제</button>
+
+          <button className={`${styles.navButton} ${styles.editButton}`}>방 수정</button>
+          <button
+              className={`${styles.navButton} ${styles.deleteButton}`}
+              onClick={handleDeleteRoom}
+          >
+            방 삭제
+          </button>
         </div>
 
         {isEditModalOpen && (
