@@ -35,10 +35,8 @@ function ManageMainPage() {
           size: questionsPerPage,
         }
       });
-      console.log('API Response:', response.data);
       if (response.data && response.data.data) {
-        const questionsData = response.data.data.content;
-        setQuestions(questionsData);
+        setQuestions(response.data.data.content);
         setTotalPages(response.data.data.totalPages);
       } else {
         console.error('Unexpected data format:', response.data);
@@ -63,7 +61,6 @@ function ManageMainPage() {
           size: questionsPerPage,
         }
       });
-      console.log('Search API Response:', response.data);
       if (response.data && response.data.data) {
         setQuestions(response.data.data.content);
         setTotalPages(response.data.data.totalPages);
@@ -91,6 +88,10 @@ function ManageMainPage() {
     navigate(`/room/${roomId}/question/${questionId}/manageRead`);
   };
 
+  const handleCreateClick = () => {
+    navigate(`/room/${roomId}/manageCreate`);
+  };
+
   return (
       <div className={styles.managePage}>
         <SidebarComponent />
@@ -111,7 +112,7 @@ function ManageMainPage() {
               <div className={styles.actionButtons}>
                 <button className={styles.filterButton}>난이도</button>
                 <button className={styles.filterButton}>출제일</button>
-                <button className={styles.createButton} onClick={() => navigate(`/manageCreate`)}>생성</button>
+                <button className={styles.createButton} onClick={handleCreateClick}>생성</button>
               </div>
             </div>
             {loading ? (

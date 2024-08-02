@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from "../util/axiosConfig";
 import styles from '../styles/QuestionDetail.module.css';
+import { getCookie } from '../util/cookie';
 
 function CommentSection() {
     const [commentList, setCommentList] = useState([]);
@@ -14,7 +15,13 @@ function CommentSection() {
     const [totalComments, setTotalComments] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [currentUserId, setCurrentUserId] = useState(null);
     const { questionId } = useParams();
+
+    useEffect(() => {
+        const userId = getCookie('userId');
+        setCurrentUserId(userId ? parseInt(userId, 10) : null);
+    }, []);
 
     const fetchComments = useCallback(async (page, order) => {
         setIsLoading(true);
@@ -49,6 +56,27 @@ function CommentSection() {
         fetchComments(0, sortOrder);
     }, [fetchComments, sortOrder]);
 
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return date.toLocaleString('ko-KR', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    };
+
+    const isCommentEdited = (createdAt, updatedAt) => {
+        const created = new Date(createdAt);
+        const updated = new Date(updatedAt);
+        return updated > created;
+    };
+
+    const isCommentOwner = (comment) => {
+        return currentUserId === comment.userId;
+    };
+
     const handleSort = (order) => {
         setSortOrder(order);
     };
@@ -69,9 +97,10 @@ function CommentSection() {
         try {
             await axios.post(`/question/${questionId}/comments`, { comment: newComment });
             setNewComment('');
-            fetchComments(0);
+            fetchComments(0, sortOrder);
         } catch (error) {
             console.error('Failed to add comment:', error);
+            alert('댓글 작성에 실패했습니다.');
         }
     };
 
@@ -82,44 +111,34 @@ function CommentSection() {
 
     const handleSaveClick = async (commentId) => {
         try {
-            await axios.put(`/question/${questionId}/comments/${commentId}`, { comment: editContent });
+            const response = await axios.put(`/question/${questionId}/comments/${commentId}`, { comment: editContent });
+            console.log('Updated comment data:', response.data.data);  // 디버깅용
+
+            setCommentList(prevComments =>
+                prevComments.map(comment =>
+                    comment.commentId === commentId
+                        ? {...response.data.data, updatedAt: new Date().toISOString()}
+                        : comment
+                )
+            );
             setEditingCommentId(null);
             setEditContent('');
-            fetchComments(currentPage);
         } catch (error) {
             console.error('Failed to update comment:', error);
+            alert(error.response?.data?.msg || '댓글 수정에 실패했습니다.');
         }
-    };
-
-    const handleCancelClick = () => {
-        setEditingCommentId(null);
-        setEditContent('');
-    };
-
-    const handleChange = (e) => {
-        setEditContent(e.target.value);
     };
 
     const handleDeleteClick = async (commentId) => {
         if (window.confirm('정말 삭제하시겠습니까?')) {
             try {
                 await axios.delete(`/question/${questionId}/comments/${commentId}`);
-                fetchComments(currentPage);
+                fetchComments(currentPage, sortOrder);
             } catch (error) {
                 console.error('Failed to delete comment:', error);
+                alert(error.response?.data?.msg || '댓글 삭제에 실패했습니다.');
             }
         }
-    };
-
-    const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-        const hours = String(date.getHours()).padStart(2, '0');
-        const minutes = String(date.getMinutes()).padStart(2, '0');
-
-        return `${year}-${month}-${day} ${hours}:${minutes}`;
     };
 
     const renderPagination = () => {
@@ -166,13 +185,16 @@ function CommentSection() {
                     <div key={comment.commentId} className={styles.commentItem}>
                         <div className={styles.commentHeader}>
                             <span className={styles.commentAuthor}>{comment.nickName}</span>
-                            <span className={styles.commentDate}>{formatDate(comment.updatedAt)}</span>
+                            <span className={styles.commentDate}>
+                                {formatDate(isCommentEdited(comment.createdAt, comment.updatedAt) ? comment.updatedAt : comment.createdAt)}
+                                {isCommentEdited(comment.createdAt, comment.updatedAt) && " (수정됨)"}
+                            </span>
                         </div>
                         {editingCommentId === comment.commentId ? (
                             <div className={styles.editingComment}>
                                 <textarea
                                     value={editContent}
-                                    onChange={handleChange}
+                                    onChange={(e) => setEditContent(e.target.value)}
                                     className={styles.editCommentInput}
                                 />
                                 <button
@@ -183,7 +205,7 @@ function CommentSection() {
                                 </button>
                                 <button
                                     className={styles.cancelButton}
-                                    onClick={handleCancelClick}
+                                    onClick={() => setEditingCommentId(null)}
                                 >
                                     취소
                                 </button>
@@ -191,20 +213,22 @@ function CommentSection() {
                         ) : (
                             <>
                                 <p className={styles.commentContent}>{comment.comment}</p>
-                                <div className={styles.commentActions}>
-                                    <button
-                                        className={styles.actionButton}
-                                        onClick={() => handleEditClick(comment.commentId, comment.comment)}
-                                    >
-                                        댓글 수정
-                                    </button>
-                                    <button
-                                        className={styles.actionButton}
-                                        onClick={() => handleDeleteClick(comment.commentId)}
-                                    >
-                                        댓글 삭제
-                                    </button>
-                                </div>
+                                {isCommentOwner(comment) && (
+                                    <div className={styles.commentActions}>
+                                        <button
+                                            className={styles.actionButton}
+                                            onClick={() => handleEditClick(comment.commentId, comment.comment)}
+                                        >
+                                            댓글 수정
+                                        </button>
+                                        <button
+                                            className={styles.actionButton}
+                                            onClick={() => handleDeleteClick(comment.commentId)}
+                                        >
+                                            댓글 삭제
+                                        </button>
+                                    </div>
+                                )}
                             </>
                         )}
                     </div>
@@ -225,14 +249,14 @@ function CommentSection() {
                     className={styles.newCommentInput}
                 />
                 <div className={styles.submitCommentWrapper}>
-                <button
-                    className={styles.submitComment}
-                    onClick={handleAddComment}
-                >
-                    댓글 등록
-                </button>
+                    <button
+                        className={styles.submitComment}
+                        onClick={handleAddComment}
+                    >
+                        댓글 등록
+                    </button>
+                </div>
             </div>
-        </div>
         </div>
     );
 }
