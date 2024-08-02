@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from '../styles/ManageMainHeaderNav.module.css';
 import axios from '../util/axiosConfig';
@@ -8,34 +8,33 @@ function ManageMainHeaderNav({ roomId, roomName, roomIsPrivate, onQuestionListCl
   const navigate = useNavigate();
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [newRoomName, setNewRoomName] = useState('');
-  const [isPrivate, setIsPrivate] = useState(false);
+  const [isPrivate, setIsPrivate] = useState(roomIsPrivate);
+
+  const fetchRoomInfo = useCallback(async () => {
+    if (!roomId) return;
+
+    try {
+      const response = await axios.get(`/rooms/${roomId}`);
+      if (response.data && Array.isArray(response.data.data)) {
+        const room = response.data.data.find(r => r.roomId === parseInt(roomId, 10));
+        if (room) {
+          setIsPrivate(room.roomPassword !== null);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to fetch room info:', error);
+      // 알림창을 제거하고 콘솔에만 오류를 기록합니다.
+    }
+  }, [roomId]);
 
   useEffect(() => {
-    const fetchRoomInfo = async () => {
-      try {
-        const response = await axios.get(`/rooms/${roomId}`);
-        if (response.data && Array.isArray(response.data.data)) {
-          const room = response.data.data.find(r => r.roomId === parseInt(roomId, 10));
-          if (room) {
-            setIsPrivate(room.roomPassword !== null);
-          }
-        }
-      } catch (error) {
-        console.error('Failed to fetch room info:', error);
-        alert('방 정보를 불러오는 데 실패했습니다. 나중에 다시 시도해 주세요.');
-        setIsPrivate(false);
-      }
-    };
-
     fetchRoomInfo();
-  }, [roomId]);
+  }, [fetchRoomInfo]);
 
   const handleDeleteRoom = async () => {
     const confirmDelete = window.confirm('정말로 이 방을 삭제하시겠습니까? 삭제한 데이터는 복구할 수 없습니다.');
 
-    if (!confirmDelete) {
-      return;
-    }
+    if (!confirmDelete) return;
 
     try {
       const token = getCookie('AccessToken');
@@ -45,9 +44,7 @@ function ManageMainHeaderNav({ roomId, roomName, roomIsPrivate, onQuestionListCl
       }
 
       await axios.delete(`/rooms/${roomId}`, {
-        headers: {
-          'AccessToken': token,
-        }
+        headers: { 'AccessToken': token }
       });
 
       alert('방이 삭제되었습니다.');
@@ -75,9 +72,7 @@ function ManageMainHeaderNav({ roomId, roomName, roomIsPrivate, onQuestionListCl
         roomId: roomId,
         roomName: newRoomName,
       }, {
-        headers: {
-          'AccessToken': token,
-        }
+        headers: { 'AccessToken': token }
       });
 
       alert('방 이름이 수정되었습니다.');
@@ -92,8 +87,8 @@ function ManageMainHeaderNav({ roomId, roomName, roomIsPrivate, onQuestionListCl
   return (
       <nav className={styles.headerNav}>
         <div className={styles.leftButtons}>
-        <span className={`${styles.visibilityIndicator} ${roomIsPrivate ? styles.private : styles.public}`}>
-          {roomIsPrivate ? 'Private' : 'Public'}
+        <span className={`${styles.visibilityIndicator} ${isPrivate ? styles.private : styles.public}`}>
+          {isPrivate ? 'Private' : 'Public'}
         </span>
           <button
               className={`${styles.navButton} ${styles.activeButton}`}
