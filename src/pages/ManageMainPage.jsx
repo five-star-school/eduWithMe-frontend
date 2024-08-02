@@ -14,6 +14,7 @@ function ManageMainPage() {
   const [loading, setLoading] = useState(true);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [roomName, setRoomName] = useState('');
+  const [isPrivate, setIsPrivate] = useState(false);
   const { roomId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -37,6 +38,7 @@ function ManageMainPage() {
         const room = rooms.find(r => r.roomId === parseInt(roomId, 10));
         if (room) {
           setRoomName(room.roomName);
+          setIsPrivate(room.roomPassword !== null && room.roomPassword !== '');
         }
       } else {
         console.error('Unexpected data format:', response.data);
@@ -139,7 +141,7 @@ function ManageMainPage() {
       <div className={styles.managePage}>
         <SidebarComponent />
         <div className={styles.mainContent}>
-          <ManageMainHeaderNav roomId={roomId} roomName={roomName} onQuestionListClick={handleQuestionListClick} />
+          <ManageMainHeaderNav roomId={roomId} roomName={roomName} roomIsPrivate={isPrivate} onQuestionListClick={handleQuestionListClick} />
           <div className={styles.manageContent}>
             <div className={styles.contentHeader}>
               <div className={styles.searchContainer}>

@@ -1,20 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from '../styles/ManageMainHeaderNav.module.css';
 import axios from '../util/axiosConfig';
 import { getCookie } from '../util/cookie';
 
-function ManageMainHeaderNav({ roomId, roomName, onQuestionListClick }) {
-
+function ManageMainHeaderNav({ roomId, roomName, roomIsPrivate, onQuestionListClick }) {
   const navigate = useNavigate();
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [newRoomName, setNewRoomName] = useState('');
+  const [isPrivate, setIsPrivate] = useState(false);
+
+  useEffect(() => {
+    const fetchRoomInfo = async () => {
+      try {
+        const response = await axios.get(`/rooms/${roomId}`);
+        if (response.data && Array.isArray(response.data.data)) {
+          const room = response.data.data.find(r => r.roomId === parseInt(roomId, 10));
+          if (room) {
+            setIsPrivate(room.roomPassword !== null);
+          }
+        }
+      } catch (error) {
+        console.error('Failed to fetch room info:', error);
+        alert('방 정보를 불러오는 데 실패했습니다. 나중에 다시 시도해 주세요.');
+        setIsPrivate(false);
+      }
+    };
+
+    fetchRoomInfo();
+  }, [roomId]);
 
   const handleDeleteRoom = async () => {
     const confirmDelete = window.confirm('정말로 이 방을 삭제하시겠습니까? 삭제한 데이터는 복구할 수 없습니다.');
 
     if (!confirmDelete) {
-      return; // 사용자가 취소를 누른 경우 아무 작업도 하지 않음
+      return;
     }
 
     try {
@@ -31,7 +51,7 @@ function ManageMainHeaderNav({ roomId, roomName, onQuestionListClick }) {
       });
 
       alert('방이 삭제되었습니다.');
-      navigate('/main'); // 방 삭제 후 /main 페이지로 리다이렉트
+      navigate('/main');
     } catch (error) {
       console.error('방 삭제 실패:', error);
       alert('방 삭제에 실패했습니다.');
@@ -62,7 +82,7 @@ function ManageMainHeaderNav({ roomId, roomName, onQuestionListClick }) {
 
       alert('방 이름이 수정되었습니다.');
       setEditModalOpen(false);
-      window.location.reload(); // 수정 후 페이지 새로고침
+      window.location.reload();
     } catch (error) {
       console.error('방 수정 실패:', error);
       alert('방 수정에 실패했습니다.');
@@ -71,12 +91,17 @@ function ManageMainHeaderNav({ roomId, roomName, onQuestionListClick }) {
 
   return (
       <nav className={styles.headerNav}>
-        <button
-            className={`${styles.navButton} ${styles.activeButton}`}
-            onClick={onQuestionListClick}
-        >
-          문제 목록
-        </button>
+        <div className={styles.leftButtons}>
+        <span className={`${styles.visibilityIndicator} ${roomIsPrivate ? styles.private : styles.public}`}>
+          {roomIsPrivate ? 'Private' : 'Public'}
+        </span>
+          <button
+              className={`${styles.navButton} ${styles.activeButton}`}
+              onClick={onQuestionListClick}
+          >
+            문제 목록
+          </button>
+        </div>
         <div className={styles.rightButtons}>
           <button className={`${styles.navButton} ${styles.editButton}`} onClick={() => setEditModalOpen(true)}>방 수정</button>
           <button className={`${styles.navButton} ${styles.deleteButton}`} onClick={handleDeleteRoom}>방 삭제</button>
@@ -95,7 +120,7 @@ function ManageMainHeaderNav({ roomId, roomName, onQuestionListClick }) {
                   <input type="text" value={newRoomName} onChange={(e) => setNewRoomName(e.target.value)} />
                 </div>
                 <div className={styles.modalActions}>
-                  <button className={styles.saveButton} onClick={handleEditRoom}>저장</button>
+                  <button className={styles.saveButton} onClick={handleEditRoom}>수정</button>
                   <button className={styles.cancelButton} onClick={() => setEditModalOpen(false)}>취소</button>
                 </div>
               </div>
