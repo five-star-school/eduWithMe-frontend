@@ -1,13 +1,11 @@
 import React from 'react';
-import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styles from '../styles/ManageMainHeaderNav.module.css';
 import axios from '../util/axiosConfig';
 import { getCookie } from '../util/cookie';
 
-function ManageMainHeaderNav() {
-  const { roomId } = useParams();
+function ManageMainHeaderNav({ roomId, onQuestionListClick }) {
   const navigate = useNavigate();
-  const location = useLocation();
 
   const handleDeleteRoom = async () => {
     const confirmDelete = window.confirm('정말로 이 방을 삭제하시겠습니까? 삭제한 데이터는 복구할 수 없습니다.');
@@ -37,20 +35,20 @@ function ManageMainHeaderNav() {
     }
   };
 
-  const handleQuestionListClick = () => {
-    if (location.pathname.includes('/question/')) {
-      navigate(`/room/${roomId}`);
-    } else {
-      window.location.reload();
-    }
-  };
-
   return (
       <nav className={styles.headerNav}>
-        <button className={`${styles.navButton} ${styles.activeButton}`}>문제 목록</button>
+        <button
+            className={`${styles.navButton} ${styles.activeButton}`}
+            onClick={onQuestionListClick}
+        >
+          문제 목록
+        </button>
         <div className={styles.rightButtons}>
           <button className={`${styles.navButton} ${styles.editButton}`}>방 수정</button>
-          <button className={`${styles.navButton} ${styles.deleteButton}`} onClick={handleDeleteRoom}>
+          <button
+              className={`${styles.navButton} ${styles.deleteButton}`}
+              onClick={handleDeleteRoom}
+          >
             방 삭제
           </button>
         </div>
