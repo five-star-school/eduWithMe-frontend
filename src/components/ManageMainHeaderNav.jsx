@@ -4,7 +4,7 @@ import styles from '../styles/ManageMainHeaderNav.module.css';
 import axios from '../util/axiosConfig';
 import { getCookie } from '../util/cookie';
 
-function ManageMainHeaderNav({ roomId }) {
+function ManageMainHeaderNav({ roomId, onQuestionListClick }) {
   const navigate = useNavigate();
 
   const handleDeleteRoom = async () => {
@@ -37,7 +37,7 @@ function ManageMainHeaderNav({ roomId }) {
 
   return (
       <nav className={styles.headerNav}>
-        <button className={`${styles.navButton} ${styles.activeButton}`}>문제 목록</button>
+        <button className={`${styles.navButton} ${styles.activeButton}`} onClick={onQuestionListClick}>문제 목록</button>
         <div className={styles.rightButtons}>
           <button className={`${styles.navButton} ${styles.editButton}`}>방 수정</button>
           <button className={`${styles.navButton} ${styles.deleteButton}`} onClick={handleDeleteRoom}>
