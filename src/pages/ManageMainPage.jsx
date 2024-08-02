@@ -22,9 +22,15 @@ function ManageMainPage() {
     if (token === null) {
       navigate('/login');
     } else {
-      fetchQuestions();
+      fetchQuestions();  // Call fetchQuestions on mount
     }
-  }, [roomId, page, navigate]);
+  }, [roomId]);  // Re-fetch on roomId change
+
+  useEffect(() => {
+    if (page >= 0) {
+      fetchQuestions();  // Call fetchQuestions on page change
+    }
+  }, [page]);
 
   const fetchQuestions = async () => {
     try {
@@ -35,17 +41,22 @@ function ManageMainPage() {
           size: questionsPerPage,
         }
       });
-      if (response.data && response.data.data) {
-        setQuestions(response.data.data.content);
-        setTotalPages(response.data.data.totalPages);
+      console.log('Fetch Questions Response:', response.data);
+      if (response.data && response.data.data && response.data.data.content) {
+        setQuestions(response.data.data.content);  // 데이터가 'content'에 있음
+        setTotalPages(response.data.data.totalPages || 0);
       } else {
-        console.error('Unexpected data format:', response.data);
+        console.error('Unexpected fetch data format:', response.data);
+        setQuestions([]);
+        setTotalPages(0);
       }
     } catch (error) {
       console.error('Failed to fetch questions:', error);
       if (error.response && error.response.status === 403) {
         navigate('/login');
       }
+      setQuestions([]);
+      setTotalPages(0);
     } finally {
       setLoading(false);
     }
@@ -61,15 +72,20 @@ function ManageMainPage() {
           size: questionsPerPage,
         }
       });
-      if (response.data && response.data.data) {
-        setQuestions(response.data.data.content);
-        setTotalPages(response.data.data.totalPages);
+      console.log('Search API Response:', response.data);
+      if (response.data && Array.isArray(response.data.data)) {
+        setQuestions(response.data.data);  // 데이터가 직접 배열 형태로 있음
+        setTotalPages(Math.ceil(response.data.data.length / questionsPerPage));  // 페이지 수 계산
         setPage(0);
       } else {
         console.error('Unexpected search data format:', response.data);
+        setQuestions([]);
+        setTotalPages(0);
       }
     } catch (error) {
       console.error('Failed to search questions:', error);
+      setQuestions([]);
+      setTotalPages(0);
     } finally {
       setLoading(false);
     }
@@ -93,76 +109,78 @@ function ManageMainPage() {
   };
 
   return (
-      <div className={styles.managePage}>
-        <SidebarComponent />
-        <div className={styles.mainContent}>
-          <ManageMainHeaderNav roomId={roomId} />
-          <div className={styles.manageContent}>
-            <div className={styles.contentHeader}>
-              <div className={styles.searchContainer}>
-                <input
-                    type="text"
-                    className={styles.searchInput}
-                    placeholder="검색어 ( 제목 )"
-                    value={searchKeyword}
-                    onChange={handleSearchInputChange}
-                />
-                <button className={styles.searchButton} onClick={handleSearch}>검색</button>
-              </div>
-              <div className={styles.actionButtons}>
-                <button className={styles.filterButton}>난이도</button>
-                <button className={styles.filterButton}>출제일</button>
-                <button className={styles.createButton} onClick={handleCreateClick}>생성</button>
-              </div>
+    <div className={styles.managePage}>
+      <SidebarComponent />
+      <div className={styles.mainContent}>
+        <ManageMainHeaderNav roomId={roomId} />
+        <div className={styles.manageContent}>
+          <div className={styles.contentHeader}>
+            <div className={styles.searchContainer}>
+              <input
+                type="text"
+                className={styles.searchInput}
+                placeholder="검색어 ( 제목 )"
+                value={searchKeyword}
+                onChange={handleSearchInputChange}
+              />
+              <button className={styles.searchButton} onClick={handleSearch}>검색</button>
             </div>
-            {loading ? (
-                <p>로딩 중...</p>
-            ) : (
-                <>
-                  <table className={styles.problemTable}>
-                    <thead>
-                    <tr>
-                      <th>문제 번호</th>
-                      <th>카테고리</th>
-                      <th>문제 제목</th>
-                      <th>난이도</th>
-                      <th>출제일</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {questions.map((question) => (
-                        <tr key={question.questionId} onClick={() => handleQuestionClick(question.questionId)} style={{ cursor: 'pointer' }}>
-                          <td>{question.questionId}</td>
-                          <td>{question.category}</td>
-                          <td>{question.title}</td>
-                          <td>{question.difficulty}</td>
-                          <td>{question.updatedAt ? formatDate(question.updatedAt) : 'N/A'}</td>
-                        </tr>
-                    ))}
-                    </tbody>
-                  </table>
-                  {totalPages > 1 && (
-                      <div className={styles.pagination}>
-                        <button
-                            disabled={page === 0}
-                            onClick={() => setPage(prev => Math.max(0, prev - 1))}
-                        >
-                          이전
-                        </button>
-                        <span>{page + 1} / {totalPages}</span>
-                        <button
-                            disabled={page >= totalPages - 1}
-                            onClick={() => setPage(prev => Math.min(totalPages - 1, prev + 1))}
-                        >
-                          다음
-                        </button>
-                      </div>
-                  )}
-                </>
-            )}
+            <div className={styles.actionButtons}>
+              <button className={styles.filterButton}>난이도</button>
+              <button className={styles.filterButton}>출제일</button>
+              <button className={styles.createButton} onClick={handleCreateClick}>생성</button>
+            </div>
           </div>
+          {loading ? (
+            <p>로딩 중...</p>
+          ) : (
+            questions.length > 0 ? (
+              <table className={styles.problemTable}>
+                <thead>
+                  <tr>
+                    <th>문제 번호</th>
+                    <th>카테고리</th>
+                    <th>문제 제목</th>
+                    <th>난이도</th>
+                    <th>출제일</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {questions.map((question) => (
+                    <tr key={question.questionId} onClick={() => handleQuestionClick(question.questionId)} style={{ cursor: 'pointer' }}>
+                      <td>{question.questionId}</td>
+                      <td>{question.category}</td>
+                      <td>{question.title}</td>
+                      <td>{question.difficulty}</td>
+                      <td>{question.updatedAt ? formatDate(question.updatedAt) : 'N/A'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <p>검색 결과가 없습니다.</p>
+            )
+          )}
+          {totalPages > 1 && (
+            <div className={styles.pagination}>
+              <button
+                disabled={page === 0}
+                onClick={() => setPage(prev => Math.max(0, prev - 1))}
+              >
+                이전
+              </button>
+              <span>{page + 1} / {totalPages}</span>
+              <button
+                disabled={page >= totalPages - 1}
+                onClick={() => setPage(prev => Math.min(totalPages - 1, prev + 1))}
+              >
+                다음
+              </button>
+            </div>
+          )}
         </div>
       </div>
+    </div>
   );
 }
 
