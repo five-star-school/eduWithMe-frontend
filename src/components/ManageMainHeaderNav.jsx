@@ -4,7 +4,6 @@ import styles from '../styles/ManageMainHeaderNav.module.css';
 import axios from '../util/axiosConfig';
 import { getCookie } from '../util/cookie';
 
-
 function ManageMainHeaderNav({ roomId, roomName, onQuestionListClick }) {
 
   const navigate = useNavigate();

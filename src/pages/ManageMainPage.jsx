@@ -24,9 +24,27 @@ function ManageMainPage() {
     if (token === null) {
       navigate('/login');
     } else {
+      fetchRoomInfo(); // 방 정보 가져오기
       fetchQuestions();
     }
   }, [roomId, page]);
+
+  const fetchRoomInfo = async () => {
+    try {
+      const response = await axios.get(`/rooms/${roomId}`);
+      if (response.data && response.data.data) {
+        const rooms = response.data.data;
+        const room = rooms.find(r => r.roomId === parseInt(roomId, 10));
+        if (room) {
+          setRoomName(room.roomName);
+        }
+      } else {
+        console.error('Unexpected data format:', response.data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch room info:', error);
+    }
+  };
 
   const fetchQuestions = async () => {
     try {
@@ -46,7 +64,6 @@ function ManageMainPage() {
         }));
         setQuestions(questionsWithNumber);
         setTotalPages(response.data.data.totalPages);
-        setRoomName(response.data.roomName); // 추가
       } else {
         console.error('Unexpected data format:', response.data);
         setQuestions([]);
@@ -122,10 +139,10 @@ function ManageMainPage() {
       <div className={styles.managePage}>
         <SidebarComponent />
         <div className={styles.mainContent}>
-          <ManageMainHeaderNav roomId={roomId} roomName={roomName} onQuestionListClick={handleQuestionListClick}  />
+          <ManageMainHeaderNav roomId={roomId} roomName={roomName} onQuestionListClick={handleQuestionListClick} />
           <div className={styles.manageContent}>
-          <div className={styles.contentHeader}>
-            <div className={styles.searchContainer}>
+            <div className={styles.contentHeader}>
+              <div className={styles.searchContainer}>
               <input
                 type="text"
                 className={styles.searchInput}
