@@ -6,7 +6,7 @@ import styles from '../styles/RoomMainPage.module.css';
 import { format } from 'date-fns';
 
 function RoomMain() {
-    const [questions, setQuestions] = useState([]);
+    const [questions, setQuestions] = useState([]); // 초기 상태를 빈 배열로 설정
     const [page, setPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [loading, setLoading] = useState(true);
@@ -35,16 +35,18 @@ function RoomMain() {
             });
             console.log('API Response:', response.data); // 응답 데이터 확인
             if (response.data && response.data.data) {
-                const questionsData = response.data.data.content;
+                const questionsData = response.data.data.content || []; // 응답 데이터가 없을 경우 빈 배열로 설정
                 setQuestions(questionsData);
 
                 // Update total pages based on API response
                 setTotalPages(response.data.data.totalPages);
             } else {
                 console.error('Unexpected data format:', response.data);
+                setQuestions([]); // 예상치 못한 데이터 형식인 경우 빈 배열로 설정
             }
         } catch (error) {
             console.error('Failed to fetch questions:', error);
+            setQuestions([]); // 오류 발생 시 빈 배열로 설정
             if (error.response && error.response.status === 403) {
                 navigate('/login');
             }
@@ -56,29 +58,36 @@ function RoomMain() {
     const handleSearch = async () => {
         try {
             setLoading(true);
-            const response = await axios.get(`/search/rooms/${roomId}/question/title`, {
-                params: {
-                    keyword: searchKeyword,
-                    page: 0, // Always start search from page 0
-                    size: questionsPerPage,
+            // URL에 쿼리 매개변수 직접 포함
+            const response = await axios.get(
+                `/search/rooms/${roomId}/question/title`,
+                {
+                    params: {
+                        keyword: searchKeyword,
+                        page: 0,
+                        size: questionsPerPage,
+                    },
                 }
-            });
-            console.log('Search API Response:', response.data); // 검색 응답 데이터 확인
-            if (response.data && response.data.data) {
-                setQuestions(response.data.data.content);
+            );
 
-                // Update total pages based on search results
-                setTotalPages(response.data.data.totalPages);
+            console.log('Search API Response:', response.data); // 검색 응답 데이터 확인
+
+            if (response.data && Array.isArray(response.data.data)) {
+                setQuestions(response.data.data);  // 응답 데이터의 배열 설정
+                setTotalPages(response.data.totalPages || 1);
                 setPage(0); // 검색 후 페이지를 첫 페이지로 초기화
             } else {
                 console.error('Unexpected search data format:', response.data);
+                setQuestions([]); // 예상치 못한 데이터 형식인 경우 빈 배열로 설정
             }
         } catch (error) {
             console.error('Failed to search questions:', error);
+            setQuestions([]); // 오류 발생 시 빈 배열로 설정
         } finally {
             setLoading(false);
         }
     };
+
 
     const handleSearchInputChange = (e) => {
         setSearchKeyword(e.target.value);
@@ -124,15 +133,21 @@ function RoomMain() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {questions.map((question) => (
-                                        <tr key={question.questionId} onClick={() => handleQuestionClick(question.questionId)} style={{ cursor: 'pointer' }}>
-                                            <td>{question.questionId}</td>
-                                            <td>{question.category}</td>
-                                            <td>{question.title}</td>
-                                            <td>{question.difficulty}</td>
-                                            <td>{question.updatedAt ? formatDate(question.updatedAt) : 'N/A'}</td>
+                                    {Array.isArray(questions) && questions.length > 0 ? (
+                                        questions.map((question) => (
+                                            <tr key={question.questionId} onClick={() => handleQuestionClick(question.questionId)} style={{ cursor: 'pointer' }}>
+                                                <td>{question.questionId}</td>
+                                                <td>{question.category}</td>
+                                                <td>{question.title}</td>
+                                                <td>{question.difficulty}</td>
+                                                <td>{question.updatedAt ? formatDate(question.updatedAt) : 'N/A'}</td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td colSpan="5">결과가 없습니다.</td>
                                         </tr>
-                                    ))}
+                                    )}
                                 </tbody>
                             </table>
                             {totalPages > 1 && (
