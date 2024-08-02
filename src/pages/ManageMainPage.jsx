@@ -104,6 +104,10 @@ function ManageMainPage() {
     navigate(`/room/${roomId}/question/${questionId}/manageRead`);
   };
 
+  const handleCreateClick = () => {
+    navigate(`/room/${roomId}/manageCreate`);
+  };
+
   return (
     <div className={styles.managePage}>
       <SidebarComponent />
