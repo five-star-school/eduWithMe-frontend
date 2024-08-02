@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import ManageMainHeaderNav from '../components/ManageMainHeaderNav';
 import SidebarComponent from '../components/SidebarComponent';
 import axios from "../util/axiosConfig";
@@ -15,6 +15,7 @@ function ManageMainPage() {
   const [searchKeyword, setSearchKeyword] = useState('');
   const { roomId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const questionsPerPage = 10;
 
   useEffect(() => {
@@ -22,15 +23,9 @@ function ManageMainPage() {
     if (token === null) {
       navigate('/login');
     } else {
-      fetchQuestions();  // Call fetchQuestions on mount
+      fetchQuestions();
     }
-  }, [roomId]);  // Re-fetch on roomId change
-
-  useEffect(() => {
-    if (page >= 0) {
-      fetchQuestions();  // Call fetchQuestions on page change
-    }
-  }, [page]);
+  }, [roomId, page]);
 
   const fetchQuestions = async () => {
     try {
@@ -41,22 +36,25 @@ function ManageMainPage() {
           size: questionsPerPage,
         }
       });
-      console.log('Fetch Questions Response:', response.data);
-      if (response.data && response.data.data && response.data.data.content) {
-        setQuestions(response.data.data.content);  // 데이터가 'content'에 있음
-        setTotalPages(response.data.data.totalPages || 0);
+      if (response.data && response.data.data) {
+        const questionsData = response.data.data.content || [];
+        // 각 질문에 roomQuestionNumber 추가
+        const questionsWithNumber = questionsData.map((question, index) => ({
+          ...question,
+          roomQuestionNumber: page * questionsPerPage + index + 1
+        }));
+        setQuestions(questionsWithNumber);
+        setTotalPages(response.data.data.totalPages);
       } else {
-        console.error('Unexpected fetch data format:', response.data);
+        console.error('Unexpected data format:', response.data);
         setQuestions([]);
-        setTotalPages(0);
       }
     } catch (error) {
       console.error('Failed to fetch questions:', error);
+      setQuestions([]);
       if (error.response && error.response.status === 403) {
         navigate('/login');
       }
-      setQuestions([]);
-      setTotalPages(0);
     } finally {
       setLoading(false);
     }
@@ -72,20 +70,22 @@ function ManageMainPage() {
           size: questionsPerPage,
         }
       });
-      console.log('Search API Response:', response.data);
+
       if (response.data && Array.isArray(response.data.data)) {
-        setQuestions(response.data.data);  // 데이터가 직접 배열 형태로 있음
-        setTotalPages(Math.ceil(response.data.data.length / questionsPerPage));  // 페이지 수 계산
+        const questionsWithNumber = response.data.data.map((question, index) => ({
+          ...question,
+          roomQuestionNumber: index + 1
+        }));
+        setQuestions(questionsWithNumber);
+        setTotalPages(Math.ceil(response.data.data.length / questionsPerPage));
         setPage(0);
       } else {
         console.error('Unexpected search data format:', response.data);
         setQuestions([]);
-        setTotalPages(0);
       }
     } catch (error) {
       console.error('Failed to search questions:', error);
       setQuestions([]);
-      setTotalPages(0);
     } finally {
       setLoading(false);
     }
@@ -108,12 +108,20 @@ function ManageMainPage() {
     navigate(`/room/${roomId}/manageCreate`);
   };
 
+  const handleQuestionListClick = () => {
+    if (location.pathname.includes('/question/')) {
+      navigate(`/room/${roomId}/manageMain`);
+    } else {
+      window.location.reload();
+    }
+  };
+
   return (
-    <div className={styles.managePage}>
-      <SidebarComponent />
-      <div className={styles.mainContent}>
-        <ManageMainHeaderNav roomId={roomId} />
-        <div className={styles.manageContent}>
+      <div className={styles.managePage}>
+        <SidebarComponent />
+        <div className={styles.mainContent}>
+          <ManageMainHeaderNav roomId={roomId} onQuestionListClick={handleQuestionListClick} />
+          <div className={styles.manageContent}>
           <div className={styles.contentHeader}>
             <div className={styles.searchContainer}>
               <input
@@ -134,32 +142,32 @@ function ManageMainPage() {
           {loading ? (
             <p>로딩 중...</p>
           ) : (
-            questions.length > 0 ? (
-              <table className={styles.problemTable}>
-                <thead>
-                  <tr>
-                    <th>문제 번호</th>
-                    <th>카테고리</th>
-                    <th>문제 제목</th>
-                    <th>난이도</th>
-                    <th>출제일</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {questions.map((question) => (
-                    <tr key={question.questionId} onClick={() => handleQuestionClick(question.questionId)} style={{ cursor: 'pointer' }}>
-                      <td>{question.questionId}</td>
-                      <td>{question.category}</td>
-                      <td>{question.title}</td>
-                      <td>{question.difficulty}</td>
-                      <td>{question.updatedAt ? formatDate(question.updatedAt) : 'N/A'}</td>
+              questions.length > 0 ? (
+                  <table className={styles.problemTable}>
+                    <thead>
+                    <tr>
+                      <th>문제 번호</th>
+                      <th>카테고리</th>
+                      <th>문제 제목</th>
+                      <th>난이도</th>
+                      <th>출제일</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            ) : (
-              <p>검색 결과가 없습니다.</p>
-            )
+                    </thead>
+                    <tbody>
+                    {questions.map((question) => (
+                        <tr key={question.questionId} onClick={() => handleQuestionClick(question.questionId)} style={{ cursor: 'pointer' }}>
+                          <td>{question.roomQuestionNumber}</td>
+                          <td>{question.category}</td>
+                          <td>{question.title}</td>
+                          <td>{question.difficulty}</td>
+                          <td>{question.updatedAt ? formatDate(question.updatedAt) : 'N/A'}</td>
+                        </tr>
+                    ))}
+                    </tbody>
+                  </table>
+              ) : (
+                  <p>검색 결과가 없습니다.</p>
+              )
           )}
           {totalPages > 1 && (
             <div className={styles.pagination}>

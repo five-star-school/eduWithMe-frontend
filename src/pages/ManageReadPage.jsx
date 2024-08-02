@@ -41,6 +41,11 @@ function ManageReadPage() {
     }
   };
 
+  const handleQuestionListClick = () => {
+    navigate(`/room/${roomId}/manageMain`);
+  };
+
+
   const handleEdit = () => {
     navigate(`/room/${roomId}/question/${questionId}/manageModify`);
   };
@@ -70,7 +75,7 @@ function ManageReadPage() {
       <div className={styles.manageReadPage}>
         <ManageReadSidebar />
         <div className={styles.mainContent}>
-          <ManageMainHeaderNav />
+          <ManageMainHeaderNav roomId={roomId} onQuestionListClick={handleQuestionListClick} />
           <div className={styles.readContent}>
             <div className={styles.questionSection}>
               <div className={styles.questionTitleSection}>

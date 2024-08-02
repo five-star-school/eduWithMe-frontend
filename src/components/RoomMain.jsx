@@ -6,7 +6,7 @@ import styles from '../styles/RoomMainPage.module.css';
 import { format } from 'date-fns';
 
 function RoomMain() {
-    const [questions, setQuestions] = useState([]); // 초기 상태를 빈 배열로 설정
+    const [questions, setQuestions] = useState([]);
     const [page, setPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [loading, setLoading] = useState(true);
@@ -33,20 +33,23 @@ function RoomMain() {
                     size: questionsPerPage,
                 }
             });
-            console.log('API Response:', response.data); // 응답 데이터 확인
             if (response.data && response.data.data) {
-                const questionsData = response.data.data.content || []; // 응답 데이터가 없을 경우 빈 배열로 설정
-                setQuestions(questionsData);
-
-                // Update total pages based on API response
+                const questionsData = response.data.data.content || [];
+                // 각 질문에 roomQuestionNumber 추가
+                const questionsWithNumber = questionsData.map((question, index) => ({
+                    ...question,
+                    roomQuestionNumber: page * questionsPerPage + index + 1
+                }));
+                setQuestions(questionsWithNumber);
                 setTotalPages(response.data.data.totalPages);
+                console.table(questionsWithNumber);
             } else {
                 console.error('Unexpected data format:', response.data);
-                setQuestions([]); // 예상치 못한 데이터 형식인 경우 빈 배열로 설정
+                setQuestions([]);
             }
         } catch (error) {
             console.error('Failed to fetch questions:', error);
-            setQuestions([]); // 오류 발생 시 빈 배열로 설정
+            setQuestions([]);
             if (error.response && error.response.status === 403) {
                 navigate('/login');
             }
@@ -124,30 +127,32 @@ function RoomMain() {
                         <>
                             <table className={styles.problemTable}>
                                 <thead>
-                                    <tr>
-                                        <th>문제 번호</th>
-                                        <th>카테고리</th>
-                                        <th>문제 제목</th>
-                                        <th>난이도</th>
-                                        <th>출제일</th>
-                                    </tr>
+                                <tr>
+                                    <th>문제 번호</th>
+                                    <th>카테고리</th>
+                                    <th>문제 제목</th>
+                                    <th>난이도</th>
+                                    <th>출제일</th>
+                                </tr>
                                 </thead>
                                 <tbody>
-                                    {Array.isArray(questions) && questions.length > 0 ? (
-                                        questions.map((question) => (
-                                            <tr key={question.questionId} onClick={() => handleQuestionClick(question.questionId)} style={{ cursor: 'pointer' }}>
-                                                <td>{question.questionId}</td>
-                                                <td>{question.category}</td>
-                                                <td>{question.title}</td>
-                                                <td>{question.difficulty}</td>
-                                                <td>{question.updatedAt ? formatDate(question.updatedAt) : 'N/A'}</td>
-                                            </tr>
-                                        ))
-                                    ) : (
-                                        <tr>
-                                            <td colSpan="5">결과가 없습니다.</td>
+                                {Array.isArray(questions) && questions.length > 0 ? (
+                                    questions.map((question) => (
+                                        <tr key={question.questionId}
+                                            onClick={() => handleQuestionClick(question.questionId)}
+                                            style={{cursor: 'pointer'}}>
+                                            <td>{question.roomQuestionNumber}</td>
+                                            <td>{question.category}</td>
+                                            <td>{question.title}</td>
+                                            <td>{question.difficulty}</td>
+                                            <td>{question.updatedAt ? formatDate(question.updatedAt) : 'N/A'}</td>
                                         </tr>
-                                    )}
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan="5">결과가 없습니다.</td>
+                                    </tr>
+                                )}
                                 </tbody>
                             </table>
                             {totalPages > 1 && (
