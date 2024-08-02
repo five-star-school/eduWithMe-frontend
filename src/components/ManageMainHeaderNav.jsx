@@ -81,14 +81,6 @@ function ManageMainHeaderNav({ roomId, roomName, onQuestionListClick }) {
         <div className={styles.rightButtons}>
           <button className={`${styles.navButton} ${styles.editButton}`} onClick={() => setEditModalOpen(true)}>방 수정</button>
           <button className={`${styles.navButton} ${styles.deleteButton}`} onClick={handleDeleteRoom}>방 삭제</button>
-
-          <button className={`${styles.navButton} ${styles.editButton}`}>방 수정</button>
-          <button
-              className={`${styles.navButton} ${styles.deleteButton}`}
-              onClick={handleDeleteRoom}
-          >
-            방 삭제
-          </button>
         </div>
 
         {isEditModalOpen && (
