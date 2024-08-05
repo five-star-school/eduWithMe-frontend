@@ -4,7 +4,7 @@ import styles from '../styles/ManageMainHeaderNav.module.css';
 import axios from '../util/axiosConfig';
 import { getCookie } from '../util/cookie';
 
-function ManageMainHeaderNav({ roomId, roomName, roomIsPrivate, onQuestionListClick, isRoomInfoLoading, isManager }) {
+function ManageMainHeaderNav({ roomId, roomName, roomIsPrivate, onQuestionListClick }) {
   const navigate = useNavigate();
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [newRoomName, setNewRoomName] = useState('');
