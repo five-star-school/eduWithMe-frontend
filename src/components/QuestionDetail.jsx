@@ -9,6 +9,7 @@ function QuestionDetail() {
     const [selectedAnswer, setSelectedAnswer] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [modalContent, setModalContent] = useState({ title: '', message: '', points: '' });
+    const [isTeacher, setIsTeacher] = useState(false);
     const { roomId, questionId } = useParams();
     const navigate = useNavigate();
 
@@ -18,13 +19,14 @@ function QuestionDetail() {
             navigate('/login');
         } else {
             fetchQuestionDetail();
+            checkIfTeacher();
         }
     }, [roomId, questionId, navigate]);
 
     const fetchQuestionDetail = async () => {
         try {
             const response = await axios.get(`/rooms/${roomId}/question/${questionId}`);
-            console.log('Question detail:', response.data); // 데이터 구조 확인용
+            console.log('Question detail:', response.data);
             if (response.data && response.data.data) {
                 setQuestion(response.data.data);
             }
@@ -36,11 +38,31 @@ function QuestionDetail() {
         }
     };
 
+    const checkIfTeacher = async () => {
+        try {
+            const response = await axios.get(`/rooms/${roomId}/users`);
+            if (response.data && response.data.data) {
+                const currentUserId = getCookie('userId');
+                const roomData = response.data.data;
+                setIsTeacher(roomData.some(user => user.userId.toString() === currentUserId && user.userId === user.managerUserId));
+            }
+        } catch (error) {
+            console.error('Failed to check if user is teacher:', error);
+        }
+    };
+
     const handleAnswerClick = (index) => {
-        setSelectedAnswer(index);
+        if (!isTeacher) {
+            setSelectedAnswer(index);
+        }
     };
 
     const handleSubmit = async () => {
+        if (isTeacher) {
+            alert('선생님은 문제를 풀 수 없습니다.');
+            return;
+        }
+
         if (selectedAnswer !== null && question) {
             try {
                 const response = await axios.post(`/rooms/${roomId}/question/${questionId}/submit`, {
@@ -107,7 +129,7 @@ function QuestionDetail() {
                     <div key={index} className={styles.answerOption}>
                         <span className={styles.optionNumber}>{index + 1}</span>
                         <span
-                            className={`${styles.optionContent} ${selectedAnswer === index ? styles.selectedAnswer : ''}`}
+                            className={`${styles.optionContent} ${selectedAnswer === index ? styles.selectedAnswer : ''} ${isTeacher ? styles.disabled : ''}`}
                             onClick={() => handleAnswerClick(index)}
                         >
                             {option}
@@ -131,7 +153,13 @@ function QuestionDetail() {
                 </button>
             </div>
 
-            <button className={styles.submitButton} onClick={handleSubmit}>제출</button>
+            <button
+                className={`${styles.submitButton} ${isTeacher ? styles.disabled : ''}`}
+                onClick={handleSubmit}
+                disabled={isTeacher}
+            >
+                {isTeacher ? '선생님은 제출할 수 없습니다' : '제출'}
+            </button>
 
             {showModal && (
                 <div className={styles.modal}>

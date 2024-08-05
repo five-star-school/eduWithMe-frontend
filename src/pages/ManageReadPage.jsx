@@ -11,6 +11,7 @@ function ManageReadPage() {
   const [loading, setLoading] = useState(true);
   const [roomName, setRoomName] = useState('');
   const [isPrivate, setIsPrivate] = useState(false);
+  const [solvedStudents, setSolvedStudents] = useState([]);
   const { roomId, questionId } = useParams();
   const navigate = useNavigate();
 
@@ -21,6 +22,7 @@ function ManageReadPage() {
     } else {
       fetchRoomInfo();
       fetchQuestionDetail();
+      fetchSolvedStudents();
     }
   }, [roomId, questionId, navigate]);
 
@@ -57,6 +59,17 @@ function ManageReadPage() {
     }
   };
 
+  const fetchSolvedStudents = async () => {
+    try {
+      const response = await axios.get(`/rooms/${roomId}/question/${questionId}/solved-students`);
+      if (response.data && response.data.data) {
+        setSolvedStudents(response.data.data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch solved students:', error);
+    }
+  };
+
   const handleQuestionListClick = () => {
     navigate(`/room/${roomId}/manageMain`);
   };
@@ -88,7 +101,7 @@ function ManageReadPage() {
 
   return (
       <div className={styles.manageReadPage}>
-        <ManageReadSidebar />
+        <ManageReadSidebar roomName={roomName} solvedStudents={solvedStudents} />
         <div className={styles.mainContent}>
           <ManageMainHeaderNav
               roomId={roomId}
