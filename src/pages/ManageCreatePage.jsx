@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import SidebarComponent from '../components/SidebarComponent';
-import ManageMainHeaderNav from '../components/ManageMainHeaderNav';
+import ManageMainHeaderNav from '../components/Manage/ManageMainHeaderNav';
 import styles from '../styles/ManageCreatePage.module.css';
 import QuestionDetail from '../components/Manage/QuestionDetail';
 import axios from '../util/axiosConfig';

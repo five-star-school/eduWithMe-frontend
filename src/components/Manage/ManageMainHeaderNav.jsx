@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import styles from '../styles/ManageMainHeaderNav.module.css';
-import axios from '../util/axiosConfig';
-import { getCookie } from '../util/cookie';
+import styles from '../../styles/ManageMainHeaderNav.module.css';
+import axios from '../../util/axiosConfig';
+import { getCookie } from '../../util/cookie';
 
 function ManageMainHeaderNav({ roomId, roomName, roomIsPrivate, onQuestionListClick }) {
   const navigate = useNavigate();

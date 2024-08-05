@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import HeaderNavComponent from '../components/HeaderNavComponent';
 import SidebarComponent from '../components/SidebarComponent';
 import axios from "../util/axiosConfig";
 import { getCookie } from '../util/cookie';
 import styles from '../styles/ManageMainPage.module.css';
 import { format } from 'date-fns';
-import ManageMainHeaderNav from "../components/ManageMainHeaderNav";
+import ManageMainHeaderNav from "../components/Manage/ManageMainHeaderNav";
 
 function ManageMainPage() {
     const [questions, setQuestions] = useState([]);

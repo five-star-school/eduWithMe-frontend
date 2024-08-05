@@ -1,6 +1,6 @@
 // 문제 상세 조회 시 보여줄 사이드바 화면임.
 import React from 'react';
-import styles from '../styles/ManageReadSidebar.module.css';
+import styles from '../../styles/ManageReadSidebar.module.css';
 
 function ManageReadSidebar() {
   return (
