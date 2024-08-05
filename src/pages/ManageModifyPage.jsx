@@ -147,122 +147,122 @@ function ManageModifyPage() {
     }
   };
 
-    if (loading) return <div>로딩 중...</div>;
-    if (!question) return <div>문제를 찾을 수 없습니다.</div>;
+  if (loading) return <div>로딩 중...</div>;
+  if (!question) return <div>문제를 찾을 수 없습니다.</div>;
 
   return (
-      <div className={styles.manageModifyPage}>
-        <SidebarComponent />
-        <div className={styles.mainContent}>
-          <ManageMainHeaderNav
-              roomId={roomId}
-              roomName={roomName}
-              roomIsPrivate={isPrivate}
-              onQuestionListClick={handleQuestionListClick}
-          />
-          <div className={styles.modifyContent}>
-            <div className={styles.questionSection}>
-              <div className={styles.questionTitleSection}>
-                <span className={styles.questionLabel}>문제 제목</span>
+    <div className={styles.manageModifyPage}>
+      <SidebarComponent />
+      <div className={styles.mainContent}>
+        <ManageMainHeaderNav
+          roomId={roomId}
+          roomName={roomName}
+          roomIsPrivate={isPrivate}
+          onQuestionListClick={handleQuestionListClick}
+        />
+        <div className={styles.modifyContent}>
+          <div className={styles.questionSection}>
+            <div className={styles.questionTitleSection}>
+              <span className={styles.questionLabel}>문제 제목</span>
+              <input
+                type="text"
+                className={styles.questionTitleInput}
+                name="title"
+                value={question.title}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div className={styles.questionContentSection}>
+              <span className={styles.questionLabel}>객관식 문제</span>
+              <textarea
+                className={styles.questionContentInput}
+                name="content"
+                value={question.content}
+                onChange={handleInputChange}
+              ></textarea>
+            </div>
+          </div>
+          <div className={styles.answerOptions}>
+            {['first', 'second', 'third', 'fourth'].map((option, index) => (
+              <div key={index} className={styles.answerOption}>
+                <span className={styles.optionNumber}>{index + 1}</span>
                 <input
-                    type="text"
-                    className={styles.questionTitleInput}
-                    name="title"
-                    value={question.title}
-                    onChange={handleInputChange}
+                  type="text"
+                  className={styles.optionContent}
+                  value={question.answerOption[option]}
+                  onChange={(e) => handleAnswerOptionChange(option, e.target.value)}
                 />
               </div>
-              <div className={styles.questionContentSection}>
-                <span className={styles.questionLabel}>객관식 문제</span>
-                <textarea
-                    className={styles.questionContentInput}
-                    name="content"
-                    value={question.content}
-                    onChange={handleInputChange}
-                ></textarea>
-              </div>
+            ))}
+          </div>
+          <div className={styles.questionInfo}>
+            <div className={styles.infoItem}>
+              <label className={styles.infoLabel}>카테고리</label>
+              <select
+                className={styles.infoSelect}
+                name="category"
+                value={reverseCategoryMapping[question.category] || question.category}
+                onChange={(e) => handleInputChange({
+                  target: {
+                    name: 'category',
+                    value: categoryMapping[e.target.value] || e.target.value
+                  }
+                })}
+              >
+                <option value="수학">수학</option>
+                <option value="과학">과학</option>
+                <option value="영어">영어</option>
+                <option value="국어">국어</option>
+              </select>
             </div>
-            <div className={styles.answerOptions}>
-              {['first', 'second', 'third', 'fourth'].map((option, index) => (
-                  <div key={index} className={styles.answerOption}>
-                    <span className={styles.optionNumber}>{index + 1}</span>
-                    <input
-                        type="text"
-                        className={styles.optionContent}
-                        value={question.answerOption[option]}
-                        onChange={(e) => handleAnswerOptionChange(option, e.target.value)}
-                    />
-                  </div>
-              ))}
+            <div className={styles.infoItem}>
+              <label className={styles.infoLabel}>난이도</label>
+              <select
+                className={styles.infoSelect}
+                name="difficulty"
+                value={reverseDifficultyMapping[question.difficulty]}
+                onChange={handleInputChange}
+              >
+                <option value="Lv1">Lv1</option>
+                <option value="Lv2">Lv2</option>
+                <option value="Lv3">Lv3</option>
+                <option value="Lv4">Lv4</option>
+                <option value="Lv5">Lv5</option>
+              </select>
             </div>
-            <div className={styles.questionInfo}>
-              <div className={styles.infoItem}>
-                <label className={styles.infoLabel}>카테고리:</label>
-                <select
-                    className={styles.infoSelect}
-                    name="category"
-                    value={reverseCategoryMapping[question.category] || question.category}
-                    onChange={(e) => handleInputChange({
-                      target: {
-                        name: 'category',
-                        value: categoryMapping[e.target.value] || e.target.value
-                      }
-                    })}
-                >
-                  <option value="수학">수학</option>
-                  <option value="과학">과학</option>
-                  <option value="영어">영어</option>
-                  <option value="국어">국어</option>
-                </select>
-              </div>
-              <div className={styles.infoItem}>
-                <label className={styles.infoLabel}>난이도:</label>
-                <select
-                    className={styles.infoSelect}
-                    name="difficulty"
-                    value={reverseDifficultyMapping[question.difficulty]}
-                    onChange={handleInputChange}
-                >
-                  <option value="Lv1">Lv1</option>
-                  <option value="Lv2">Lv2</option>
-                  <option value="Lv3">Lv3</option>
-                  <option value="Lv4">Lv4</option>
-                  <option value="Lv5">Lv5</option>
-                </select>
-              </div>
-              <div className={styles.infoItem}>
-                <label className={styles.infoLabel}>포인트:</label>
-                <input
-                    type="number"
-                    className={styles.infoInput}
-                    name="point"
-                    value={question.point}
-                    readOnly
-                />
-              </div>
-              <div className={styles.infoItem}>
-                <label className={styles.infoLabel}>정답:</label>
-                <select
-                    className={styles.infoSelect}
-                    name="answered"
-                    value={question.answerOption.answered}
-                    onChange={(e) => handleAnswerOptionChange('answered', e.target.value)}
-                >
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                </select>
-              </div>
+            <div className={styles.infoItem}>
+              <label className={styles.infoLabel}>포인트</label>
+              <input
+                type="number"
+                className={styles.infoInput}
+                name="point"
+                value={question.point}
+                readOnly
+              />
             </div>
-            <div className={styles.actionButtons}>
-              <button className={styles.cancelButton} onClick={() => navigate(`/room/${roomId}/manageMain`)}>취소</button>
-              <button className={styles.saveButton} onClick={handleSave}>저장</button>
+            <div className={styles.infoItem}>
+              <label className={styles.infoLabel}>정답</label>
+              <select
+                className={styles.infoSelect}
+                name="answered"
+                value={question.answerOption.answered}
+                onChange={(e) => handleAnswerOptionChange('answered', e.target.value)}
+              >
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+              </select>
             </div>
+          </div>
+          <div className={styles.actionButtons}>
+            <button className={styles.cancelButton} onClick={() => navigate(`/room/${roomId}/manageMain`)}>취소</button>
+            <button className={styles.saveButton} onClick={handleSave}>저장</button>
           </div>
         </div>
       </div>
+    </div>
   );
-  }
+}
 
-  export default ManageModifyPage;
+export default ManageModifyPage;
