@@ -59,11 +59,7 @@ function ManageMainPage() {
             const response = await axios.get(`/rooms/${roomId}/question`, { params });
             if (response.data && response.data.data && response.data.data.content) {
                 const questionsData = response.data.data.content;
-                const questionsWithNumber = questionsData.map((question, index) => ({
-                    ...question,
-                    roomQuestionNumber: page * questionsPerPage + index + 1
-                }));
-                setQuestions(questionsWithNumber);
+                setQuestions(questionsData);
                 setTotalPages(response.data.data.totalPages);
             } else {
                 setQuestions([]);
@@ -91,11 +87,7 @@ function ManageMainPage() {
             });
 
             if (response.data && Array.isArray(response.data.data)) {
-                const questionsWithNumber = response.data.data.map((question, index) => ({
-                    ...question,
-                    roomQuestionNumber: index + 1
-                }));
-                setQuestions(questionsWithNumber);
+                setQuestions(response.data.data);
                 setTotalPages(Math.ceil(response.data.data.length / questionsPerPage));
                 setPage(0);
             } else {
@@ -218,7 +210,7 @@ function ManageMainPage() {
                                     <tbody>
                                         {sortedQuestions.map((question) => (
                                             <tr key={question.questionId} onClick={() => handleQuestionClick(question.questionId)} style={{ cursor: 'pointer' }}>
-                                                <td>{question.roomQuestionNumber}</td>
+                                                <td>{question.orderInRoom}</td>
                                                 <td>{question.category}</td>
                                                 <td>{question.title}</td>
                                                 <td>{question.difficulty}</td>

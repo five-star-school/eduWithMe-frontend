@@ -35,14 +35,9 @@ function RoomMain() {
             });
             if (response.data && response.data.data) {
                 const questionsData = response.data.data.content || [];
-                // 각 질문에 roomQuestionNumber 추가
-                const questionsWithNumber = questionsData.map((question, index) => ({
-                    ...question,
-                    roomQuestionNumber: page * questionsPerPage + index + 1
-                }));
-                setQuestions(questionsWithNumber);
+                setQuestions(questionsData);
                 setTotalPages(response.data.data.totalPages);
-                console.table(questionsWithNumber);
+                console.table(questionsData);
             } else {
                 console.error('Unexpected data format:', response.data);
                 setQuestions([]);
@@ -61,7 +56,6 @@ function RoomMain() {
     const handleSearch = async () => {
         try {
             setLoading(true);
-            // URL에 쿼리 매개변수 직접 포함
             const response = await axios.get(
                 `/search/rooms/${roomId}/question/title`,
                 {
@@ -73,24 +67,23 @@ function RoomMain() {
                 }
             );
 
-            console.log('Search API Response:', response.data); // 검색 응답 데이터 확인
+            console.log('Search API Response:', response.data);
 
             if (response.data && Array.isArray(response.data.data)) {
-                setQuestions(response.data.data);  // 응답 데이터의 배열 설정
+                setQuestions(response.data.data);
                 setTotalPages(response.data.totalPages || 1);
-                setPage(0); // 검색 후 페이지를 첫 페이지로 초기화
+                setPage(0);
             } else {
                 console.error('Unexpected search data format:', response.data);
-                setQuestions([]); // 예상치 못한 데이터 형식인 경우 빈 배열로 설정
+                setQuestions([]);
             }
         } catch (error) {
             console.error('Failed to search questions:', error);
-            setQuestions([]); // 오류 발생 시 빈 배열로 설정
+            setQuestions([]);
         } finally {
             setLoading(false);
         }
     };
-
 
     const handleSearchInputChange = (e) => {
         setSearchKeyword(e.target.value);
@@ -141,7 +134,7 @@ function RoomMain() {
                                         <tr key={question.questionId}
                                             onClick={() => handleQuestionClick(question.questionId)}
                                             style={{cursor: 'pointer'}}>
-                                            <td>{question.roomQuestionNumber}</td>
+                                            <td>{question.orderInRoom}</td>
                                             <td>{question.category}</td>
                                             <td>{question.title}</td>
                                             <td>{question.difficulty}</td>
