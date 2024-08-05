@@ -27,7 +27,7 @@ function WrongAnswers({ problems = [] }) {
                         {problems.map((problem) => (
                             <tr key={problem.questionId}>
                                 <td>{problem.roomName}</td>
-                                <td>{problem.questionId}</td>
+                                <td>{problem.orderInRoom || 'N/A'}</td>
                                 <td>{problem.category}</td>
                                 <td>{problem.title}</td>
                                 <td>{problem.difficulty}</td>
