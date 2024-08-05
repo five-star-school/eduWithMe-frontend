@@ -91,7 +91,7 @@ function ChangePassword() {
 
     return (
         <div className={styles.changePassword}>
-            <h2 className={styles.title}>비밀번호 수정</h2>
+            <h2 className={styles.title}>비밀번호 변경</h2>
             <div className={styles.form}>
                 <input
                     className={styles.input}
