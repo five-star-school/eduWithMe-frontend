@@ -174,7 +174,7 @@ function ManageMainPage() {
                     isManager={isManager}
                 />
                 {isManager ? (
-                    <div className={styles.manageContent}>
+                    <div className={styles.roomContent}>
                         <div className={styles.contentHeader}>
                             <div className={styles.searchContainer}>
                                 <input
@@ -208,24 +208,24 @@ function ManageMainPage() {
                             sortedQuestions.length > 0 ? (
                                 <table className={styles.problemTable}>
                                     <thead>
-                                    <tr>
-                                        <th>문제 번호</th>
-                                        <th>카테고리</th>
-                                        <th>문제 제목</th>
-                                        <th>난이도</th>
-                                        <th>출제일</th>
-                                    </tr>
+                                        <tr>
+                                            <th>문제 번호</th>
+                                            <th>카테고리</th>
+                                            <th>문제 제목</th>
+                                            <th>난이도</th>
+                                            <th>출제일</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
-                                    {sortedQuestions.map((question) => (
-                                        <tr key={question.questionId} onClick={() => handleQuestionClick(question.questionId)} style={{ cursor: 'pointer' }}>
-                                            <td>{question.roomQuestionNumber}</td>
-                                            <td>{question.category}</td>
-                                            <td>{question.title}</td>
-                                            <td>{question.difficulty}</td>
-                                            <td>{question.createdAt ? formatDate(question.createdAt) : 'N/A'}</td>
-                                        </tr>
-                                    ))}
+                                        {sortedQuestions.map((question) => (
+                                            <tr key={question.questionId} onClick={() => handleQuestionClick(question.questionId)} style={{ cursor: 'pointer' }}>
+                                                <td>{question.roomQuestionNumber}</td>
+                                                <td>{question.category}</td>
+                                                <td>{question.title}</td>
+                                                <td>{question.difficulty}</td>
+                                                <td>{question.createdAt ? formatDate(question.createdAt) : 'N/A'}</td>
+                                            </tr>
+                                        ))}
                                     </tbody>
                                 </table>
                             ) : (

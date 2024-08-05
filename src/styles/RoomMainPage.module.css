@@ -7,12 +7,7 @@
 }
 
 .mainContent {
-    max-width: 1200px;
     margin: 0 auto;
-}
-
-.roomContent {
-    padding: 20px;
 }
 
 .contentHeader {
@@ -80,28 +75,28 @@
 
 .problemTable tr td:nth-child(1) {
     text-align: left;
-    width: 10%;
-}
-
-.problemTable tr td:nth-child(4) {
-    text-align: left;
-    width: 10%;
-}
-
-.problemTable tr td:nth-child(5) {
-    text-align: left;
-    width: 30%;
+    width: 8%;
 }
 
 .problemTable tr td:nth-child(2) {
     text-align: left;
-    width: 10%;
+    width: 12%;
 }
 
 .problemTable tr td:nth-child(3) {
     font-weight: 600;
     color: #3697ff;
-    width: 40%;
+    width: 50%;
+}
+
+.problemTable tr td:nth-child(4) {
+    text-align: left;
+    width: 15%;
+}
+
+.problemTable tr td:nth-child(5) {
+    text-align: left;
+    width: 15%;
 }
 
 .roomMainPage h2 {

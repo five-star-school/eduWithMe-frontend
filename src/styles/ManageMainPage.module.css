@@ -1,6 +1,8 @@
 .managePage {
   display: flex;
-  height: 100vh;
+  text-align: left;
+  background-color: #ffffff;
+  border-radius: 8px;
 }
 
 .mainContent {
@@ -10,15 +12,18 @@
   overflow-y: auto;
 }
 
-.manageContent {
+.roomContent {
   padding: 20px;
+  margin-right: 20px;
+  margin-left: 20px;
+  margin-top: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .contentHeader {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 20px;  
 }
 
 .searchContainer {
@@ -27,19 +32,21 @@
 }
 
 .searchInput {
-  padding: 8px 15px;
-  border: 1px solid #ced4da;
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ddd;  
   border-radius: 4px;
   margin-right: 10px;
-  font-size: 14px;
 }
 
-.searchButton, .filterButton, .createButton {
-  padding: 8px 15px;
+.searchButton,
+.filterButton,
+.createButton {
+  padding: 8px 16px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 16px;  
   color: white;
 }
 
@@ -77,19 +84,16 @@
   border-collapse: collapse;
   margin-top: 20px;
   font-size: 16px;
-  table-layout: fixed; 
 }
 
-.problemTable th, .problemTable td {
+.problemTable th,
+.problemTable td {
   padding: 15px 20px;
   text-align: left;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .problemTable th {
-  background-color: #4CAF50; 
+  background-color: #4CAF50;
   color: white;
   font-weight: bold;
   text-transform: uppercase;
@@ -102,33 +106,33 @@
 }
 
 .problemTable tr:hover {
-  background-color: #f1f1f1; 
+  background-color: #f1f1f1;
 }
 
 .problemTable th:nth-child(1),
 .problemTable td:nth-child(1) {
-  width: 8%; 
+  width: 8%;
 }
 
 .problemTable th:nth-child(2),
 .problemTable td:nth-child(2) {
-  width: 12%; 
+  width: 12%;
 }
 
 .problemTable td:nth-child(3) {
-  width: 50%; 
+  width: 50%;
   font-weight: 600;
-  color: #3697ff; 
+  color: #3697ff;
 }
 
 .problemTable th:nth-child(4),
 .problemTable td:nth-child(4) {
-  width: 15%; 
+  width: 15%;
 }
 
 .problemTable th:nth-child(5),
 .problemTable td:nth-child(5) {
-  width: 15%; 
+  width: 15%;
 }
 
 .solvedProblems h2 {
