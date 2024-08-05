@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import SidebarComponent from '../components/SidebarComponent';
 import ManageMainHeaderNav from '../components/ManageMainHeaderNav';
@@ -14,8 +14,31 @@ function ManageCreatePage() {
   const [difficulty, setDifficulty] = useState('');
   const [points, setPoints] = useState('');
   const [correctAnswer, setCorrectAnswer] = useState('');
+  const [roomName, setRoomName] = useState('');
+  const [isPrivate, setIsPrivate] = useState(false);
   const { roomId } = useParams();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchRoomInfo();
+  }, [roomId]);
+
+  const fetchRoomInfo = async () => {
+    try {
+      const response = await axios.get(`/rooms/one/${roomId}`);
+      if (response.data && response.data.data) {
+        const roomData = response.data.data;
+        setRoomName(roomData.roomName);
+        setIsPrivate(roomData.roomPassword !== null && roomData.roomPassword !== '');
+      }
+    } catch (error) {
+      console.error('Failed to fetch room info:', error);
+    }
+  };
+
+  const handleQuestionListClick = () => {
+    navigate(`/room/${roomId}/manageMain`);
+  };
 
   const categoryMapping = {
     '수학': 'MATH',
@@ -85,7 +108,12 @@ function ManageCreatePage() {
       <div className={styles.manageCreatePage}>
         <SidebarComponent />
         <div className={styles.mainContent}>
-          <ManageMainHeaderNav roomId={roomId} />
+          <ManageMainHeaderNav
+              roomId={roomId}
+              roomName={roomName}
+              roomIsPrivate={isPrivate}
+              onQuestionListClick={handleQuestionListClick}
+          />
           <div className={styles.createContent}>
             <QuestionDetail
                 titleValue={title}
