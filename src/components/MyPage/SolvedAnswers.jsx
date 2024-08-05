@@ -5,13 +5,15 @@ import { format } from 'date-fns';
 function SolvedAnswers({ problems }) {
     const formatDate = (dateString) => {
         const date = new Date(dateString);
-        return format(date, 'yyyy-MM-dd HH:mm'); 
+        return format(date, 'yyyy-MM-dd HH:mm');
     };
+
+    console.log('All problems:', problems);
 
     return (
         <div className={styles.solvedProblems}>
             <h2 className={styles.title}>해결한 문제</h2>
-            {problems.length > 0 ? (
+            {problems && problems.length > 0 ? (
                 <table className={styles.problemTable}>
                     <thead>
                     <tr>
@@ -24,16 +26,19 @@ function SolvedAnswers({ problems }) {
                     </tr>
                     </thead>
                     <tbody>
-                        {problems.map((problem) => (
+                    {problems.map((problem, index) => {
+                        console.log(`Problem ${index + 1}:`, problem);
+                        return (
                             <tr key={problem.questionId}>
                                 <td>{problem.roomName}</td>
-                                <td>{problem.questionId}</td>
+                                <td>{problem.orderInRoom || 'N/A'}</td>
                                 <td>{problem.category}</td>
                                 <td>{problem.title}</td>
                                 <td>{problem.difficulty}</td>
-                                <td>{formatDate(problem.updatedAt)}</td>
+                                <td>{problem.updatedAt ? formatDate(problem.updatedAt) : 'N/A'}</td>
                             </tr>
-                        ))}
+                        );
+                    })}
                     </tbody>
                 </table>
             ) : (
