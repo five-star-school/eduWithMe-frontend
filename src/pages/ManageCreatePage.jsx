@@ -125,7 +125,7 @@ function ManageCreatePage() {
             />
             <div className={styles.questionInfo}>
               <div className={styles.infoItem}>
-                <label className={styles.infoLabel}>카테고리:</label>
+                <label className={styles.infoLabel}>카테고리</label>
                 <select
                     className={styles.infoSelect}
                     value={Object.keys(categoryMapping).find(key => categoryMapping[key] === category) || ''}
@@ -139,7 +139,7 @@ function ManageCreatePage() {
                 </select>
               </div>
               <div className={styles.infoItem}>
-                <label className={styles.infoLabel}>난이도:</label>
+                <label className={styles.infoLabel}>난이도</label>
                 <select
                     className={styles.infoSelect}
                     value={Object.keys(difficultyMapping).find(key => difficultyMapping[key] === difficulty) || ''}
@@ -154,7 +154,7 @@ function ManageCreatePage() {
                 </select>
               </div>
               <div className={styles.infoItem}>
-                <label className={styles.infoLabel}>포인트:</label>
+                <label className={styles.infoLabel}>포인트</label>
                 <input
                     type="number"
                     className={styles.infoInput}
@@ -163,7 +163,7 @@ function ManageCreatePage() {
                 />
               </div>
               <div className={styles.infoItem}>
-                <label className={styles.infoLabel}>정답:</label>
+                <label className={styles.infoLabel}>정답</label>
                 <select
                     className={styles.infoSelect}
                     value={correctAnswer}

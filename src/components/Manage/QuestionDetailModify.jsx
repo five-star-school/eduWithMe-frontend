@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from '../../styles/ManageModifyPage.module.css';
+import AnswerOption from './AnswerOption';  
 
 const QuestionDetailModify = ({ question, onInputChange, onAnswerOptionChange }) => {
   return (
@@ -25,15 +26,12 @@ const QuestionDetailModify = ({ question, onInputChange, onAnswerOptionChange })
       </div>
       <div className={styles.answerOptions}>
         {['first', 'second', 'third', 'fourth'].map((option, index) => (
-          <div key={index} className={styles.answerOption}>
-            <span className={styles.optionNumber}>{index + 1}</span>
-            <input
-              type="text"
-              className={styles.optionContent}
-              value={question.answerOption[option]}
-              onChange={(e) => onAnswerOptionChange(option, e.target.value)}
-            />
-          </div>
+          <AnswerOption
+            key={index}
+            optionNumber={index + 1}
+            value={question.answerOption[option]}
+            onChange={(e) => onAnswerOptionChange(option, e.target.value)}
+          />
         ))}
       </div>
     </div>
