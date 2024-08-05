@@ -31,15 +31,14 @@ function App() {
             <Route path="/room/:roomId" element={<RoomMainPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
-            <Route path="/changepassword" element={<ChangePasswordPage />} />
-            <Route path="/forgotpassword" element={<ForgotPasswordPage />} />
+            <Route path="/changePassword" element={<ChangePasswordPage />} />
+            <Route path="/forgotPassword" element={<ForgotPasswordPage />} />
             <Route path="/room/:roomId/question/:questionId" element={<QuestionDetailPage />} />
             <Route path="/room/:roomId/manageMain" element={<ManageMainPage />} />
             <Route path="/room/:roomId/manageCreate" element={<ManageCreatePage />} />
             <Route path="/mypage" element={<MyPage />} />
             <Route path="/room/:roomId/question/:questionId/manageRead" element={<ManageReadPage />} />
             <Route path="/room/:roomId/question/:questionId/manageModify" element={<ManageModifyPage />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/myroom" element={<MyRoomPage />} />
           </Routes>
         </div>

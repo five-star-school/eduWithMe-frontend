@@ -98,7 +98,7 @@ function MyPage() {
     };
 
     const handleChangePassword = () => {
-        navigate('/changepassword');
+        navigate('/changePassword');
     };
 
     const handleMyRoomClick = () => {

@@ -88,7 +88,7 @@ function Login() {
             </form>
             {loginError && <p className={styles.errorMessage}>{loginError}</p>}
             <div className={styles.links}>
-                <Link to="/forgot-password" className={styles.link}>비밀번호 찾기</Link>
+                <Link to="/forgotPassword" className={styles.link}>비밀번호 찾기</Link>
                 <span className={styles.separator}>|</span>
                 <Link to="/signup" className={styles.link}>회원가입</Link>
             </div>
