@@ -9,6 +9,8 @@ import styles from '../styles/ManageReadPage.module.css';
 function ManageReadPage() {
   const [question, setQuestion] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [roomName, setRoomName] = useState('');
+  const [isPrivate, setIsPrivate] = useState(false);
   const { roomId, questionId } = useParams();
   const navigate = useNavigate();
 
@@ -17,9 +19,23 @@ function ManageReadPage() {
     if (token === null) {
       navigate('/login');
     } else {
+      fetchRoomInfo();
       fetchQuestionDetail();
     }
-  }, [questionId, navigate]);
+  }, [roomId, questionId, navigate]);
+
+  const fetchRoomInfo = async () => {
+    try {
+      const response = await axios.get(`/rooms/one/${roomId}`);
+      if (response.data && response.data.data) {
+        const roomData = response.data.data;
+        setRoomName(roomData.roomName);
+        setIsPrivate(roomData.roomPassword !== null && roomData.roomPassword !== '');
+      }
+    } catch (error) {
+      console.error('Failed to fetch room info:', error);
+    }
+  };
 
   const fetchQuestionDetail = async () => {
     try {
@@ -44,7 +60,6 @@ function ManageReadPage() {
   const handleQuestionListClick = () => {
     navigate(`/room/${roomId}/manageMain`);
   };
-
 
   const handleEdit = () => {
     navigate(`/room/${roomId}/question/${questionId}/manageModify`);
@@ -75,7 +90,12 @@ function ManageReadPage() {
       <div className={styles.manageReadPage}>
         <ManageReadSidebar />
         <div className={styles.mainContent}>
-          <ManageMainHeaderNav roomId={roomId} onQuestionListClick={handleQuestionListClick} />
+          <ManageMainHeaderNav
+              roomId={roomId}
+              roomName={roomName}
+              roomIsPrivate={isPrivate}
+              onQuestionListClick={handleQuestionListClick}
+          />
           <div className={styles.readContent}>
             <div className={styles.questionSection}>
               <div className={styles.questionTitleSection}>

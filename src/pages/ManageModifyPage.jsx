@@ -8,6 +8,8 @@ import styles from '../styles/ManageModifyPage.module.css';
 function ManageModifyPage() {
   const [question, setQuestion] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [roomName, setRoomName] = useState('');
+  const [isPrivate, setIsPrivate] = useState(false);
   const { roomId, questionId } = useParams();
   const navigate = useNavigate();
 
@@ -50,25 +52,43 @@ function ManageModifyPage() {
   };
 
   useEffect(() => {
+    const fetchRoomInfo = async () => {
+      try {
+        const response = await axios.get(`/rooms/one/${roomId}`);
+        if (response.data && response.data.data) {
+          const roomData = response.data.data;
+          setRoomName(roomData.roomName);
+          setIsPrivate(roomData.roomPassword !== null && roomData.roomPassword !== '');
+        }
+      } catch (error) {
+        console.error('Failed to fetch room info:', error);
+      }
+    };
+
+    const fetchQuestionDetail = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(`/rooms/${roomId}/question/${questionId}`);
+        const fetchedQuestion = response.data.data;
+        const difficulty = reverseDifficultyMapping[fetchedQuestion.difficulty];
+        setQuestion({
+          ...fetchedQuestion,
+          point: difficultyPointMapping[difficulty]
+        });
+      } catch (error) {
+        console.error('Failed to fetch question detail:', error);
+        alert('문제 정보를 불러오는데 실패했습니다.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRoomInfo();
     fetchQuestionDetail();
   }, [roomId, questionId]);
 
-  const fetchQuestionDetail = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.get(`/rooms/${roomId}/question/${questionId}`);
-      const fetchedQuestion = response.data.data;
-      const difficulty = reverseDifficultyMapping[fetchedQuestion.difficulty];
-      setQuestion({
-        ...fetchedQuestion,
-        point: difficultyPointMapping[difficulty]
-      });
-    } catch (error) {
-      console.error('Failed to fetch question detail:', error);
-      alert('문제 정보를 불러오는데 실패했습니다.');
-    } finally {
-      setLoading(false);
-    }
+  const handleQuestionListClick = () => {
+    navigate(`/room/${roomId}/manageMain`);
   };
 
   const handleInputChange = (e) => {
@@ -127,14 +147,19 @@ function ManageModifyPage() {
     }
   };
 
-  if (loading) return <div>로딩 중...</div>;
-  if (!question) return <div>문제를 찾을 수 없습니다.</div>;
+    if (loading) return <div>로딩 중...</div>;
+    if (!question) return <div>문제를 찾을 수 없습니다.</div>;
 
   return (
       <div className={styles.manageModifyPage}>
         <SidebarComponent />
         <div className={styles.mainContent}>
-          <ManageMainHeaderNav />
+          <ManageMainHeaderNav
+              roomId={roomId}
+              roomName={roomName}
+              roomIsPrivate={isPrivate}
+              onQuestionListClick={handleQuestionListClick}
+          />
           <div className={styles.modifyContent}>
             <div className={styles.questionSection}>
               <div className={styles.questionTitleSection}>
@@ -177,7 +202,12 @@ function ManageModifyPage() {
                     className={styles.infoSelect}
                     name="category"
                     value={reverseCategoryMapping[question.category] || question.category}
-                    onChange={(e) => handleInputChange({target: {name: 'category', value: categoryMapping[e.target.value] || e.target.value}})}
+                    onChange={(e) => handleInputChange({
+                      target: {
+                        name: 'category',
+                        value: categoryMapping[e.target.value] || e.target.value
+                      }
+                    })}
                 >
                   <option value="수학">수학</option>
                   <option value="과학">과학</option>
@@ -233,6 +263,6 @@ function ManageModifyPage() {
         </div>
       </div>
   );
-}
+  }
 
-export default ManageModifyPage;
+  export default ManageModifyPage;
