@@ -12,13 +12,13 @@ function ManageReadPage() {
   const [loading, setLoading] = useState(true);
   const [roomName, setRoomName] = useState('');
   const [isPrivate, setIsPrivate] = useState(false);
-  const [solvedStudents, setSolvedStudents] = useState([]);
+  const [solvedStudents, setSolvedStudents] = useState([]); // 빈 배열로 초기화
   const { roomId, questionId } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
     const token = getCookie('AccessToken');
-    if (token === null) {
+    if (!token) {
       navigate('/login');
     } else {
       fetchRoomInfo();
@@ -101,7 +101,7 @@ function ManageReadPage() {
 
   return (
     <div className={styles.manageReadPage}>
-      <ManageReadSidebar />
+      <ManageReadSidebar roomName={roomName} solvedStudents={solvedStudents} />
       <div className={styles.mainContent}>
         <ManageMainHeaderNav
           roomId={roomId}
