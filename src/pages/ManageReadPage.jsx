@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from "../util/axiosConfig";
 import { getCookie } from '../util/cookie';
-import ManageReadSidebar from '../components/ManageReadSidebar';
-import ManageMainHeaderNav from '../components/ManageMainHeaderNav';
+import ManageReadSidebar from '../components/Manage/ManageReadSidebar';
+import ManageMainHeaderNav from '../components/Manage/ManageMainHeaderNav';
+import QuestionDetailRead from '../components/Manage/QuestionDetailRead';
 import styles from '../styles/ManageReadPage.module.css';
 
 function ManageReadPage() {
@@ -43,7 +44,6 @@ function ManageReadPage() {
     try {
       setLoading(true);
       const response = await axios.get(`/rooms/${roomId}/question/${questionId}`);
-      console.log('Question Detail:', response.data);
       if (response.data && response.data.data) {
         setQuestion(response.data.data);
       } else {
@@ -100,59 +100,22 @@ function ManageReadPage() {
   }
 
   return (
-      <div className={styles.manageReadPage}>
-        <ManageReadSidebar roomName={roomName} solvedStudents={solvedStudents} />
-        <div className={styles.mainContent}>
-          <ManageMainHeaderNav
-              roomId={roomId}
-              roomName={roomName}
-              roomIsPrivate={isPrivate}
-              onQuestionListClick={handleQuestionListClick}
-          />
-          <div className={styles.readContent}>
-            <div className={styles.questionSection}>
-              <div className={styles.questionTitleSection}>
-                <span className={styles.questionLabel}>문제 제목</span>
-                <input type="text" className={styles.questionTitleInput} value={question.title} readOnly />
-              </div>
-              <div className={styles.questionContentSection}>
-                <span className={styles.questionLabel}>객관식 문제</span>
-                <textarea className={styles.questionContentInput} value={question.content} readOnly></textarea>
-              </div>
-            </div>
-            <div className={styles.answerOptions}>
-              {['first', 'second', 'third', 'fourth'].map((option, index) => (
-                  <div key={index} className={styles.answerOption}>
-                    <span className={styles.optionNumber}>{index + 1}</span>
-                    <input type="text" className={styles.optionContent} value={question.answerOption[option]} readOnly />
-                  </div>
-              ))}
-            </div>
-            <div className={styles.questionInfo}>
-              <div className={styles.infoItem}>
-                <span className={styles.infoLabel}>카테고리</span>
-                <input type="text" className={styles.infoInput} value={question.category} readOnly />
-              </div>
-              <div className={styles.infoItem}>
-                <span className={styles.infoLabel}>난이도</span>
-                <input type="text" className={styles.infoInput} value={question.difficulty} readOnly />
-              </div>
-              <div className={styles.infoItem}>
-                <span className={styles.infoLabel}>포인트</span>
-                <input type="text" className={styles.infoInput} value={question.point} readOnly />
-              </div>
-              <div className={styles.infoItem}>
-                <span className={styles.infoLabel}>정답</span>
-                <input type="text" className={styles.infoInput} value={question.answerOption.answered} readOnly />
-              </div>
-            </div>
-            <div className={styles.actionButtons}>
-              <button className={styles.editButton} onClick={handleEdit}>수정</button>
-              <button className={styles.deleteButton} onClick={handleDelete}>삭제</button>
-            </div>
-          </div>
-        </div>
+    <div className={styles.manageReadPage}>
+      <ManageReadSidebar />
+      <div className={styles.mainContent}>
+        <ManageMainHeaderNav
+          roomId={roomId}
+          roomName={roomName}
+          roomIsPrivate={isPrivate}
+          onQuestionListClick={handleQuestionListClick}
+        />
+        <QuestionDetailRead
+          question={question}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+        />
       </div>
+    </div>
   );
 }
 

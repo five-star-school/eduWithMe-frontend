@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from '../../styles/QuestionDetail.module.css';
+import AnswerOption from './AnswerOption';  
 
 function QuestionDetail({ 
   titleValue, 
@@ -32,16 +33,12 @@ function QuestionDetail({
       </div>
       <div className={styles.answerOptions}>
         {options.map((option, index) => (
-          <div key={index} className={styles.answerOption}>
-            <span className={styles.optionNumber}>{index + 1}</span>
-            <input 
-              type="text" 
-              className={styles.optionContent} 
-              placeholder={`객관식${index + 1}`} 
-              value={option} 
-              onChange={e => onOptionChange(index, e.target.value)}
-            />
-          </div>
+          <AnswerOption
+            key={index}
+            optionNumber={index + 1}
+            value={option}
+            onChange={(e) => onOptionChange(index, e.target.value)}
+          />
         ))}
       </div>
     </div>

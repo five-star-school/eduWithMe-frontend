@@ -169,3 +169,33 @@
   color: #fff;
   border-color: #007bff;
 }
+
+.infoItem {
+  display: flex;
+  align-items: center;
+  margin-left: 20px;
+}
+
+.infoLabel {
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.infoSelect,
+.infoInput {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  width: 120px;
+  font-size: 16px;
+  margin-left: 12px;
+  color: #333;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.infoSelect option {
+  background-color: #fff;
+  color: #333;
+}

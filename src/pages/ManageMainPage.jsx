@@ -5,7 +5,7 @@ import axios from "../util/axiosConfig";
 import { getCookie } from '../util/cookie';
 import styles from '../styles/ManageMainPage.module.css';
 import { format } from 'date-fns';
-import ManageMainHeaderNav from "../components/ManageMainHeaderNav";
+import ManageMainHeaderNav from "../components/Manage/ManageMainHeaderNav";
 
 function ManageMainPage() {
     const [questions, setQuestions] = useState([]);
@@ -57,6 +57,9 @@ function ManageMainPage() {
                 sort: `${sortField},${sortDirection}`
             };
             const response = await axios.get(`/rooms/${roomId}/question`, { params });
+            
+            console.table(response.data.data.content);
+
             if (response.data && response.data.data && response.data.data.content) {
                 const questionsData = response.data.data.content;
                 setQuestions(questionsData);
@@ -85,6 +88,8 @@ function ManageMainPage() {
                     size: questionsPerPage,
                 }
             });
+
+            console.table(response.data.data);
 
             if (response.data && Array.isArray(response.data.data)) {
                 setQuestions(response.data.data);

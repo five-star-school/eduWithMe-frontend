@@ -1,4 +1,3 @@
-/* src/styles/ManageModifyPage.module.css */
 .manageModifyPage {
   display: flex;
   height: 100vh;
@@ -16,6 +15,8 @@
 }
 
 .questionSection {
+  margin-top: 20px;
+  padding: 20px;
   margin-bottom: 20px;
 }
 
@@ -23,30 +24,43 @@
 .questionContentSection {
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 
 .questionLabel {
   flex: 0 0 100px;
   font-weight: bold;
+  color: #333;
 }
 
 .questionTitleInput,
 .questionContentInput {
   flex: 1;
-  padding: 10px;
-  border: 1px solid #ccc;
+  padding: 12px;
+  border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 16px;
+  color: #333;
+  background-color: #f9f9f9;
+}
+
+.questionTitleInput {
+  height: 30px;
 }
 
 .questionContentInput {
-  height: 100px;
+  height: 80px;
   resize: vertical;
 }
 
 .answerOptions {
-  margin: 30px 0 30px 100px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  background-color: #fff;
+  padding: 20px;
+  margin-left: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .answerOption {
@@ -58,33 +72,40 @@
 .optionNumber {
   background-color: #007bff;
   color: white;
-  width: 25px;
-  height: 25px;
+  width: 30px;
+  height: 30px;
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 50%;
   margin-right: 10px;
+  font-weight: bold;
 }
 
 .optionContent {
   flex: 1;
-  padding: 10px;
-  border: 1px solid #ccc;
+  margin-left: 12px;
+  padding: 12px;
+  background-color: #f0f0f0;
   border-radius: 4px;
-  font-size: 16px;
+  border: none;
+  font-size: 17px;
+  color: #333;
+  text-align: center;
 }
 
 .questionInfo {
   display: flex;
   justify-content: flex-end;
   margin-bottom: 20px;
-  flex-wrap: wrap; /* 필요시 줄 바꿈 */
+  font-size: 15px;
+  color: #666;
 }
 
 .infoItem {
+  display: flex;
+  align-items: center;
   margin-left: 20px;
-  margin-bottom: 10px; /* 줄 바꿈 시 간격 조정 */
 }
 
 .infoLabel {
@@ -94,10 +115,21 @@
 
 .infoSelect,
 .infoInput {
-  padding: 5px;
+  padding: 10px;
   border: 1px solid #ccc;
-  border-radius: 4px;
-  width: 120px; /* 모든 입력 필드의 너비를 동일하게 설정 */
+  border-radius: 8px;
+  width: 80px;
+  font-size: 16px;
+  margin-left: 12px;
+  color: #333;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.infoSelect option {
+  background-color: #fff;
+  color: #333;
 }
 
 .actionButtons {
@@ -122,4 +154,12 @@
 .saveButton {
   background-color: #ffa500;
   color: white;
+}
+
+.saveButton:hover {
+  background-color: #e59400;
+}
+
+.cancelButton:hover {
+  background-color: #e0e0e0;
 }
