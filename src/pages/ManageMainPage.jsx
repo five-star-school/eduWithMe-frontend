@@ -204,22 +204,26 @@ function ManageMainPage() {
                             sortedQuestions.length > 0 ? (
                                 <table className={styles.problemTable}>
                                     <thead>
-                                        <tr>
-                                            <th>문제 번호</th>
-                                            <th>카테고리</th>
-                                            <th>문제 제목</th>
-                                            <th>난이도</th>
-                                            <th>출제일</th>
-                                        </tr>
+                                    <tr>
+                                        <th>문제 번호</th>
+                                        <th>카테고리</th>
+                                        <th>문제 제목</th>
+                                        <th>난이도</th>
+                                        <th>출제일</th>
+                                        <th>수정일</th>
+                                    </tr>
                                     </thead>
                                     <tbody>
                                         {sortedQuestions.map((question) => (
-                                            <tr key={question.questionId} onClick={() => handleQuestionClick(question.questionId)} style={{ cursor: 'pointer' }}>
+                                            <tr key={question.questionId}
+                                                onClick={() => handleQuestionClick(question.questionId)}
+                                                style={{cursor: 'pointer'}}>
                                                 <td>{question.orderInRoom}</td>
                                                 <td>{question.category}</td>
                                                 <td>{question.title}</td>
                                                 <td>{question.difficulty}</td>
                                                 <td>{question.createdAt ? formatDate(question.createdAt) : 'N/A'}</td>
+                                                <td>{question.updatedAt ? formatDate(question.updatedAt) : 'N/A'}</td>
                                             </tr>
                                         ))}
                                     </tbody>

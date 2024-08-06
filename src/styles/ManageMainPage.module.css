@@ -120,18 +120,23 @@
 }
 
 .problemTable td:nth-child(3) {
-  width: 50%;
+  width: 42%;
   font-weight: 600;
   color: #3697ff;
 }
 
 .problemTable th:nth-child(4),
 .problemTable td:nth-child(4) {
-  width: 15%;
+  width: 8%;
 }
 
 .problemTable th:nth-child(5),
 .problemTable td:nth-child(5) {
+  width: 15%;
+}
+
+.problemTable th:nth-child(6),
+.problemTable td:nth-child(6) {
   width: 15%;
 }
 
