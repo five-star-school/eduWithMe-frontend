@@ -20,7 +20,7 @@ function RoomLayout({ children }) {
 
     const fetchRoomInfo = async () => {
         try {
-            const response = await axios.get(`/rooms/one/${roomId}`);
+            const response = await axios.get(`/api/rooms/one/${roomId}`);
             console.log('Room info response:', response.data);
 
             if (response.data && response.data.data) {
@@ -48,7 +48,7 @@ function RoomLayout({ children }) {
 
     const checkRoomManagerStatus = async () => {
         try {
-            const response = await axios.get(`/rooms/${roomId}/users`);
+            const response = await axios.get(`/api/rooms/${roomId}/users`);
             const currentUserId = getCookie('userId'); // Get the current user ID from the cookie
 
             // Debugging information

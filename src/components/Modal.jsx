@@ -25,12 +25,12 @@ function Modal({ modalOpen, setModalOpen, isCreateModal, selectedSpace, addNewSp
       try {
         let response;
         if (isPrivate) {
-          response = await axios.post('/rooms/private', {
+          response = await axios.post('/api/rooms/private', {
             roomName: newTitle,
             roomPassword: newPassword,
           });
         } else {
-          response = await axios.post('/rooms/public', {
+          response = await axios.post('/api/rooms/public', {
             roomName: newTitle,
           });
         }
@@ -59,11 +59,11 @@ function Modal({ modalOpen, setModalOpen, isCreateModal, selectedSpace, addNewSp
             alert('비밀번호를 입력해야 합니다.');
             return;
           }
-          await axios.post(`/rooms/${selectedSpace.roomId}/private`, {
+          await axios.post(`/api/rooms/${selectedSpace.roomId}/private`, {
             roomPassword: enteredPassword,
           });
         } else {
-          await axios.post(`/rooms/${selectedSpace.roomId}/public`);
+          await axios.post(`/api/rooms/${selectedSpace.roomId}/public`);
         }
         alert('방에 성공적으로 입장했습니다.');
         setModalOpen(false);

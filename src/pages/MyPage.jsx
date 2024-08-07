@@ -54,7 +54,7 @@ function MyPage() {
                     throw new Error('AccessToken이 없습니다.');
                 }
 
-                const response = await axios.get('/profiles', {
+                const response = await axios.get('/api/profiles', {
                     headers: {
                         'AccessToken': token
                     }
@@ -76,11 +76,11 @@ function MyPage() {
 
     useEffect(() => {
         if (activeTab === 'solved') {
-            fetchData(`/profiles/solve?page=${page}&size=5`, setSolvedProblems, setError, setLoading, setTotalPages);
+            fetchData(`/api/profiles/solve?page=${page}&size=5`, setSolvedProblems, setError, setLoading, setTotalPages);
         } else if (activeTab === 'wrong') {
-            fetchData(`/profiles/wrong?page=${page}&size=5`, setWrongAnswers, setError, setLoading, setTotalPages);
+            fetchData(`/api/profiles/wrong?page=${page}&size=5`, setWrongAnswers, setError, setLoading, setTotalPages);
         } else if (activeTab === 'comments') {
-            fetchData(`/profiles/comments?page=${page}&size=5`, setMyComments, setError, setLoading, setTotalPages);
+            fetchData(`/api/profiles/comments?page=${page}&size=5`, setMyComments, setError, setLoading, setTotalPages);
         }
     }, [activeTab, page]);
 

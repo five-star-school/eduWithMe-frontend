@@ -34,7 +34,7 @@ function Signup() {
         }
 
         try {
-            await axios.post('/users/signup/request', { email });
+            await axios.post('/api/users/signup/request', { email });
             alert('인증 코드가 이메일로 전송되었습니다.');
         } catch (error) {
             if (error.response && error.response.data.msg === "중복된 유저가 존재합니다.") {
@@ -54,7 +54,7 @@ function Signup() {
         }
 
         try {
-            await axios.post('/users/signup/verify', { email, authNum });
+            await axios.post('/api/users/signup/verify', { email, authNum });
             alert('이메일 인증이 완료되었습니다.');
             setIsEmailVerified(true);
         } catch (error) {
@@ -104,7 +104,7 @@ function Signup() {
         }
 
         try {
-            await axios.post('/users/signup', {
+            await axios.post('/api/users/signup', {
                 email,
                 password,
                 nickName: nickname

@@ -25,7 +25,7 @@ function ManageCreatePage() {
 
   const fetchRoomInfo = async () => {
     try {
-      const response = await axios.get(`/rooms/one/${roomId}`);
+      const response = await axios.get(`/api/rooms/one/${roomId}`);
       if (response.data && response.data.data) {
         const roomData = response.data.data;
         setRoomName(roomData.roomName);
@@ -95,7 +95,7 @@ function ManageCreatePage() {
         }
       };
 
-      await axios.post(`/rooms/${roomId}/question`, questionData);
+      await axios.post(`/api/rooms/${roomId}/question`, questionData);
       alert('문제가 성공적으로 생성되었습니다.');
       navigate(`/room/${roomId}/manageMain`);
     } catch (error) {

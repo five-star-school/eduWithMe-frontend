@@ -29,7 +29,7 @@ function ManageReadPage() {
 
   const fetchRoomInfo = async () => {
     try {
-      const response = await axios.get(`/rooms/one/${roomId}`);
+      const response = await axios.get(`/api/rooms/one/${roomId}`);
       if (response.data && response.data.data) {
         const roomData = response.data.data;
         setRoomName(roomData.roomName);
@@ -43,7 +43,7 @@ function ManageReadPage() {
   const fetchQuestionDetail = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`/rooms/${roomId}/question/${questionId}`);
+      const response = await axios.get(`/api/rooms/${roomId}/question/${questionId}`);
       if (response.data && response.data.data) {
         setQuestion(response.data.data);
       } else {
@@ -61,7 +61,7 @@ function ManageReadPage() {
 
   const fetchSolvedStudents = async () => {
     try {
-      const response = await axios.get(`/rooms/${roomId}/question/${questionId}/solved-students`);
+      const response = await axios.get(`/api/rooms/${roomId}/question/${questionId}/solved-students`);
       if (response.data && response.data.data) {
         setSolvedStudents(response.data.data);
       }

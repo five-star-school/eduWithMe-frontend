@@ -13,7 +13,7 @@ function SpaceCard() {
 
   const fetchSpaces = async () => {
     try {
-      const response = await axios.get('/rooms?page=0');
+      const response = await axios.get('/api/rooms?page=0');
       if (Array.isArray(response.data.data)) {
         const updatedSpaces = response.data.data.map(space => ({
           ...space,

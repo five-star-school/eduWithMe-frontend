@@ -19,11 +19,11 @@ function Modal({ modalOpen, setModalOpen, selectedSpace }) {
                         alert('비밀번호를 입력해야 합니다.');
                         return;
                     }
-                    await axios.post(`/rooms/${selectedSpace.roomId}/private`, {
+                    await axios.post(`/api/rooms/${selectedSpace.roomId}/private`, {
                         roomPassword: enteredPassword,
                     });
                 } else {
-                    await axios.post(`/rooms/${selectedSpace.roomId}/public`);
+                    await axios.post(`/api/rooms/${selectedSpace.roomId}/public`);
                 }
                 alert('방에 성공적으로 입장했습니다.');
                 setModalOpen(false);
@@ -99,7 +99,7 @@ function MyRoom() {
         }
 
         try {
-            const response = await axios.get(`/rooms/${userId}`);
+            const response = await axios.get(`/api/rooms/${userId}`);
             console.log('API response:', response);
 
             if (response.data && response.data.data) {
