@@ -18,6 +18,7 @@
 
 .authButtons {
   display: flex;
+  align-items: center;
   gap: 20px;
 }
 
@@ -48,10 +49,9 @@
   background-color: #333;
 }
 
-/* 추가된 스타일 */
 .nickName {
   margin-right: 10px;
-  font-size: 18px;
+  font-size: 20px;
   font-weight: bold;
   color: #333;
 }
@@ -66,19 +66,19 @@
 }
 
 .myPageButton {
-  background-color: #007bff;
+  background-color: #2980b9;
   color: white;
 }
 
 .myPageButton:hover {
-  background-color: #0056b3;
+  background-color: #1f6395;
 }
 
 .logoutButton {
-  background-color: #dc3545;
+  background-color: #e74c3c;
   color: white;
 }
 
 .logoutButton:hover {
-  background-color: #c82333;
+  background-color: #c0392b;
 }

@@ -1,38 +1,53 @@
 .headerNav {
     display: flex;
-    justify-content: space-between; /* 왼쪽과 오른쪽 요소 사이에 공간을 만듭니다 */
+    justify-content: space-between; 
     align-items: center;
     padding: 15px 20px;
-    background-color: #f0f0f0;
+    background-color: #ffffff;
+    border-bottom: 1px solid #e0e0e0; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
 }
 
 .navButtons {
     display: flex;
-    gap: 10px; /* 버튼 사이의 간격 */
+    gap: 12px; 
 }
 
 .navButton {
-    padding: 0.6rem 1rem;
+    padding: 8px 16px;
     border: none;
     background-color: #007bff;
     color: white;
     cursor: pointer;
     font-size: 14px;
-    border-radius: 0.5rem;
+    border-radius: 8px; 
+    transition: background-color 0.3s ease, transform 0.2s ease; 
+}
+
+.navButton:hover {
+    background-color: #0056b3; 
+    transform: scale(1.05);
+}
+
+.navButton:focus {
+    outline: none; 
 }
 
 .visibilityIndicator {
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
+    padding: 8px 16px;
+    border-radius: 8px; 
     color: white;
     font-weight: bold;
     text-transform: uppercase;
+    font-size: 14px; 
+    transition: background-color 0.3s ease; 
 }
 
 .public {
-    background-color: #4CAF50; /* Green for Public */
+    background-color: #28a745; 
 }
 
 .private {
-    background-color: #F44336; /* Red for Private */
+    background-color: #dc3545; 
 }
+
