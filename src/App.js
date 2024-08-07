@@ -18,6 +18,7 @@ import { AuthProvider } from './util/AuthContext';
 import ForgotPassword from './components/ForgotPassword';
 import MyRoomPage from './pages/MyRoomPage';
 import HomePage from './pages/HomePage';
+import KakaoRedirect from './pages/KakaoRedirect';
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
             <Route path="/room/:roomId/question/:questionId/manageRead" element={<ManageReadPage />} />
             <Route path="/room/:roomId/question/:questionId/manageModify" element={<ManageModifyPage />} />
             <Route path="/myroom" element={<MyRoomPage />} />
+            <Route path="/kakao-redirect" element={<KakaoRedirect />} />
           </Routes>
         </div>
       </Router>

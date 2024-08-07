@@ -1,16 +1,21 @@
-// src/components/Header.jsx
 import React, { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../util/AuthContext';
 import styles from '../styles/Header.module.css';
+
 function Header() {
   const navigate = useNavigate();
   const { user, logout } = useContext(AuthContext);
+
   const handleLogoutClick = () => {
     logout();
-    alert('로그아웃되었습니다.'); // 로그아웃 알림창 추가
+    // Clear cookies
+    document.cookie = 'AccessToken=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    document.cookie = 'userId=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    alert('로그아웃되었습니다.');
     navigate('/main');
   };
+
   return (
       <header className={styles.header}>
         <Link to="/main" className={styles.headerTitle}>EduWithMe</Link>
@@ -31,4 +36,5 @@ function Header() {
       </header>
   );
 }
+
 export default Header;

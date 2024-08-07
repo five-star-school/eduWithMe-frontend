@@ -1,8 +1,6 @@
-// src/util/AuthContext.js
 import React, { createContext, useState, useEffect } from 'react';
 import axios from '../util/axiosConfig';
 import { getCookie } from './cookie';
-import Cookies from 'js-cookie';
 
 export const AuthContext = createContext(undefined);
 
@@ -12,10 +10,11 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const checkLoginStatus = async () => {
       const token = getCookie('AccessToken');
-      if (token) {
+      const userId = getCookie('userId');
+      if (token && userId) {
         try {
           const response = await axios.get('/profiles');
-          console.log('User profile fetched:', response.data); // 로그 추가
+          console.log('User profile fetched:', response.data);
           setUser(response.data.data);
         } catch (error) {
           console.error('Failed to fetch user profile:', error);
@@ -30,7 +29,7 @@ export const AuthProvider = ({ children }) => {
     setUser(userData);
     try {
       const response = await axios.get('/profiles');
-      console.log('User profile fetched after login:', response.data); // 로그 추가
+      console.log('User profile fetched after login:', response.data);
       setUser(response.data.data);
     } catch (error) {
       console.error('Failed to fetch user profile after login:', error);
@@ -39,9 +38,6 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     setUser(null);
-    Cookies.remove('AccessToken');
-    Cookies.remove('RefreshToken');
-    delete axios.defaults.headers.common['AccessToken'];
   };
 
   return (
