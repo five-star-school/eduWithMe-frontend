@@ -27,7 +27,7 @@ function RoomMain() {
     const fetchQuestions = async () => {
         try {
             setLoading(true);
-            const response = await axios.get(`/rooms/${roomId}/question`, {
+            const response = await axios.get(`/api/rooms/${roomId}/question`, {
                 params: {
                     page: page,
                     size: questionsPerPage,
@@ -57,7 +57,7 @@ function RoomMain() {
         try {
             setLoading(true);
             const response = await axios.get(
-                `/search/rooms/${roomId}/question/title`,
+                `/api/search/rooms/${roomId}/question/title`,
                 {
                     params: {
                         keyword: searchKeyword,

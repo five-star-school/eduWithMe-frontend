@@ -40,6 +40,7 @@
   
   .spaceCard {
     background-color: #ffffff;
+    margin-top: 30px;
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -159,4 +160,36 @@
 
 .modalButton:hover {
   background: #ddd;
+}
+
+.searchContainer {
+  display: flex;
+  align-items: center;
+  margin-right: 730px; 
+}
+
+.searchInput {
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-right: 10px;
+}
+
+.searchButton {
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.searchButton:hover {
+  background-color: #0056b3;
+}
+
+.noResultsMessage {
+  margin-top: 50px;
 }

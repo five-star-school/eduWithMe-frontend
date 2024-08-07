@@ -66,7 +66,7 @@ function ChangePassword() {
             setLoading(true);
             setError(null);
 
-            const response = await axios.put('/profiles/password', {
+            const response = await axios.put('/api/profiles/password', {
                 currentPassword,
                 newPassword,
             });

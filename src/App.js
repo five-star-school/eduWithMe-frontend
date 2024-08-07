@@ -15,7 +15,6 @@ import MyPage from './pages/MyPage';
 import ManageReadPage from './pages/ManageReadPage';
 import ManageModifyPage from './pages/ManageModifyPage';
 import { AuthProvider } from './util/AuthContext';
-import ForgotPassword from './components/ForgotPassword';
 import MyRoomPage from './pages/MyRoomPage';
 import HomePage from './pages/HomePage';
 import KakaoRedirect from './pages/KakaoRedirect';

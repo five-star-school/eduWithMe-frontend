@@ -56,7 +56,7 @@ function ManageModifyPage() {
   useEffect(() => {
     const fetchRoomInfo = async () => {
       try {
-        const response = await axios.get(`/rooms/one/${roomId}`);
+        const response = await axios.get(`/api/rooms/one/${roomId}`);
         if (response.data && response.data.data) {
           const roomData = response.data.data;
           setRoomName(roomData.roomName);
@@ -70,7 +70,7 @@ function ManageModifyPage() {
     const fetchQuestionDetail = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`/rooms/${roomId}/question/${questionId}`);
+        const response = await axios.get(`/api/rooms/${roomId}/question/${questionId}`);
         const fetchedQuestion = response.data.data;
         const difficulty = reverseDifficultyMapping[fetchedQuestion.difficulty];
         setQuestion({
@@ -138,7 +138,7 @@ function ManageModifyPage() {
 
       console.log('Sending update:', updatedQuestion);
 
-      const response = await axios.put(`/rooms/${roomId}/question/${questionId}`, updatedQuestion);
+      const response = await axios.put(`/api/rooms/${roomId}/question/${questionId}`, updatedQuestion);
       console.log('Server response:', response.data);
 
       alert('문제가 성공적으로 수정되었습니다.');

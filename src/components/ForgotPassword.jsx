@@ -21,7 +21,7 @@ function ForgotPassword() {
         setMessage('');
 
         try {
-            const response = await axios.post('/users/temp-password-request', { email });
+            const response = await axios.post('/api/users/temp-password-request', { email });
             setMessage(response.data);
             setShowAuthCodeInput(true);
         } catch (error) {
@@ -37,7 +37,7 @@ function ForgotPassword() {
         setMessage('');
 
         try {
-            const response = await axios.post('/users/reset-password', { email, authNum: authCode });
+            const response = await axios.post('/api/users/reset-password', { email, authNum: authCode });
             setShowTempPassword(true);
             setMessage('임시 비밀번호가 이메일로 전송되었습니다. 로그인 페이지로 이동합니다.');
             setTimeout(() => navigate('/login'), 3000);
