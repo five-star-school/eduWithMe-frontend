@@ -27,7 +27,7 @@ function CommentSection() {
         setIsLoading(true);
         setError(null);
         try {
-            const response = await axios.get(`/question/${questionId}/comments`, {
+            const response = await axios.get(`/api/question/${questionId}/comments`, {
                 params: {
                     page: page,
                     sort: `createdAt,${order}`
@@ -95,7 +95,7 @@ function CommentSection() {
             return;
         }
         try {
-            await axios.post(`/question/${questionId}/comments`, { comment: newComment });
+            await axios.post(`/api/question/${questionId}/comments`, { comment: newComment });
             setNewComment('');
             fetchComments(0, sortOrder);
         } catch (error) {
@@ -111,7 +111,7 @@ function CommentSection() {
 
     const handleSaveClick = async (commentId) => {
         try {
-            const response = await axios.put(`/question/${questionId}/comments/${commentId}`, { comment: editContent });
+            const response = await axios.put(`/api/question/${questionId}/comments/${commentId}`, { comment: editContent });
             console.log('Updated comment data:', response.data.data);  // 디버깅용
 
             setCommentList(prevComments =>
@@ -132,7 +132,7 @@ function CommentSection() {
     const handleDeleteClick = async (commentId) => {
         if (window.confirm('정말 삭제하시겠습니까?')) {
             try {
-                await axios.delete(`/question/${questionId}/comments/${commentId}`);
+                await axios.delete(`/api/question/${questionId}/comments/${commentId}`);
                 fetchComments(currentPage, sortOrder);
             } catch (error) {
                 console.error('Failed to delete comment:', error);

@@ -25,7 +25,7 @@ function QuestionDetail() {
 
     const fetchQuestionDetail = async () => {
         try {
-            const response = await axios.get(`/rooms/${roomId}/question/${questionId}`);
+            const response = await axios.get(`/api/rooms/${roomId}/question/${questionId}`);
             console.log('Question detail:', response.data);
             if (response.data && response.data.data) {
                 setQuestion(response.data.data);
@@ -40,7 +40,7 @@ function QuestionDetail() {
 
     const checkIfTeacher = async () => {
         try {
-            const response = await axios.get(`/rooms/${roomId}/users`);
+            const response = await axios.get(`/api/rooms/${roomId}/users`);
             if (response.data && response.data.data) {
                 const currentUserId = getCookie('userId');
                 const roomData = response.data.data;
@@ -65,7 +65,7 @@ function QuestionDetail() {
 
         if (selectedAnswer !== null && question) {
             try {
-                const response = await axios.post(`/rooms/${roomId}/question/${questionId}/submit`, {
+                const response = await axios.post(`/api/rooms/${roomId}/question/${questionId}/submit`, {
                     selectedAnswer: selectedAnswer + 1
                 });
 

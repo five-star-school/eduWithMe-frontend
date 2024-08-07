@@ -35,7 +35,7 @@ function ManageMainPage() {
 
     const fetchRoomInfo = async () => {
         try {
-            const response = await axios.get(`/rooms/one/${roomId}`);
+            const response = await axios.get(`/api/rooms/one/${roomId}`);
             if (response.data && response.data.data) {
                 const roomData = response.data.data;
                 setRoomName(roomData.roomName);
@@ -56,7 +56,7 @@ function ManageMainPage() {
                 size: questionsPerPage,
                 sort: `${sortField},${sortDirection}`
             };
-            const response = await axios.get(`/rooms/${roomId}/question`, { params });
+            const response = await axios.get(`/api/rooms/${roomId}/question`, { params });
             
             console.table(response.data.data.content);
 
@@ -81,7 +81,7 @@ function ManageMainPage() {
     const handleSearch = async () => {
         try {
             setLoading(true);
-            const response = await axios.get(`/search/rooms/${roomId}/question/title`, {
+            const response = await axios.get(`/api/search/rooms/${roomId}/question/title`, {
                 params: {
                     keyword: searchKeyword,
                     page: 0,

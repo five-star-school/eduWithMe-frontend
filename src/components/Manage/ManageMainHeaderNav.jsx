@@ -23,7 +23,7 @@ function ManageMainHeaderNav({ roomId, roomName, roomIsPrivate, onQuestionListCl
         return;
       }
 
-      await axios.delete(`/rooms/${roomId}`, {
+      await axios.delete(`/api/rooms/${roomId}`, {
         headers: {
           'AccessToken': token,
         }
@@ -50,7 +50,7 @@ function ManageMainHeaderNav({ roomId, roomName, roomIsPrivate, onQuestionListCl
         return;
       }
 
-      await axios.put(`/rooms/${roomId}`, {
+      await axios.put(`/api/rooms/${roomId}`, {
         roomId: roomId,
         roomName: newRoomName,
       }, {

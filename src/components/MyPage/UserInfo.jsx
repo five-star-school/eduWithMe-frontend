@@ -14,7 +14,7 @@ function UserInfo({ user }) {
 
     const handleSaveClick = async () => {
         try {
-            const response = await axios.put('/profiles', {
+            const response = await axios.put('/api/profiles', {
                 email, // 이메일은 수정하지 않습니다.
                 nickName
             });

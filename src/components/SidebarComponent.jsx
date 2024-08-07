@@ -15,7 +15,7 @@ function SidebarComponent() {
     const fetchRoomData = async () => {
       try {
         // API 호출
-        const response = await axios.get(`/rooms/${roomId}/users`);
+        const response = await axios.get(`/api/rooms/${roomId}/users`);
         console.log('API Response:', response.data); // 응답 데이터 확인
 
         // 응답 데이터 구조에 맞게 수정

@@ -32,7 +32,7 @@ function Login() {
         }
 
         try {
-            const response = await axios.post('/users/login', { email, password });
+            const response = await axios.post('/api/users/login', { email, password });
 
             if (response.status === 200) {
                 const accessToken = response.headers['accesstoken'];
@@ -61,7 +61,7 @@ function Login() {
 
     const handleKakaoLogin = async () => {
         try {
-            const keyResponse = await axios.get('/users/key-value');
+            const keyResponse = await axios.get('/api/users/key-value');
             const { redirectUri, appKey } = keyResponse.data;
 
             if (!window.Kakao.isInitialized()) {
