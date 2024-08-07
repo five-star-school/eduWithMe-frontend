@@ -81,7 +81,7 @@ function ManageReadPage() {
   const handleDelete = async () => {
     if (window.confirm('정말로 이 문제를 삭제하시겠습니까?')) {
       try {
-        await axios.delete(`/rooms/${roomId}/question/${questionId}`);
+        await axios.delete(`/api/rooms/${roomId}/question/${questionId}`);
         alert('문제가 삭제되었습니다.');
         navigate(`/room/${roomId}/manageMain`);
       } catch (error) {
