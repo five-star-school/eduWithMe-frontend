@@ -6,6 +6,7 @@ export const AuthContext = createContext(undefined);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const checkLoginStatus = async () => {
@@ -20,6 +21,7 @@ export const AuthProvider = ({ children }) => {
           console.error('Failed to fetch user profile:', error);
         }
       }
+      setLoading(false);
     };
 
     checkLoginStatus();
@@ -38,7 +40,13 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     setUser(null);
+    document.cookie = 'AccessToken=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    document.cookie = 'userId=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
       <AuthContext.Provider value={{ user, login, logout }}>
