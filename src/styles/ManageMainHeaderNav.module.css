@@ -51,6 +51,12 @@
   background-color: #dc3545; 
 }
 
+.leftButtons, .rightButtons {
+  display: flex;
+  align-items: center;
+  gap: 16px; /* 버튼 사이의 간격을 늘리기 위해 16px로 설정 */
+}
+
 .modalOverlay {
   position: fixed;
   top: 0;
