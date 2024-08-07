@@ -1,36 +1,54 @@
 .headerNav {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between; 
   align-items: center;
   padding: 15px 20px;
-  background-color: #f0f0f0;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e0e0e0; 
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+}
+
+.navButtons {
+  display: flex;
+  gap: 12px; 
 }
 
 .navButton {
-  padding: 0.6rem 1rem;
-  border-radius: 0.5rem;
+  padding: 8px 16px;
   border: none;
+  background-color: #007bff;
+  color: white;
   cursor: pointer;
   font-size: 14px;
+  border-radius: 8px; 
+  transition: background-color 0.3s ease, transform 0.2s ease; 
+}
+
+.navButton:hover {
+  background-color: #0056b3; 
+  transform: scale(1.05);
+}
+
+.navButton:focus {
+  outline: none; 
+}
+
+.visibilityIndicator {
+  padding: 8px 16px;
+  border-radius: 8px; 
   color: white;
-  gap: 10px;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 14px; 
+  transition: background-color 0.3s ease; 
 }
 
-.activeButton {
-  background-color: #007bff;
+.public {
+  background-color: #28a745; 
 }
 
-.rightButtons {
-  display: flex;
-  gap: 10px;
-}
-
-.editButton {
-  background-color: #6c757d;
-}
-
-.deleteButton {
-  background-color: #dc3545;
+.private {
+  background-color: #dc3545; 
 }
 
 .modalOverlay {
@@ -100,27 +118,4 @@
 .cancelButton {
   background-color: #f44336;
   color: white;
-}
-
-.leftButtons {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.visibilityIndicator {
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  color: white;
-  font-weight: bold;
-  text-transform: uppercase;
-
-}
-
-.public {
-  background-color: #4CAF50; /* Green for Public */
-}
-
-.private {
-  background-color: #F44336; /* Red for Private */
 }
