@@ -1,5 +1,5 @@
 import axios from 'axios';
-import Cookies from 'js-cookie';
+import { getCookie } from './cookie';
 
 const instance = axios.create({
   baseURL: 'http://localhost:8888',
@@ -8,9 +8,9 @@ const instance = axios.create({
 
 instance.interceptors.request.use(
     (config) => {
-      const token = Cookies.get('AccessToken');  // 쿠키에서 AccessToken 가져오기
+      const token = getCookie('AccessToken');
       if (token) {
-        config.headers['AccessToken'] = token;  // 헤더에 AccessToken 추가
+        config.headers['AccessToken'] = token;
       }
       return config;
     },

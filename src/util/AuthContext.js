@@ -1,18 +1,18 @@
-// src/util/AuthContext.js
 import React, { createContext, useState, useEffect } from 'react';
 import axios from '../util/axiosConfig';
 import { getCookie } from './cookie';
-import Cookies from 'js-cookie';
 
 export const AuthContext = createContext(undefined);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const checkLoginStatus = async () => {
       const token = getCookie('AccessToken');
-      if (token) {
+      const userId = getCookie('userId');
+      if (token && userId) {
         try {
           const response = await axios.get('/api/profiles');
           console.log('User profile fetched:', response.data); // 로그 추가
@@ -21,6 +21,7 @@ export const AuthProvider = ({ children }) => {
           console.error('Failed to fetch user profile:', error);
         }
       }
+      setLoading(false);
     };
 
     checkLoginStatus();
@@ -39,10 +40,13 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     setUser(null);
-    Cookies.remove('AccessToken');
-    Cookies.remove('RefreshToken');
-    delete axios.defaults.headers.common['AccessToken'];
+    document.cookie = 'AccessToken=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    document.cookie = 'userId=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
       <AuthContext.Provider value={{ user, login, logout }}>
