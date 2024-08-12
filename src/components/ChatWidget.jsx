@@ -112,7 +112,7 @@ function ChatWidget() {
   return (
     <div className={styles.chatWidgetContainer}>
       <div className={styles.chatIcon} onClick={toggleChat}>
-        :말풍선:
+        💬
       </div>
       {isChatOpen && (
         <div className={styles.chatBox}>
