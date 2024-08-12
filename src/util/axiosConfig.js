@@ -2,7 +2,7 @@ import axios from 'axios';
 import { getCookie } from './cookie';
 
 const instance = axios.create({
-  baseURL: 'http://localhost:8888',
+  baseURL: 'https://eduwithme.com',
   withCredentials: true,
 });
 
