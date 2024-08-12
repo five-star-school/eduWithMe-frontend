@@ -64,6 +64,7 @@ function MyPage() {
 
                 if (response.status === 200 && response.data.data) {
                     setUser(response.data.data);
+                    console.log(response.data.data);
                 } else {
                     throw new Error(response.data.message || '프로필 조회에 실패했습니다.');
                 }
