@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from '../styles/MyPage.module.css';
 import UserInfo from '../components/MyPage/UserInfo';
@@ -7,12 +7,14 @@ import WrongAnswers from '../components/MyPage/WrongAnswers';
 import MyComments from '../components/MyPage/MyComments';
 import SideBar from '../components/MyPage/SideBar';
 import axios from '../util/axiosConfig';
+import { AuthContext } from '../util/AuthContext';
 
 function MyPage() {
     const [activeTab, setActiveTab] = useState('solved');
     const [user, setUser] = useState(null);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
+    const { logout } = useContext(AuthContext);
 
     const [solvedProblems, setSolvedProblems] = useState([]);
     const [wrongAnswers, setWrongAnswers] = useState([]);
@@ -106,6 +108,26 @@ function MyPage() {
         navigate('/myroom');
     };
 
+    const handleDeleteAccount = async () => {
+        const isConfirmed = window.confirm("정말로 회원탈퇴를 하시겠습니까? 이 작업은 되돌릴 수 없습니다.");
+        if (isConfirmed) {
+            try {
+                const response = await axios.delete('/api/users/delete');
+                if (response.status === 200) {
+                    alert('회원탈퇴가 완료되었습니다.');
+                    // 로그아웃 처리 및 메인 페이지로 이동
+                    // document.cookie = 'AccessToken=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+                    // document.cookie = 'userId=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+                    logout();
+                    navigate('/');
+                }
+            } catch (error) {
+                console.error('회원탈퇴 오류:', error.response?.data || error.message);
+                alert('회원탈퇴 처리 중 오류가 발생했습니다.' + (error.response?.data?.message || error.message));
+            }
+        }
+    };
+
     if (error) {
         return <div className={styles.error}>에러: {error}</div>;
     }
@@ -115,8 +137,16 @@ function MyPage() {
             <header className={styles.header}>
                 <h1 className={styles.title}>마이페이지</h1>
                 <div className={styles.headerButtons}>
-                    <button className={styles.headerButton} onClick={handleMyRoomClick}>마이룸</button>
-                    <button className={styles.headerButton} onClick={handleChangePassword}>비밀번호 변경</button>
+                    <button className={styles.headerButton}
+                            onClick={handleMyRoomClick}>마이룸
+                    </button>
+                    <button className={styles.headerButton}
+                            onClick={handleChangePassword}>비밀번호 변경
+                    </button>
+                    <button
+                        className={`${styles.headerButton} ${styles.deleteButton}`}
+                        onClick={handleDeleteAccount}>회원탈퇴
+                    </button>
                 </div>
             </header>
             <div className={styles.content}>
