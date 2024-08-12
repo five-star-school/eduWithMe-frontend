@@ -28,9 +28,9 @@
 
 .headerButton {
     padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
+    background-color: #ffffff;
+    color: #333;
+    border: none; 
     border-radius: 6px;
     cursor: pointer;
     font-size: 14px;
@@ -38,7 +38,7 @@
 }
 
 .headerButton:hover {
-    background-color: #0056b3;
+    color: #28a745; 
     transform: scale(1.05);
 }
 

@@ -19,66 +19,31 @@
 .authButtons {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 10px;
 }
 
 .loginButton,
-.signupButton {
+.signupButton,
+.myPageButton,
+.logoutButton {
   padding: 10px 20px;
   border: none;
-  border-radius: 25px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 17px;
+  background-color: transparent;
 }
 
-.loginButton {
-  background-color: #e0e0e0;
-  color: #333;
+.loginButton:hover,
+.signupButton:hover,
+.myPageButton:hover,
+.logoutButton:hover {
+  color: #007bff;
 }
 
-.loginButton:hover {
-  background-color: #bebebe;
-}
-
-.signupButton {
-  background-color: #000;
-  color: #fff;
-}
-
-.signupButton:hover {
-  background-color: #333;
-}
 
 .nickName {
   margin-right: 10px;
   font-size: 20px;
   font-weight: bold;
   color: #333;
-}
-
-.myPageButton,
-.logoutButton {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 25px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-.myPageButton {
-  background-color: #2980b9;
-  color: white;
-}
-
-.myPageButton:hover {
-  background-color: #1f6395;
-}
-
-.logoutButton {
-  background-color: #e74c3c;
-  color: white;
-}
-
-.logoutButton:hover {
-  background-color: #c0392b;
 }

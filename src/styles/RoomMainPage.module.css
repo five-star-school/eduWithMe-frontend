@@ -75,7 +75,7 @@
 
 .problemTable tr td:nth-child(1) {
     text-align: left;
-    width: 8%;
+    width: 12%;
 }
 
 .problemTable tr td:nth-child(2) {
@@ -86,12 +86,12 @@
 .problemTable tr td:nth-child(3) {
     font-weight: 600;
     color: #3697ff;
-    width: 50%;
+    width: 45%;
 }
 
 .problemTable tr td:nth-child(4) {
     text-align: left;
-    width: 15%;
+    width: 9%;
 }
 
 .problemTable tr td:nth-child(5) {
