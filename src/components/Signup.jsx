@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from '../util/axiosConfig';
 import styles from '../styles/Signup.module.css';
@@ -15,6 +15,8 @@ function Signup() {
     const [passwordError, setPasswordError] = useState('');
     const [passwordMismatch, setPasswordMismatch] = useState(false);
     const [nicknameError, setNicknameError] = useState('');
+
+    const [isNicknameAvailable, setIsNicknameAvailable] = useState(true);
 
     const isEmailValid = (email) => {
         const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9]{1,20}$/;
@@ -80,7 +82,33 @@ function Signup() {
     const handleNicknameChange = (e) => {
         const nickname = e.target.value;
         setNicknameError(nickname ? '' : '닉네임은 필수 입력사항입니다.');
+
+        if (nickname) {
+            checkNicknameAvailability(nickname);
+        }
     };
+
+    const checkNicknameAvailability = async (nickname) => {
+        try {
+            const response = await axios.get(`/api/users/check-nickname?nickname=${nickname}`);
+            setIsNicknameAvailable(response.data.available);
+            if (!response.data.available) {
+                setNicknameError('이미 사용 중인 닉네임입니다.');
+            }
+        } catch (error) {
+            console.error('닉네임 확인 중 오류 발생:', error);
+        }
+    };
+
+    useEffect(() => {
+        const debounceTimer = setTimeout(() => {
+            if (nicknameInput.current?.value) {
+                checkNicknameAvailability(nicknameInput.current.value);
+            }
+        }, 500);
+
+        return () => clearTimeout(debounceTimer);
+    }, [nicknameInput.current?.value]);
 
     const handleSignupClick = async () => {
         const email = emailInput.current?.value;
@@ -100,6 +128,11 @@ function Signup() {
 
         if (!isPasswordValid(password)) {
             alert('비밀번호 형식이 올바르지 않습니다.');
+            return;
+        }
+
+        if (!isNicknameAvailable) {
+            alert('이미 사용 중인 닉네임입니다.');
             return;
         }
 

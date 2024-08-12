@@ -7,12 +7,40 @@ function UserInfo({ user }) {
     const [isEditing, setIsEditing] = useState(false);
     const [nickName, setNickName] = useState(user.nickName);
     const [email] = useState(user.email); // 이메일은 수정할 수 없으므로 상태에 저장만 합니다.
+    const [nicknameError, setNicknameError] = useState('');
 
     const handleEditClick = () => {
         setIsEditing(true);
+        setNicknameError('');
+    };
+
+    const checkNicknameAvailability = async (newNickname) => {
+        if (newNickname === user.nickName) {
+            return true;
+        }
+        try {
+            const response = await axios.get(`/api/users/check-nickname?nickname=${newNickname}`);
+            return response.data.available;
+        } catch (error) {
+            console.error('닉네임 확인 중 오류 발생:', error);
+            return false;
+        }
     };
 
     const handleSaveClick = async () => {
+        setNicknameError('');
+
+        if (nickName === user.nickName) {
+            setIsEditing(false);
+            return;
+        }
+
+        const isAvailable = await checkNicknameAvailability(nickName);
+        if (!isAvailable) {
+            setNicknameError('이미 사용 중인 닉네임입니다.');
+            return;
+        }
+
         try {
             const response = await axios.put('/api/profiles', {
                 email, // 이메일은 수정하지 않습니다.
@@ -21,6 +49,7 @@ function UserInfo({ user }) {
 
             if (response.status === 200) {
                 alert('프로필이 성공적으로 저장되었습니다.');
+                setIsEditing(false);
                 window.location.reload(); // 저장 후 페이지 새로고침
             } else {
                 throw new Error('프로필 저장에 실패했습니다.');
@@ -57,12 +86,16 @@ function UserInfo({ user }) {
                     <input
                         type="text"
                         value={nickName}
-                        onChange={(e) => setNickName(e.target.value)}
+                        onChange={(e) => {
+                            setNickName(e.target.value);
+                            setNicknameError('');
+                        }}
                         readOnly={!isEditing}
                     />
                     <span className={styles.label}>포인트</span>
                     <input type="text" value={user.points} readOnly />
                 </div>
+                {nicknameError && <p className={styles.errorMessage}>{nicknameError}</p>}
                 <div className={styles.buttonRow}>
                     {isEditing ? (
                         <button className={styles.profileSaveButton} onClick={handleSaveClick}>
