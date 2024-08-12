@@ -21,7 +21,7 @@ function UserInfo({ user }) {
 
             if (response.status === 200) {
                 alert('프로필이 성공적으로 저장되었습니다.');
-                setIsEditing(false);
+                window.location.reload(); // 저장 후 페이지 새로고침
             } else {
                 throw new Error('프로필 저장에 실패했습니다.');
             }
@@ -80,3 +80,4 @@ function UserInfo({ user }) {
 }
 
 export default UserInfo;
+
