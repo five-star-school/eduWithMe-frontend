@@ -30,7 +30,7 @@
     padding: 10px 20px;
     background-color: #ffffff;
     color: #333;
-    border: none; 
+    border: none;
     border-radius: 6px;
     cursor: pointer;
     font-size: 14px;
@@ -38,7 +38,7 @@
 }
 
 .headerButton:hover {
-    color: #28a745; 
+    color: #28a745;
     transform: scale(1.05);
 }
 
@@ -52,12 +52,11 @@
 }
 
 .deleteButton {
-    background-color: #dc3545;
-    color: white;
+    color: #333;
 }
 
 .deleteButton:hover {
-    background-color: #c82333;
+    color: #dc3545;
 }
 
 .sidebar {
