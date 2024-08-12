@@ -1,5 +1,5 @@
 # 1. Node.js 환경에서 빌드 수행
-FROM node:14 AS build
+FROM node:18 AS build
 
 WORKDIR /app
 
@@ -20,9 +20,6 @@ FROM nginx:alpine
 
 # 빌드 결과물 복사
 COPY --from=build /app/build /usr/share/nginx/html
-
-# port
-EXPOSE 80
 
 # Nginx 실행
 CMD ["nginx", "-g", "daemon off;"]
