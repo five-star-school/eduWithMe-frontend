@@ -67,6 +67,7 @@ function Modal({ modalOpen, setModalOpen, isCreateModal, selectedSpace, addNewSp
         }
         alert('방에 성공적으로 입장했습니다.');
         setModalOpen(false);
+        fetchSpaces(); // Fetch the updated list of spaces
         navigate(`/room/${selectedSpace.roomId}`);
       } catch (error) {
         const errorMessage = error.response?.data?.msg || '방 입장에 실패했습니다.';
@@ -119,31 +120,31 @@ function Modal({ modalOpen, setModalOpen, isCreateModal, selectedSpace, addNewSp
                 <input
                   className={styles.modalInput}
                   type="password"
-                  placeholder="방 패스워드"
+                  placeholder="비밀번호"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                 />
               )}
               <div className={styles.modalFooter}>
                 <button className={styles.modalSubmitBtn} onClick={handleAddSpace}>
-                  방 생성하기
+                  생성하기
                 </button>
               </div>
             </>
           ) : (
             <>
-              <p>{selectedSpace?.roomPassword ? 'Private' : 'Public'}</p>
+              <p>{selectedSpace.roomPassword ? 'Private' : 'Public'}</p>
               <input
                 className={styles.modalInput}
                 type="text"
                 readOnly
                 defaultValue={selectedSpace?.roomName || ''}
               />
-              {selectedSpace?.roomPassword && (
+              {selectedSpace.roomPassword && (
                 <input
                   className={styles.modalInput}
                   type="password"
-                  placeholder="방 패스워드"
+                  placeholder="비밀번호 입력"
                   value={enteredPassword}
                   onChange={(e) => setEnteredPassword(e.target.value)}
                 />

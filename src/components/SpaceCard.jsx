@@ -7,25 +7,45 @@ function SpaceCard() {
   const [modalOpen, setModalOpen] = useState(false);
   const [isCreateModal, setIsCreateModal] = useState(true);
   const [selectedSpace, setSelectedSpace] = useState(null);
-  const [allSpaces, setAllSpaces] = useState([]); // 전체 데이터를 저장하는 상태
-  const [filteredSpaces, setFilteredSpaces] = useState([]); // 필터된 데이터를 저장하는 상태
+  const [allSpaces, setAllSpaces] = useState([]);
+  const [filteredSpaces, setFilteredSpaces] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [roomUsers, setRoomUsers] = useState([]);
 
   const fetchSpaces = async () => {
     try {
       const response = await axios.get('/api/rooms?page=0');
       if (Array.isArray(response.data.data)) {
-        const updatedSpaces = response.data.data.map(space => ({
-          ...space,
-          description: space.nickName || '방 설명', // Use nickName or default to '방 설명'
+        const updatedSpaces = await Promise.all(response.data.data.map(async (space) => {
+          const userCountResponse = await axios.get(`/api/rooms/${space.roomId}/users`);
+          const userCount = userCountResponse.data.data.length; // 사용자 수
+
+          return {
+            ...space,
+            description: space.nickName || '방 설명',
+            userCount, // 사용자 수 업데이트
+          };
         }));
         setAllSpaces(updatedSpaces);
-        setFilteredSpaces(updatedSpaces); // 초기에는 전체 데이터를 필터된 데이터로 설정
+        setFilteredSpaces(updatedSpaces);
       } else {
         console.error('Unexpected response format:', response.data);
       }
     } catch (error) {
       console.error('Failed to fetch spaces:', error);
+    }
+  };
+
+  const fetchRoomUsers = async (roomId) => {
+    try {
+      const response = await axios.get(`/api/rooms/${roomId}/users`);
+      if (response.data && Array.isArray(response.data.data)) {
+        setRoomUsers(response.data.data);
+      } else {
+        console.error('Unexpected response format:', response.data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch room users:', error);
     }
   };
 
@@ -43,6 +63,7 @@ function SpaceCard() {
     setIsCreateModal(false);
     setSelectedSpace(space);
     setModalOpen(true);
+    fetchRoomUsers(space.roomId);
   };
 
   const addNewSpace = (title, isPrivate, roomPassword, nickName) => {
@@ -54,9 +75,9 @@ function SpaceCard() {
       roomId: Date.now(),
       roomPassword: isPrivate ? roomPassword : null
     };
-    
+
     setAllSpaces([...allSpaces, newSpace]);
-    setFilteredSpaces([...allSpaces, newSpace]); // 필터된 데이터에도 추가
+    setFilteredSpaces([...allSpaces, newSpace]);
   };
 
   const handleSearchChange = (e) => {
@@ -70,7 +91,7 @@ function SpaceCard() {
       );
       setFilteredSpaces(filtered);
     } else {
-      setFilteredSpaces(allSpaces); // 검색어가 없을 경우 모든 방을 표시
+      setFilteredSpaces(allSpaces);
     }
   };
 
@@ -94,7 +115,7 @@ function SpaceCard() {
           방 생성
         </button>
       </div>
-      
+
       {filteredSpaces.length === 0 ? (
         <p className={styles.noResultsMessage}>결과가 없습니다.</p>
       ) : (
@@ -123,6 +144,7 @@ function SpaceCard() {
         selectedSpace={selectedSpace}
         addNewSpace={addNewSpace}
         fetchSpaces={fetchSpaces}
+        roomUsers={roomUsers}
       />
     </div>
   );

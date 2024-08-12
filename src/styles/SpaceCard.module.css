@@ -1,83 +1,83 @@
 .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 50px;
-  }
-  
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  
-  .heading {
-    text-align: left;
-    margin: 0;
-    flex-grow: 1;
-  }
-  
-  .createButton {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 25px;
-    background-color: #3f51b5;
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
-    margin-left: auto; 
-  }
-  
-  .createButton:hover {
-    background-color: #303f9f;
-  }
-  
-  .spaceGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
-  }
-  
-  .spaceCard {
-    background-color: #ffffff;
-    margin-top: 30px;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  
-  .spaceCard:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  }
-  
-  .spaceIcon {
-    width: 100%;
-    height: 150px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 48px;
-    color: #3f51b5;
-    background-color: #e8eaf6;
-    border-bottom: 1px solid #ddd;
-  }
-  
-  .spaceInfo {
-    padding: 15px;
-  }
-  
-  .spaceTitle {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 5px;
-  }
-  
-  .spaceDescription {
-    font-size: 14px;
-    color: #666;
-  }
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 50px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.heading {
+  text-align: left;
+  margin: 0;
+  flex-grow: 1;
+}
+
+.createButton {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 25px;
+  background-color: #3f51b5;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+.createButton:hover {
+  background-color: #303f9f;
+}
+
+.spaceGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.spaceCard {
+  background-color: #ffffff;
+  margin-top: 30px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.spaceCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.spaceIcon {
+  width: 100%;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  color: #3f51b5;
+  background-color: #e8eaf6;
+  border-bottom: 1px solid #ddd;
+}
+
+.spaceInfo {
+  padding: 15px;
+}
+
+.spaceTitle {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.spaceDescription {
+  font-size: 14px;
+  color: #666;
+}
 
 /* Modal styles */
 .modalContainer {
@@ -114,8 +114,19 @@
   cursor: pointer;
 }
 
+.modalSubmitBtn {
+  padding: 10px 20px;
+  font-size: 15px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: #3f51b5;
+  color: #ffffff;
+  transition: background-color 0.3s ease;
+}
+
 .modalSubmitBtn:hover {
-  background: #0056b3;
+  background-color: #303f9f;
 }
 
 .modalInput {
@@ -152,12 +163,6 @@
   margin-top: 20px;
 }
 
-.modalSubmitBtn {
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-}
-
 .modalButton:hover {
   background: #ddd;
 }
@@ -165,7 +170,7 @@
 .searchContainer {
   display: flex;
   align-items: center;
-  margin-right: 730px; 
+  margin-right: 20px;
 }
 
 .searchInput {
@@ -187,7 +192,8 @@
 }
 
 .searchButton:hover {
-  background-color: #0056b3;
+  background-color: #3f51b5;
+
 }
 
 .noResultsMessage {
