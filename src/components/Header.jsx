@@ -10,8 +10,8 @@ function Header() {
   const handleLogoutClick = () => {
     logout();
     // Clear cookies
-    document.cookie = 'AccessToken=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-    document.cookie = 'userId=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    // document.cookie = 'AccessToken=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    // document.cookie = 'userId=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
     alert('로그아웃되었습니다.');
     navigate('/main');
   };

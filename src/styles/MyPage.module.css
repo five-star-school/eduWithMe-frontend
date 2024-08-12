@@ -51,6 +51,15 @@
     flex: 1;
 }
 
+.deleteButton {
+    background-color: #dc3545;
+    color: white;
+}
+
+.deleteButton:hover {
+    background-color: #c82333;
+}
+
 .sidebar {
     width: 220px;
     padding: 20px;
