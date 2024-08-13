@@ -102,7 +102,7 @@ function UserInfo({ user }) {
                 ) : (
                     <IoPersonCircleOutline size={100} className={styles.defaultIcon} />
                 )}
-                <button className={styles.editButton} onClick={handleImageUpload}>프로필 사진 편집</button>
+                <button className={styles.editButton} onClick={handleImageUpload}>프로필 사진 수정</button>
                 {isUploading && (
                     <input
                         type="file"

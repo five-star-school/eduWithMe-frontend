@@ -1,16 +1,11 @@
 .homeContainer {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 40px;
-    color: #333;
+    background-color: #e0f7fa;
+    padding: 20px;
 }
 
 .introSection {
     padding: 30px;
-    background: linear-gradient(135deg, #e0f7fa, #80deea);
-    border-radius: 12px;
     text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .introSection h1 {
@@ -21,7 +16,7 @@
 }
 
 .introSection p {
-    font-size: 1.3rem;
+    font-size: 20px;
     margin-bottom: 20px;
     line-height: 1.8;
     color: #555;
@@ -58,6 +53,8 @@
 .featuresList {
     list-style-type: none;
     padding-left: 0;
+    max-width: 900px;
+    margin: 0 auto;
 }
 
 .featuresList li {
@@ -72,12 +69,11 @@
 }
 
 .featuresList li:hover {
-    background-color: #e0f2f1;
     transform: scale(1.02);
 }
 
 .featuresList li strong {
-    color: #008080; 
+    color: #008080;
 }
 
 .signupPrompt {
