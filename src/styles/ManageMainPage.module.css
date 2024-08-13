@@ -111,16 +111,16 @@
 
 .problemTable th:nth-child(1),
 .problemTable td:nth-child(1) {
-  width: 8%;
+  width: 11%;
 }
 
 .problemTable th:nth-child(2),
 .problemTable td:nth-child(2) {
-  width: 12%;
+  width: 11%;
 }
 
 .problemTable td:nth-child(3) {
-  width: 42%;
+  width: 35%;
   font-weight: 600;
   color: #3697ff;
 }

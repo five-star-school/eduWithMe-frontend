@@ -154,11 +154,11 @@ function QuestionDetail() {
             </div>
 
             <button
-                className={`${styles.submitButton} ${isTeacher ? styles.disabled : ''}`}
+                className={`${styles.submitButton} ${isTeacher ? styles.submitButtonDisabled : ''}`}
                 onClick={handleSubmit}
                 disabled={isTeacher}
             >
-                {isTeacher ? '선생님은 제출할 수 없습니다' : '제출'}
+                {isTeacher ? '선생님은 제출할 수 없습니다.' : '제출'}
             </button>
 
             {showModal && (

@@ -27,7 +27,7 @@ function HeaderNavComponent({ isRoomManager, roomName, isPrivate }) {
             </span>
             <div className={styles.navButtons}>
                 <button className={styles.navButton} onClick={handleQuestionListClick}>문제 목록</button>
-                <button className={styles.navButton}>AI 아바 만들 예정</button>
+                {/* <button className={styles.navButton}>AI 만들 예정</button> */}
                 {isRoomManager && (
                     <button className={styles.navButton} onClick={handleAdminPageClick}>관리자 페이지</button>
                 )}
