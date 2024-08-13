@@ -109,11 +109,6 @@ function ManageMainPage() {
         setSearchKeyword(e.target.value);
     };
 
-    const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        return format(date, 'yyyy-MM-dd HH:mm');
-    };
-
     const handleQuestionClick = (questionId) => {
         navigate(`/room/${roomId}/question/${questionId}/manageRead`);
     };
