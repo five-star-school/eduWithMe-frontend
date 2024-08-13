@@ -6,6 +6,7 @@ import { Client } from '@stomp/stompjs';
 import axios from '../util/axiosConfig';
 import Cookies from 'js-cookie';
 import { AuthContext } from '../util/AuthContext';
+
 function ChatWidget() {
   const { roomId } = useParams();
   const { user } = useContext(AuthContext);
@@ -13,9 +14,12 @@ function ChatWidget() {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const stompClient = useRef(null);
+  const chatContentRef = useRef(null); // 채팅 내용 컨테이너를 참조할 ref
+
   useEffect(() => {
     console.log('User:', user);
   }, [user]);
+
   const fetchMessages = async () => {
     try {
       const response = await axios.get(`/api/room/${roomId}`);
@@ -24,15 +28,16 @@ function ChatWidget() {
         sender: msg.sender,
         text: msg.content,
         time: new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        profilePicture: 'https://via.placeholder.com/40'
+        profilePicture: msg.photoUrl || 'https://via.placeholder.com/40'
       })));
     } catch (error) {
       console.error('Failed to fetch messages:', error);
     }
   };
+
   const connect = useCallback(() => {
     const token = Cookies.get('AccessToken');
-    const socket = new SockJS('https://eduwithme.com/api/ws');
+    const socket = new SockJS('http://localhost:8888/api/ws'); // 서버 URL
     stompClient.current = new Client({
       webSocketFactory: () => socket,
       connectHeaders: {
@@ -40,9 +45,9 @@ function ChatWidget() {
       },
       onConnect: () => {
         console.log('Connected');
-        stompClient.current.subscribe(`/api/topic/room/${roomId}`, message => {
-          const parsedMessage = JSON.parse(message.body);
-          showMessage(parsedMessage.sender, parsedMessage.content);
+        stompClient.current.subscribe(`/api/topic/room/${roomId}`, () => {
+          // 새로운 메시지가 들어올 때마다 메시지 재로드
+          fetchMessages();
         });
         fetchMessages();
       },
@@ -56,12 +61,14 @@ function ChatWidget() {
     });
     stompClient.current.activate();
   }, [roomId]);
+
   const disconnect = () => {
     if (stompClient.current !== null) {
       stompClient.current.deactivate();
       console.log('Disconnected');
     }
   };
+
   useEffect(() => {
     if (isChatOpen) {
       connect();
@@ -70,7 +77,8 @@ function ChatWidget() {
       };
     }
   }, [isChatOpen, connect]);
-  const sendMessage = () => {
+
+  const sendMessage = async () => {
     if (user && user.nickName) {
       const token = Cookies.get('AccessToken');
       if (newMessage.trim() !== '' && stompClient.current && stompClient.current.connected) {
@@ -78,6 +86,8 @@ function ChatWidget() {
           sender: user.nickName,
           content: newMessage
         };
+
+        // 메시지 전송
         stompClient.current.publish({
           destination: `/api/app/chat/${roomId}`,
           headers: {
@@ -85,30 +95,33 @@ function ChatWidget() {
           },
           body: JSON.stringify(chatMessage)
         });
+
+        // 메시지 초기화
         setNewMessage('');
+
+        // 메시지를 보낸 후 서버에서 최신 메시지를 다시 불러옴
+        await fetchMessages();
       }
     } else {
       console.warn('User is not logged in or user.nickName is not available.');
     }
   };
-  const showMessage = (sender, messageContent) => {
-    const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    setMessages(prevMessages => [
-      ...prevMessages,
-      {
-        sender: sender || 'Unknown User',
-        text: messageContent,
-        time: currentTime,
-        profilePicture: 'https://via.placeholder.com/40'
-      }
-    ]);
-  };
+
   const handleInputChange = (e) => {
     setNewMessage(e.target.value);
   };
+
   const toggleChat = () => {
     setIsChatOpen(!isChatOpen);
   };
+
+  // 메시지가 업데이트될 때마다 스크롤을 맨 아래로 이동
+  useEffect(() => {
+    if (chatContentRef.current) {
+      chatContentRef.current.scrollTop = chatContentRef.current.scrollHeight;
+    }
+  }, [messages]);
+
   return (
     <div className={styles.chatWidgetContainer}>
       <div className={styles.chatIcon} onClick={toggleChat}>
@@ -119,7 +132,7 @@ function ChatWidget() {
           <button className={styles.closeBtn} onClick={toggleChat}>
             &times;
           </button>
-          <div className={styles.chatContent}>
+          <div className={styles.chatContent} ref={chatContentRef}>
             {messages.map((message, index) => (
               <div key={index} className={styles.chatMessage}>
                 <img src={message.profilePicture} alt="Profile" className={styles.profilePicture} />
@@ -152,4 +165,5 @@ function ChatWidget() {
     </div>
   );
 }
+
 export default ChatWidget;
