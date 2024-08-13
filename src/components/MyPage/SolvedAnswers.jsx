@@ -1,13 +1,7 @@
 import React from 'react';
 import styles from '../../styles/SolvedAnswers.module.css';
-import { format } from 'date-fns';
 
 function SolvedAnswers({ problems }) {
-    const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        return format(date, 'yyyy-MM-dd HH:mm');
-    };
-
     console.log('All problems:', problems);
 
     return (
@@ -35,7 +29,7 @@ function SolvedAnswers({ problems }) {
                                 <td>{problem.category}</td>
                                 <td>{problem.title}</td>
                                 <td>{problem.difficulty}</td>
-                                <td>{problem.updatedAt ? formatDate(problem.updatedAt) : 'N/A'}</td>
+                                <td>{problem.formattedUpdatedAt || 'N/A'}</td>
                             </tr>
                         );
                     })}

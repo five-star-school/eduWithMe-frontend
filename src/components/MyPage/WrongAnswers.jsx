@@ -1,13 +1,7 @@
 import React from 'react';
 import styles from '../../styles/SolvedAnswers.module.css';
-import { format } from 'date-fns';
 
 function WrongAnswers({ problems = [] }) {
-    const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        return format(date, 'yyyy-MM-dd HH:mm'); 
-    };
-
     return (
         <div className={styles.solvedProblems}>
             <h2 className={styles.title}>오답 문제</h2>
@@ -24,16 +18,16 @@ function WrongAnswers({ problems = [] }) {
                     </tr>
                     </thead>
                     <tbody>
-                        {problems.map((problem) => (
-                            <tr key={problem.questionId}>
-                                <td>{problem.roomName}</td>
-                                <td>{problem.orderInRoom || 'N/A'}</td>
-                                <td>{problem.category}</td>
-                                <td>{problem.title}</td>
-                                <td>{problem.difficulty}</td>
-                                <td>{formatDate(problem.updatedAt)}</td>
-                            </tr>
-                        ))}
+                    {problems.map((problem) => (
+                        <tr key={problem.questionId}>
+                            <td>{problem.roomName}</td>
+                            <td>{problem.orderInRoom || 'N/A'}</td>
+                            <td>{problem.category}</td>
+                            <td>{problem.title}</td>
+                            <td>{problem.difficulty}</td>
+                            <td>{problem.formattedUpdatedAt}</td>
+                        </tr>
+                    ))}
                     </tbody>
                 </table>
             ) : (

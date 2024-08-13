@@ -4,7 +4,6 @@ import SidebarComponent from '../components/SidebarComponent';
 import axios from "../util/axiosConfig";
 import { getCookie } from '../util/cookie';
 import styles from '../styles/ManageMainPage.module.css';
-import { format } from 'date-fns';
 import ManageMainHeaderNav from "../components/Manage/ManageMainHeaderNav";
 
 function ManageMainPage() {
@@ -146,9 +145,9 @@ function ManageMainPage() {
     const sortedQuestions = useMemo(() => {
         return [...questions].sort((a, b) => {
             if (sortField === 'createdAt') {
-                const dateA = new Date(a.createdAt);
-                const dateB = new Date(b.createdAt);
-                return sortDirection === 'asc' ? dateA - dateB : dateB - dateA;
+                return sortDirection === 'asc'
+                    ? a.formattedCreatedAt.localeCompare(b.formattedCreatedAt)
+                    : b.formattedCreatedAt.localeCompare(a.formattedCreatedAt);
             } else if (sortField === 'difficulty') {
                 return sortDirection === 'asc'
                     ? a.difficulty.localeCompare(b.difficulty)
@@ -222,8 +221,8 @@ function ManageMainPage() {
                                                 <td>{question.category}</td>
                                                 <td>{question.title}</td>
                                                 <td>{question.difficulty}</td>
-                                                <td>{question.createdAt ? formatDate(question.createdAt) : 'N/A'}</td>
-                                                <td>{question.updatedAt ? formatDate(question.updatedAt) : 'N/A'}</td>
+                                                <td>{question.formattedCreatedAt || 'N/A'}</td>
+                                                <td>{question.formattedUpdatedAt || 'N/A'}</td>
                                             </tr>
                                         ))}
                                     </tbody>

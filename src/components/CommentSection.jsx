@@ -56,21 +56,8 @@ function CommentSection() {
         fetchComments(0, sortOrder);
     }, [fetchComments, sortOrder]);
 
-    const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        return date.toLocaleString('ko-KR', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit'
-        });
-    };
-
-    const isCommentEdited = (createdAt, updatedAt) => {
-        const created = new Date(createdAt);
-        const updated = new Date(updatedAt);
-        return updated > created;
+    const isCommentEdited = (formattedCreatedAt, formattedUpdatedAt) => {
+        return formattedCreatedAt !== formattedUpdatedAt;
     };
 
     const isCommentOwner = (comment) => {
@@ -112,12 +99,17 @@ function CommentSection() {
     const handleSaveClick = async (commentId) => {
         try {
             const response = await axios.put(`/api/question/${questionId}/comments/${commentId}`, { comment: editContent });
-            console.log('Updated comment data:', response.data.data);  // 디버깅용
+            console.log('Updated comment data:', response.data.data);
 
             setCommentList(prevComments =>
                 prevComments.map(comment =>
                     comment.commentId === commentId
-                        ? {...response.data.data, updatedAt: new Date().toISOString()}
+                        ? {
+                            ...comment,
+                            comment: response.data.data.comment,
+                            formattedCreatedAt: response.data.data.formattedCreatedAt,
+                            formattedUpdatedAt: response.data.data.formattedUpdatedAt
+                        }
                         : comment
                 )
             );
@@ -186,8 +178,10 @@ function CommentSection() {
                         <div className={styles.commentHeader}>
                             <span className={styles.commentAuthor}>{comment.nickName}</span>
                             <span className={styles.commentDate}>
-                                {formatDate(isCommentEdited(comment.createdAt, comment.updatedAt) ? comment.updatedAt : comment.createdAt)}
-                                {isCommentEdited(comment.createdAt, comment.updatedAt) && " (수정됨)"}
+                                {isCommentEdited(comment.formattedCreatedAt, comment.formattedUpdatedAt)
+                                    ? comment.formattedUpdatedAt
+                                    : comment.formattedCreatedAt}
+                                {isCommentEdited(comment.formattedCreatedAt, comment.formattedUpdatedAt) && " (수정됨)"}
                             </span>
                         </div>
                         {editingCommentId === comment.commentId ? (

@@ -75,7 +75,10 @@ function ManageModifyPage() {
         const difficulty = reverseDifficultyMapping[fetchedQuestion.difficulty];
         setQuestion({
           ...fetchedQuestion,
-          point: difficultyPointMapping[difficulty]
+          point: difficultyPointMapping[difficulty] || fetchedQuestion.point,
+          // 포맷된 날짜 문자열 사용
+          formattedCreatedAt: fetchedQuestion.formattedCreatedAt, // 기존 포인트를 fallback으로 사용
+          formattedUpdatedAt: fetchedQuestion.formattedUpdatedAt
         });
       } catch (error) {
         console.error('Failed to fetch question detail:', error);
@@ -121,12 +124,13 @@ function ManageModifyPage() {
 
   const handleSave = async () => {
     try {
+      const difficulty = reverseDifficultyMapping[question.difficulty];
       const updatedQuestion = {
         title: question.title,
         content: question.content,
         category: categoryMapping[question.category] || question.category,
         difficulty: question.difficulty,
-        point: question.point,
+        point: difficultyPointMapping[difficulty], // 난이도에 따른 포인트 설정
         answer: {
           first: question.answerOption.first,
           second: question.answerOption.second,
@@ -169,11 +173,14 @@ function ManageModifyPage() {
             onAnswerOptionChange={handleAnswerOptionChange}
           />
           <QuestionInfo
-            question={question}
-            reverseCategoryMapping={reverseCategoryMapping}
-            reverseDifficultyMapping={reverseDifficultyMapping}
-            onInputChange={handleInputChange}
-            onAnswerOptionChange={handleAnswerOptionChange}
+              question={question}
+              reverseCategoryMapping={reverseCategoryMapping}
+              reverseDifficultyMapping={reverseDifficultyMapping}
+              onInputChange={handleInputChange}
+              onAnswerOptionChange={handleAnswerOptionChange}
+              // 포맷된 날짜 문자열 전달 추가 작업
+              // formattedCreatedAt={question.formattedCreatedAt}
+              // formattedUpdatedAt={question.formattedUpdatedAt}
           />
           <div className={styles.actionButtons}>
             <button className={styles.cancelButton} onClick={() => navigate(`/room/${roomId}/manageMain`)}>취소</button>

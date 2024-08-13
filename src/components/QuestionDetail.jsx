@@ -145,6 +145,11 @@ function QuestionDetail() {
                 <span className={styles.points}>
                     <span className={styles.infoLabel}>포인트:</span> {question.point}
                 </span>
+                {question.formattedCreatedAt && (
+                    <span className={styles.createdAt}>
+                        <span className={styles.infoLabel}>생성일:</span> {question.formattedCreatedAt}
+                    </span>
+                )}
                 <button
                     className={styles.showAnswerButton}
                     onClick={handleShowAnswer}
