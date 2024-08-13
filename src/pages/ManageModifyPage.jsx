@@ -75,7 +75,10 @@ function ManageModifyPage() {
         const difficulty = reverseDifficultyMapping[fetchedQuestion.difficulty];
         setQuestion({
           ...fetchedQuestion,
-          point: difficultyPointMapping[difficulty]
+          point: difficultyPointMapping[difficulty],
+          // 포맷된 날짜 문자열 사용
+          formattedCreatedAt: fetchedQuestion.formattedCreatedAt,
+          formattedUpdatedAt: fetchedQuestion.formattedUpdatedAt
         });
       } catch (error) {
         console.error('Failed to fetch question detail:', error);
@@ -169,11 +172,14 @@ function ManageModifyPage() {
             onAnswerOptionChange={handleAnswerOptionChange}
           />
           <QuestionInfo
-            question={question}
-            reverseCategoryMapping={reverseCategoryMapping}
-            reverseDifficultyMapping={reverseDifficultyMapping}
-            onInputChange={handleInputChange}
-            onAnswerOptionChange={handleAnswerOptionChange}
+              question={question}
+              reverseCategoryMapping={reverseCategoryMapping}
+              reverseDifficultyMapping={reverseDifficultyMapping}
+              onInputChange={handleInputChange}
+              onAnswerOptionChange={handleAnswerOptionChange}
+              // 포맷된 날짜 문자열 전달 추가 작업
+              // formattedCreatedAt={question.formattedCreatedAt}
+              // formattedUpdatedAt={question.formattedUpdatedAt}
           />
           <div className={styles.actionButtons}>
             <button className={styles.cancelButton} onClick={() => navigate(`/room/${roomId}/manageMain`)}>취소</button>

@@ -1,13 +1,7 @@
 import React from 'react';
 import styles from '../../styles/MyComments.module.css';
-import { format } from 'date-fns';
 
 function MyComments({ comments }) {
-    const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        return format(date, 'yyyy-MM-dd HH:mm');
-    };
-
     return (
         <div className={styles.solvedProblems}>
             <h2 className={styles.title}>작성한 댓글</h2>
@@ -22,14 +16,14 @@ function MyComments({ comments }) {
                     </tr>
                     </thead>
                     <tbody>
-                        {comments.map((comment) => (
-                            <tr key={comment.commentId}>
-                                <td>{comment.roomName || 'N/A'}</td>
-                                <td>{comment.questionOrderInRoom || 'N/A'}</td>
-                                <td>{comment.comment}</td>
-                                <td>{formatDate(comment.updatedAt)}</td>
-                            </tr>
-                        ))}
+                    {comments.map((comment) => (
+                        <tr key={comment.commentId}>
+                            <td>{comment.roomName || 'N/A'}</td>
+                            <td>{comment.questionOrderInRoom || 'N/A'}</td>
+                            <td>{comment.comment}</td>
+                            <td>{comment.formattedUpdatedAt}</td>
+                        </tr>
+                    ))}
                     </tbody>
                 </table>
             ) : (

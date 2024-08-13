@@ -89,11 +89,6 @@ function RoomMain() {
         setSearchKeyword(e.target.value);
     };
 
-    const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        return format(date, 'yyyy-MM-dd HH:mm');
-    };
-
     const handleQuestionClick = (questionId) => {
         navigate(`/room/${roomId}/question/${questionId}`);
     };
@@ -138,7 +133,7 @@ function RoomMain() {
                                             <td>{question.category}</td>
                                             <td>{question.title}</td>
                                             <td>{question.difficulty}</td>
-                                            <td>{question.updatedAt ? formatDate(question.updatedAt) : 'N/A'}</td>
+                                            <td>{question.formattedUpdatedAt || 'N/A'}</td>
                                         </tr>
                                     ))
                                 ) : (
