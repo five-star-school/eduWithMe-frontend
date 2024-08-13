@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from '../../styles/SpaceCard.module.css';
 import axios from "../../util/axiosConfig";
-import { useAuth } from '../../util/useAuth'; // useAuth 훅 가져오기
+import { useAuth } from '../../util/useAuth'; 
 import { getCookie } from '../../util/cookie';
 
 // 모달 컴포넌트
@@ -105,8 +105,32 @@ function MyRoom() {
             if (response.data && response.data.data) {
                 const userSpaces = response.data.data;
                 if (Array.isArray(userSpaces)) {
-                    console.log('Setting spaces:', userSpaces);
-                    setSpaces(userSpaces);
+                    // Fetch user count for each space
+                    const userCounts = await Promise.all(userSpaces.map(async (space) => {
+                        try {
+                            const userCountResponse = await axios.get(`/api/rooms/${space.roomId}/users`);
+                            return {
+                                roomId: space.roomId,
+                                userCount: userCountResponse.data.data.length,
+                            };
+                        } catch (error) {
+                            console.error(`Failed to fetch user count for room ${space.roomId}:`, error);
+                            return { roomId: space.roomId, userCount: 0 };
+                        }
+                    }));
+                    
+                    const userCountMap = userCounts.reduce((acc, { roomId, userCount }) => {
+                        acc[roomId] = userCount;
+                        return acc;
+                    }, {});
+
+                    // Update state with spaces and user counts
+                    const updatedSpaces = userSpaces.map(space => ({
+                        ...space,
+                        userCount: userCountMap[space.roomId] || 0,
+                    }));
+                    
+                    setSpaces(updatedSpaces);
                 } else {
                     console.error('Unexpected response format:', response.data);
                 }
