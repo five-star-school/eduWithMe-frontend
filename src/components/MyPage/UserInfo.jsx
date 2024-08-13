@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import styles from '../../styles/UserInfo.module.css';
 import { IoPersonCircleOutline } from "react-icons/io5";
 import axios from '../../util/axiosConfig';
@@ -10,6 +10,7 @@ function UserInfo({ user }) {
     const [isUploading, setIsUploading] = useState(false); // 파일 업로드 상태
     const [profileImageUrl, setProfileImageUrl] = useState(user.photoUrl); // 프로필 이미지 URL 상태
     const [nicknameError, setNicknameError] = useState('');
+    const fileInputRef = useRef(null); // 파일 입력 요소에 대한 ref
 
     const handleEditClick = () => {
         setIsEditing(true);
@@ -63,7 +64,10 @@ function UserInfo({ user }) {
     };
 
     const handleImageUpload = () => {
-        setIsUploading(!isUploading); // 업로드 상태를 토글하여 input 태그를 표시하거나 숨김
+        // 파일 입력 요소를 강제로 클릭하여 파일 선택 창을 엽니다.
+        if (fileInputRef.current) {
+            fileInputRef.current.click();
+        }
     };
 
     const handleFileChange = async (event) => {
@@ -83,7 +87,6 @@ function UserInfo({ user }) {
                     const newPhotoUrl = response.data.photoUrl; // 서버에서 반환된 새 이미지 URL을 가져옵니다.
                     setProfileImageUrl(newPhotoUrl); // 상태 업데이트로 새 이미지 URL 설정
                     alert('프로필 사진이 성공적으로 업로드되었습니다.');
-                    setIsUploading(false); // 업로드가 완료된 후 파일 선택 창 숨기기
                 } else {
                     throw new Error('프로필 사진 업로드에 실패했습니다.');
                 }
@@ -103,16 +106,14 @@ function UserInfo({ user }) {
                     <IoPersonCircleOutline size={100} className={styles.defaultIcon} />
                 )}
                 <button className={styles.editButton} onClick={handleImageUpload}>프로필 사진 수정</button>
-                {isUploading && (
-                    <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleFileChange}
-                        className={styles.fileInput}
-                        style={{ display: 'none' }} // 기본적으로 숨김 처리
-                        ref={input => input && isUploading && input.click()} // 업로드 버튼 클릭 시 자동 클릭
-                    />
-                )}
+                <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className={styles.fileInput}
+                    style={{ display: 'none' }} // 기본적으로 숨김 처리
+                    ref={fileInputRef} // ref를 fileInputRef로 설정
+                />
             </div>
             <div className={`${styles.userDetails} ${isEditing ? styles.editing : ''}`}>
                 <div className={styles.detailRow}>
