@@ -37,7 +37,7 @@ function ChatWidget() {
 
   const connect = useCallback(() => {
     const token = Cookies.get('AccessToken');
-    const socket = new SockJS('http://localhost:8888/api/ws'); // 서버 URL
+    const socket = new SockJS('https://eduwithme.com/api/ws');
     stompClient.current = new Client({
       webSocketFactory: () => socket,
       connectHeaders: {
