@@ -75,9 +75,9 @@ function ManageModifyPage() {
         const difficulty = reverseDifficultyMapping[fetchedQuestion.difficulty];
         setQuestion({
           ...fetchedQuestion,
-          point: difficultyPointMapping[difficulty],
+          point: difficultyPointMapping[difficulty] || fetchedQuestion.point,
           // 포맷된 날짜 문자열 사용
-          formattedCreatedAt: fetchedQuestion.formattedCreatedAt,
+          formattedCreatedAt: fetchedQuestion.formattedCreatedAt, // 기존 포인트를 fallback으로 사용
           formattedUpdatedAt: fetchedQuestion.formattedUpdatedAt
         });
       } catch (error) {
@@ -129,7 +129,7 @@ function ManageModifyPage() {
         content: question.content,
         category: categoryMapping[question.category] || question.category,
         difficulty: question.difficulty,
-        point: question.point,
+        point: difficultyPointMapping[difficulty],
         answer: {
           first: question.answerOption.first,
           second: question.answerOption.second,
