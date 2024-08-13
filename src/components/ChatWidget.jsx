@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import styles from '../styles/ChatWidget.module.css';
+import { IoPersonCircleOutline } from "react-icons/io5";
 import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
 import axios from '../util/axiosConfig';
@@ -27,8 +28,13 @@ function ChatWidget() {
       setMessages(data.map(msg => ({
         sender: msg.sender,
         text: msg.content,
-        time: new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        profilePicture: msg.photoUrl || 'https://via.placeholder.com/40'
+        time: new Date(msg.timestamp).toLocaleString('ko-KR', {
+          timeZone: 'Asia/Seoul',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false
+        }),
+        profilePicture: msg.photoUrl
       })));
     } catch (error) {
       console.error('Failed to fetch messages:', error);
@@ -135,7 +141,11 @@ function ChatWidget() {
           <div className={styles.chatContent} ref={chatContentRef}>
             {messages.map((message, index) => (
               <div key={index} className={styles.chatMessage}>
+              {message.profilePicture ? (
                 <img src={message.profilePicture} alt="Profile" className={styles.profilePicture} />
+              ) : (
+                <IoPersonCircleOutline size={40} className={styles.defaultIcon} />
+              )}
                 <div className={styles.messageContainer}>
                   <div className={styles.messageHeader}>
                     <strong>{message.sender}</strong>
