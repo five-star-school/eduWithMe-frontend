@@ -124,12 +124,13 @@ function ManageModifyPage() {
 
   const handleSave = async () => {
     try {
+      const difficulty = reverseDifficultyMapping[question.difficulty];
       const updatedQuestion = {
         title: question.title,
         content: question.content,
         category: categoryMapping[question.category] || question.category,
         difficulty: question.difficulty,
-        point: difficultyPointMapping[difficulty],
+        point: difficultyPointMapping[difficulty], // 난이도에 따른 포인트 설정
         answer: {
           first: question.answerOption.first,
           second: question.answerOption.second,
