@@ -81,7 +81,6 @@ function ManageModifyPage() {
           formattedUpdatedAt: fetchedQuestion.formattedUpdatedAt
         });
       } catch (error) {
-        console.error('Failed to fetch question detail:', error);
         alert('문제 정보를 불러오는데 실패했습니다.');
       } finally {
         setLoading(false);
@@ -140,15 +139,11 @@ function ManageModifyPage() {
         }
       };
 
-      console.log('Sending update:', updatedQuestion);
-
       const response = await axios.put(`/api/rooms/${roomId}/question/${questionId}`, updatedQuestion);
-      console.log('Server response:', response.data);
 
       alert('문제가 성공적으로 수정되었습니다.');
       navigate(`/room/${roomId}/manageMain`);
     } catch (error) {
-      console.error('Failed to update question:', error.response?.data || error);
       alert('문제 수정에 실패했습니다. 오류 내용: ' + (error.response?.data?.message || error.message));
     }
   };

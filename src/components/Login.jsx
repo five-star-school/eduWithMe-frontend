@@ -37,14 +37,11 @@ function Login() {
             if (response.status === 200) {
                 const accessToken = response.headers['accesstoken'];
                 const { nickName, userId } = response.data;
-                console.log('NickName:', response.data.nickName);
-                console.log('UserID:', response.data.userId);
 
                 const expires = new Date(Date.now() + 60 * 60 * 1000).toUTCString(); // 1시간 후 만료
                 document.cookie = `AccessToken=${accessToken}; path=/; Expires=${expires}; Secure; SameSite=Strict`;
                 document.cookie = `userId=${userId}; path=/; Expires=${expires}; Secure; SameSite=Strict`;
 
-                console.log('Cookies after login:', document.cookie); // 쿠키 설정 확인용
 
                 login({ userId, nickName });
                 alert('로그인 성공!');
@@ -53,7 +50,6 @@ function Login() {
                 setLoginError('로그인 실패: ' + response.data.message);
             }
         } catch (error) {
-            console.error('로그인 오류:', error);
             setLoginError('이메일 또는 비밀번호가 올바르지 않습니다.');
         }
     };
@@ -73,7 +69,6 @@ function Login() {
                 scope: 'profile_nickname, account_email',
             });
         } catch (error) {
-            console.error('Error fetching key values:', error);
             setLoginError('카카오 로그인을 시작할 수 없습니다.');
         }
     };

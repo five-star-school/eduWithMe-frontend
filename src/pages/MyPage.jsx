@@ -35,13 +35,11 @@ function MyPage() {
             if (response.status === 200) {
                 setData(response.data.data.content);
                 setTotalPages(response.data.data.totalPages);
-                console.table(response.data.data.content);
             } else {
                 throw new Error('데이터 조회에 실패했습니다.');
             }
         } catch (error) {
-            console.error('데이터 조회 오류:', error);
-            setError(error.message || '알 수 없는 오류가 발생했습니다.');
+            setError(error.message || '데이터 조회 오류가 발생했습니다.');
         } finally {
             setLoading(false);
         }
@@ -64,13 +62,11 @@ function MyPage() {
 
                 if (response.status === 200 && response.data.data) {
                     setUser(response.data.data);
-                    console.log(response.data.data);
                 } else {
                     throw new Error(response.data.message || '프로필 조회에 실패했습니다.');
                 }
             } catch (error) {
-                console.error('프로필 조회 오류:', error);
-                setError(error.message || '알 수 없는 오류가 발생했습니다.');
+                setError(error.message || '프로필 조회 오류가 발생했습니다.');
             }
         };
 
@@ -122,7 +118,6 @@ function MyPage() {
                     navigate('/');
                 }
             } catch (error) {
-                console.error('회원탈퇴 오류:', error.response?.data || error.message);
                 alert('회원탈퇴 처리 중 오류가 발생했습니다.' + (error.response?.data?.message || error.message));
             }
         }

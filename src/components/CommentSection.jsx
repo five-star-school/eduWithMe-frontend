@@ -44,7 +44,6 @@ function CommentSection() {
                 setTotalComments(0);
             }
         } catch (error) {
-            console.error('Failed to fetch comments:', error);
             setCommentList([]);
             setError('댓글을 불러오는 중 오류가 발생했습니다.');
         } finally {
@@ -86,7 +85,6 @@ function CommentSection() {
             setNewComment('');
             fetchComments(0, sortOrder);
         } catch (error) {
-            console.error('Failed to add comment:', error);
             alert('댓글 작성에 실패했습니다.');
         }
     };
@@ -99,7 +97,6 @@ function CommentSection() {
     const handleSaveClick = async (commentId) => {
         try {
             const response = await axios.put(`/api/question/${questionId}/comments/${commentId}`, { comment: editContent });
-            console.log('Updated comment data:', response.data.data);
 
             setCommentList(prevComments =>
                 prevComments.map(comment =>
@@ -116,7 +113,6 @@ function CommentSection() {
             setEditingCommentId(null);
             setEditContent('');
         } catch (error) {
-            console.error('Failed to update comment:', error);
             alert(error.response?.data?.msg || '댓글 수정에 실패했습니다.');
         }
     };
@@ -127,7 +123,6 @@ function CommentSection() {
                 await axios.delete(`/api/question/${questionId}/comments/${commentId}`);
                 fetchComments(currentPage, sortOrder);
             } catch (error) {
-                console.error('Failed to delete comment:', error);
                 alert(error.response?.data?.msg || '댓글 삭제에 실패했습니다.');
             }
         }

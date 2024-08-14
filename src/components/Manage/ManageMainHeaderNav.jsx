@@ -32,7 +32,6 @@ function ManageMainHeaderNav({ roomId, roomName, roomIsPrivate, onQuestionListCl
       alert('방이 삭제되었습니다.');
       navigate('/main');
     } catch (error) {
-      console.error('방 삭제 실패:', error);
       alert('방 삭제에 실패했습니다.');
     }
   };
@@ -63,7 +62,6 @@ function ManageMainHeaderNav({ roomId, roomName, roomIsPrivate, onQuestionListCl
       setEditModalOpen(false);
       window.location.reload();
     } catch (error) {
-      console.error('방 수정 실패:', error);
       alert('방 수정에 실패했습니다.');
     }
   };

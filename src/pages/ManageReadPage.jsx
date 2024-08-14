@@ -50,7 +50,6 @@ function ManageReadPage() {
         console.error('Unexpected data format:', response.data);
       }
     } catch (error) {
-      console.error('Failed to fetch question detail:', error);
       if (error.response && error.response.status === 403) {
         navigate('/login');
       }
@@ -85,7 +84,6 @@ function ManageReadPage() {
         alert('문제가 삭제되었습니다.');
         navigate(`/room/${roomId}/manageMain`);
       } catch (error) {
-        console.error('Failed to delete question:', error);
         alert('문제 삭제에 실패했습니다.');
       }
     }

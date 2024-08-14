@@ -56,8 +56,6 @@ function ManageMainPage() {
                 sort: `${sortField},${sortDirection}`
             };
             const response = await axios.get(`/api/rooms/${roomId}/question`, { params });
-            
-            console.table(response.data.data.content);
 
             if (response.data && response.data.data && response.data.data.content) {
                 const questionsData = response.data.data.content;
@@ -67,7 +65,6 @@ function ManageMainPage() {
                 setQuestions([]);
             }
         } catch (error) {
-            console.error('Failed to fetch questions:', error);
             setQuestions([]);
             if (error.response && error.response.status === 403) {
                 navigate('/login');
@@ -87,8 +84,6 @@ function ManageMainPage() {
                     size: questionsPerPage,
                 }
             });
-
-            console.table(response.data.data);
 
             if (response.data && Array.isArray(response.data.data)) {
                 setQuestions(response.data.data);

@@ -45,7 +45,6 @@ function Modal({ modalOpen, setModalOpen, isCreateModal, selectedSpace, addNewSp
         fetchSpaces(); // Fetch the updated list of spaces
       } catch (error) {
         const errorMessage = error.response?.data?.msg || '방 생성에 실패했습니다.';
-        console.error('방 생성 실패:', errorMessage);
         alert(errorMessage);
       }
     }
@@ -65,14 +64,11 @@ function Modal({ modalOpen, setModalOpen, isCreateModal, selectedSpace, addNewSp
         } else {
           await axios.post(`/api/rooms/${selectedSpace.roomId}/public`);
         }
-        alert('방에 성공적으로 입장했습니다.');
         setModalOpen(false);
         fetchSpaces(); // Fetch the updated list of spaces
         navigate(`/room/${selectedSpace.roomId}`);
       } catch (error) {
-        const errorMessage = error.response?.data?.msg || '방 입장에 실패했습니다.';
-        console.error('방 입장 실패:', errorMessage);
-        alert(errorMessage);
+        alert("로그인 후 입장 가능합니다.");
       }
     }
   };

@@ -21,7 +21,6 @@ function RoomLayout({ children }) {
     const fetchRoomInfo = async () => {
         try {
             const response = await axios.get(`/api/rooms/one/${roomId}`);
-            console.log('Room info response:', response.data);
 
             if (response.data && response.data.data) {
                 const roomData = response.data.data;
@@ -31,15 +30,12 @@ function RoomLayout({ children }) {
                 const currentUserId = parseInt(getCookie('userId'), 10);
                 setIsRoomManager(roomData.managerUserId === currentUserId);
 
-                console.log('Is Room Manager:', roomData.managerUserId === currentUserId);
             } else {
-                console.error('Unexpected data format:', response.data);
                 setRoomName('Unknown Room');
                 setIsPrivate(false);
                 setIsRoomManager(false);
             }
         } catch (error) {
-            console.error('Failed to fetch room info:', error);
             setRoomName('Unknown Room');
             setIsPrivate(false);
             setIsRoomManager(false);
@@ -51,9 +47,6 @@ function RoomLayout({ children }) {
             const response = await axios.get(`/api/rooms/${roomId}/users`);
             const currentUserId = getCookie('userId'); // Get the current user ID from the cookie
 
-            // Debugging information
-            console.log('User Data: ', response.data.data);
-            console.log('Current User ID: ', currentUserId);
             if (!currentUserId) {
                 console.error('No user ID found in cookies');
                 return;
@@ -62,10 +55,8 @@ function RoomLayout({ children }) {
             const isManager = response.data.data.some(user =>
                 user.userId.toString() === currentUserId && user.userId === user.managerUserId
             );
-            console.log('Is Room Manager: ', isManager);
             setIsRoomManager(isManager);
         } catch (error) {
-            console.error('Failed to check room manager status:', error);
             setIsRoomManager(false);
         }
     };

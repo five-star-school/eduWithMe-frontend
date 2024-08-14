@@ -16,7 +16,6 @@ function SidebarComponent() {
       try {
         // API 호출
         const response = await axios.get(`/api/rooms/${roomId}/users`);
-        console.log('API Response:', response.data); // 응답 데이터 확인
 
         // 응답 데이터 구조에 맞게 수정
         const { data } = response.data; // 데이터 추출
@@ -29,7 +28,6 @@ function SidebarComponent() {
 
         setMembers(data || []); // students가 undefined일 경우 빈 배열로 설정
       } catch (error) {
-        console.error('Error fetching room data:', error);
         setRoomName('Error loading room');
         setMembers([]);
       }
