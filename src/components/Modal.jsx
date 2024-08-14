@@ -68,7 +68,12 @@ function Modal({ modalOpen, setModalOpen, isCreateModal, selectedSpace, addNewSp
         fetchSpaces(); // Fetch the updated list of spaces
         navigate(`/room/${selectedSpace.roomId}`);
       } catch (error) {
-        alert("로그인 후 입장 가능합니다.");
+        if (error.response && error.response.status === 400) {
+          // 401 Unauthorized indicates the password was incorrect
+          alert('비밀번호가 틀렸습니다.');
+        } else {
+          alert('로그인 후 입장 가능합니다.');
+        }
       }
     }
   };
