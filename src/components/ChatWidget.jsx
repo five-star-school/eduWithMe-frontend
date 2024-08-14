@@ -18,7 +18,6 @@ function ChatWidget() {
   const chatContentRef = useRef(null); // 채팅 내용 컨테이너를 참조할 ref
 
   useEffect(() => {
-    console.log('User:', user);
   }, [user]);
 
   const fetchMessages = async () => {
@@ -37,7 +36,6 @@ function ChatWidget() {
         profilePicture: msg.photoUrl
       })));
     } catch (error) {
-      console.error('Failed to fetch messages:', error);
     }
   };
 
@@ -50,7 +48,6 @@ function ChatWidget() {
         'AccessToken': token
       },
       onConnect: () => {
-        console.log('Connected');
         stompClient.current.subscribe(`/api/topic/room/${roomId}`, () => {
           // 새로운 메시지가 들어올 때마다 메시지 재로드
           fetchMessages();
@@ -58,11 +55,8 @@ function ChatWidget() {
         fetchMessages();
       },
       onDisconnect: () => {
-        console.log('Disconnected');
       },
       onStompError: (frame) => {
-        console.error('Broker reported error: ' + frame.headers['message']);
-        console.error('Additional details: ' + frame.body);
       }
     });
     stompClient.current.activate();
@@ -71,7 +65,6 @@ function ChatWidget() {
   const disconnect = () => {
     if (stompClient.current !== null) {
       stompClient.current.deactivate();
-      console.log('Disconnected');
     }
   };
 

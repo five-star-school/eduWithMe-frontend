@@ -26,12 +26,10 @@ function QuestionDetail() {
     const fetchQuestionDetail = async () => {
         try {
             const response = await axios.get(`/api/rooms/${roomId}/question/${questionId}`);
-            console.log('Question detail:', response.data);
             if (response.data && response.data.data) {
                 setQuestion(response.data.data);
             }
         } catch (error) {
-            console.error('Failed to fetch question detail:', error);
             if (error.response && error.response.status === 403) {
                 navigate('/login');
             }
@@ -76,7 +74,6 @@ function QuestionDetail() {
                 });
                 setShowModal(true);
             } catch (error) {
-                console.error('Failed to submit answer:', error);
                 setModalContent({
                     title: '오류',
                     message: '답안 제출 중 오류가 발생했습니다.',

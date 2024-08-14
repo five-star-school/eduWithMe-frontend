@@ -99,7 +99,6 @@ function ManageCreatePage() {
       alert('문제가 성공적으로 생성되었습니다.');
       navigate(`/room/${roomId}/manageMain`);
     } catch (error) {
-      console.error('문제 생성 실패:', error);
       alert('문제 생성에 실패했습니다: ' + error.response?.data?.message || error.message);
     }
   };

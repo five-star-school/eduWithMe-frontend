@@ -18,7 +18,7 @@ function ChangePassword() {
 
     const isPasswordValid = (password) => {
         // 비밀번호가 최소 8자 이상이고, 대문자, 소문자, 숫자, 특수문자를 포함해야 함
-        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/;
         return passwordRegex.test(password);
     };
 
@@ -31,7 +31,7 @@ function ChangePassword() {
         setNewPassword(value);
 
         if (!isPasswordValid(value)) {
-            setNewPasswordError('비밀번호는 최소 8자 이상이어야 하며, 대문자, 소문자, 숫자 및 특수문자를 포함해야 합니다.');
+            setNewPasswordError('비밀번호는 8~15자이며, 영문, 숫자, 특수문자를 포함해야 합니다.');
         } else {
             setNewPasswordError('');
         }

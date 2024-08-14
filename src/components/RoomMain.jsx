@@ -3,7 +3,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from "../util/axiosConfig";
 import { getCookie } from '../util/cookie';
 import styles from '../styles/RoomMainPage.module.css';
-import { format } from 'date-fns';
 
 function RoomMain() {
     const [questions, setQuestions] = useState([]);
@@ -35,15 +34,15 @@ function RoomMain() {
             });
             if (response.data && response.data.data) {
                 const questionsData = response.data.data.content || [];
-                setQuestions(questionsData);
+                // 문제 번호(orderInRoom)를 기준으로 내림차순 정렬
+                const sortedQuestions = questionsData.sort((a, b) => b.orderInRoom - a.orderInRoom);
+                setQuestions(sortedQuestions);
                 setTotalPages(response.data.data.totalPages);
-                console.table(questionsData);
             } else {
                 console.error('Unexpected data format:', response.data);
                 setQuestions([]);
             }
         } catch (error) {
-            console.error('Failed to fetch questions:', error);
             setQuestions([]);
             if (error.response && error.response.status === 403) {
                 navigate('/login');
@@ -67,10 +66,10 @@ function RoomMain() {
                 }
             );
 
-            console.log('Search API Response:', response.data);
-
             if (response.data && Array.isArray(response.data.data)) {
-                setQuestions(response.data.data);
+                // 검색 결과도 문제 번호(orderInRoom)를 기준으로 내림차순 정렬
+                const sortedQuestions = response.data.data.sort((a, b) => b.orderInRoom - a.orderInRoom);
+                setQuestions(sortedQuestions);
                 setTotalPages(response.data.totalPages || 1);
                 setPage(0);
             } else {
@@ -133,7 +132,7 @@ function RoomMain() {
                                             <td>{question.category}</td>
                                             <td>{question.title}</td>
                                             <td>{question.difficulty}</td>
-                                            <td>{question.formattedUpdatedAt || 'N/A'}</td>
+                                            <td>{question.formattedCreatedAt || 'N/A'}</td>
                                         </tr>
                                     ))
                                 ) : (
