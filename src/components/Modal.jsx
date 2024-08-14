@@ -4,7 +4,7 @@ import styles from '../styles/SpaceCard.module.css';
 import axios from "../util/axiosConfig";
 
 function Modal({ modalOpen, setModalOpen, isCreateModal, selectedSpace, addNewSpace, fetchSpaces }) {
-  const [isPrivate, setIsPrivate] = useState(false);
+  const [isPrivate, setIsPrivate] = useState(false); // Default to public
   const [newTitle, setNewTitle] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [enteredPassword, setEnteredPassword] = useState('');
@@ -69,7 +69,6 @@ function Modal({ modalOpen, setModalOpen, isCreateModal, selectedSpace, addNewSp
         navigate(`/room/${selectedSpace.roomId}`);
       } catch (error) {
         if (error.response && error.response.status === 400) {
-          // 401 Unauthorized indicates the password was incorrect
           alert('비밀번호가 틀렸습니다.');
         } else {
           alert('로그인 후 입장 가능합니다.');
@@ -105,13 +104,13 @@ function Modal({ modalOpen, setModalOpen, isCreateModal, selectedSpace, addNewSp
               />
               <div className={styles.modalButtonGroup}>
                 <button
-                  className={`${styles.modalButton} ${isPrivate ? '' : styles.modalButtonActive}`}
+                  className={`${styles.modalButton} ${!isPrivate ? styles.publicButtonActive : ''}`}
                   onClick={handlePublicClick}
                 >
                   Public
                 </button>
                 <button
-                  className={`${styles.modalButton} ${isPrivate ? styles.modalButtonActive : ''}`}
+                  className={`${styles.modalButton} ${isPrivate ? styles.privateButtonActive : ''}`}
                   onClick={handlePrivateClick}
                 >
                   Private

@@ -163,9 +163,9 @@
   margin-top: 20px;
 }
 
-.modalButton:hover {
+/* .modalButton:hover {
   background: #ddd;
-}
+} */
 
 .searchContainer {
   display: flex;
@@ -197,4 +197,18 @@
 
 .noResultsMessage {
   margin-top: 50px;
+}
+
+.modalButtonActive {
+  background-color: transparent; /* 기본 배경색 유지 */
+}
+
+.publicButtonActive {
+  background-color: #3f51b5; /* 파란색 */
+  color: #ffffff; /* 텍스트 색상 변경 */
+}
+
+.privateButtonActive {
+  background-color: #ff5252; /* 빨간색 */
+  color: #ffffff; /* 텍스트 색상 변경 */
 }
