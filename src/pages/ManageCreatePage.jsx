@@ -79,6 +79,12 @@ function ManageCreatePage() {
   };
 
   const handleSave = async () => {
+
+    if (!title || !content || options.some(option => !option) || !category || !difficulty || !correctAnswer) {
+      alert('모든 칸을 입력해주세요.');
+      return;
+    }
+
     try {
       const questionData = {
         title,
