@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import axios from './axiosConfig';
 import styles from '../styles/AIQuestionModal.module.css';
 
 function AIQuestionModal({ onClose }) {
@@ -15,7 +15,7 @@ function AIQuestionModal({ onClose }) {
         const requestBody = { prompt: input };
 
         try {
-            const result = await axios.post('http://localhost:8888/api/gemini/generate',
+            const result = await axios.post('/api/gemini/generate',
                 requestBody,
                 {
                     headers: {
