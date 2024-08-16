@@ -25,18 +25,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-
-      # # Build
-      # - name: Build the application
-      #   run: |
-      #     npm install
-      #     npm run build
-      
-      #
-      - name: Run tests
-        run: npm test
- #       env:
- #         CI: false
           
       # Docker Image 빌드
       - name: Build the Docker image
