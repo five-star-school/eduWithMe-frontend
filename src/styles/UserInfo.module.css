@@ -172,3 +172,14 @@
     visibility: visible;
 }
 
+.closeButton {
+    position: absolute;
+    top: 5px; 
+    right: 5px;
+    background: none;
+    border: none;
+    color: #e31a1a;
+    font-size: 17px;
+    background-color: #fff;
+    cursor: pointer;
+}

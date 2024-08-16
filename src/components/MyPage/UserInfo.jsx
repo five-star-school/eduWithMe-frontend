@@ -129,6 +129,10 @@ function UserInfo({ user }) {
         setShowTooltip(prevState => !prevState); // Tooltip 토글
     };
 
+    const handleCloseTooltip = () => {
+        setShowTooltip(false); // Tooltip 숨기기
+    };
+
     const { nextRank, pointsNeeded } = getNextRankInfo(user.points);
 
     return (
@@ -167,17 +171,19 @@ function UserInfo({ user }) {
                             />
                             {showTooltip && (
                                 <div className={`${styles.tooltip} ${styles.showTooltip}`}>
+                                    <button className={styles.closeButton} onClick={handleCloseTooltip}>
+                                        &times;
+                                    </button>
                                     <p>랭크 F: 50포인트 이하</p>
                                     <p>랭크 D: 51~100포인트</p>
                                     <p>랭크 C: 101~150포인트</p>
                                     <p>랭크 B: 151~200포인트</p>
                                     <p>랭크 A: 201포인트 이상</p>
                                     {nextRank && pointsNeeded > 0 && (
-                                        <p><i>다음 랭크 {nextRank}로 올라가려면 {pointsNeeded}포인트 더 필요합니다.</i></p>
+                                        <p>다음 랭크 {nextRank}로 올라가려면 {pointsNeeded}포인트 더 필요합니다.</p>
                                     )}
                                 </div>
                             )}
-
                         </div>
                     </div>
                 </div>
