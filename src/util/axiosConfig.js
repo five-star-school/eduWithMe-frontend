@@ -1,8 +1,10 @@
 import axios from 'axios';
 import { getCookie } from './cookie';
 
+const apiUrl = process.env.REACT_APP_API_URL;
 const instance = axios.create({
-  baseURL: 'https://eduwithme.com',
+  
+  baseURL: apiUrl,
   withCredentials: true,
 });
 

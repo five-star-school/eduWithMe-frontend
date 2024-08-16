@@ -40,8 +40,9 @@ function ChatWidget() {
   };
 
   const connect = useCallback(() => {
+    const apiUrl = process.env.REACT_APP_API_URL;
     const token = Cookies.get('AccessToken');
-    const socket = new SockJS('https://eduwithme.com/api/ws');
+    const socket = new SockJS(apiUrl + '/api/ws');
     stompClient.current = new Client({
       webSocketFactory: () => socket,
       connectHeaders: {
