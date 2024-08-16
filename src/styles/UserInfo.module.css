@@ -57,19 +57,19 @@
     width: 80px;
     font-weight: bold;
     margin-right: 10px;
-    margin-left: 30px;
     font-size: 17px;
     color: #333;
 }
 
 .userDetails input {
-    flex: 1;
     font-size: 18px;
     padding: 12px;
     border: none;
     border-radius: 4px;
     background-color: #fff;
     color: #555555;
+    box-sizing: border-box; /* padding과 border를 포함한 전체 너비 계산 */
+    width: 400px; /* 고정 너비 설정 */
 }
 
 .buttonRow {
@@ -105,4 +105,81 @@
 
 .profileSaveButton:hover {
     background-color: #ffa500;
+}
+
+.rankContainer {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 400px; /* 모든 입력 칸과 동일한 너비 설정 */
+}
+
+.inputContainer {
+    position: relative;
+    width: 100%;
+}
+
+.rankInput {
+    width: 100%; 
+    font-size: 18px;
+    padding: 12px;
+    padding-right: 40px; 
+    border-radius: 4px;
+    border: none;
+    background-color: #fff;
+    color: #555555;
+    box-sizing: border-box; 
+}
+
+.infoIcon {
+    position: absolute;
+    right: 10px; 
+    top: 50%; 
+    transform: translateY(-50%); 
+    font-size: 24px;
+    color: #888;
+    cursor: pointer;
+}
+
+.tooltip {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    border-radius: 4px;
+    white-space: nowrap;
+    z-index: 1000;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    opacity: 0; 
+    visibility: hidden; 
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%; 
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 6px;
+    border-style: solid;
+}
+
+.showTooltip {
+    opacity: 1;
+    visibility: visible;
+}
+
+.closeButton {
+    position: absolute;
+    top: 5px; 
+    right: 5px;
+    background: none;
+    border: none;
+    color: #e31a1a;
+    font-size: 17px;
+    background-color: #fff;
+    cursor: pointer;
 }
