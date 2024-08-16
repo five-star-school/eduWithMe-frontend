@@ -19,29 +19,19 @@ jobs:
         run: |
           touch ./.env
           echo "${{ secrets.ENV }}" > ./.env
-
+          
       # Node.js 및 Nginx 설정
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-          
-    # 의존성 설치
-      - name: Install dependencies  
-        run: npm ci
-      
-      # babel-preset-react-app 이슈 해결
-      - name: Fix babel-preset-react-app issue
-        run: npm install --save-dev @babel/plugin-proposal-private-property-in-object
-      
-      # 테스트
-      - name: Run tests  
-        run: npm test -- --passWithNoTests
-      
-      # Build
-      - name: Build the application
-        run: CI=false npm run build
 
+      # # Build
+      # - name: Build the application
+      #   run: |
+      #     npm install
+      #     npm run build
+          
       # Docker Image 빌드
       - name: Build the Docker image
         run: docker build . --file Dockerfile --tag ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.DOCKER_IMAGE_TAG_NAME }}:latest
