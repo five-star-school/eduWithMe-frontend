@@ -17,13 +17,8 @@ function ChangePassword() {
     const navigate = useNavigate();
 
     const isPasswordValid = (password) => {
-        // 비밀번호가 최소 8자 이상이고, 대문자, 소문자, 숫자, 특수문자를 포함해야 함
-        const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/;
+        const passwordRegex = /^(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^*+=-]).{8,15}$/;
         return passwordRegex.test(password);
-    };
-
-    const handleCurrentPasswordChange = () => {
-        // 기존 비밀번호에 대한 유효성 검사 또는 필요한 로직
     };
 
     const handleNewPasswordChange = (event) => {
@@ -31,7 +26,7 @@ function ChangePassword() {
         setNewPassword(value);
 
         if (!isPasswordValid(value)) {
-            setNewPasswordError('비밀번호는 8~15자이며, 영문, 숫자, 특수문자를 포함해야 합니다.');
+            setNewPasswordError('비밀번호는 8~15자이며, 소문자, 숫자, 특수문자를 포함해야 합니다.');
         } else {
             setNewPasswordError('');
         }
@@ -65,6 +60,7 @@ function ChangePassword() {
         try {
             setLoading(true);
             setError(null);
+            setCurrentPasswordError(''); // 현재 비밀번호 오류 초기화
 
             const response = await axios.put('/api/profiles/password', {
                 currentPassword,
@@ -83,7 +79,13 @@ function ChangePassword() {
                 throw new Error('비밀번호 변경에 실패했습니다.');
             }
         } catch (error) {
-            setError(error.response?.data?.message || '* 비밀번호 변경에 실패했습니다.');
+            if (error.response?.data?.message === '현재 비밀번호가 틀렸습니다.') {
+                setCurrentPasswordError('현재 비밀번호가 틀렸습니다.');
+                setError(null); // 일반 오류는 비워두기
+            } else {
+                setError(error.response?.data?.message || '* 비밀번호 변경에 실패했습니다.');
+                setCurrentPasswordError(''); // 현재 비밀번호 오류를 초기화
+            }
         } finally {
             setLoading(false);
         }
@@ -98,7 +100,6 @@ function ChangePassword() {
                     type="password"
                     placeholder="기존 비밀번호"
                     ref={currentPasswordInput}
-                    onChange={handleCurrentPasswordChange}
                 />
                 {currentPasswordError && <p className={styles.error}>{currentPasswordError}</p>}
                 <input
