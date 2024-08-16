@@ -35,8 +35,8 @@ jobs:
       #
       - name: Run tests
         run: npm test
-        env:
-          CI: false
+ #       env:
+ #         CI: false
           
       # Docker Image 빌드
       - name: Build the Docker image
