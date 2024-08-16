@@ -38,6 +38,7 @@ jobs:
       - name: Build the application
         run: |
           npm install
+          CI=false npm run build
           npm run build
 
       # Docker Image 빌드
