@@ -34,10 +34,9 @@ jobs:
       - name: Run tests  
         run: npm test
         
-      # Build
+      # 경고 제거
       - name: Build the application
-        run: |
-          npm install
+        run:
           CI=false npm run build
 
       # Docker Image 빌드
