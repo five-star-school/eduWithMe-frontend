@@ -1,16 +1,45 @@
 import React, { useState, useRef } from 'react';
 import styles from '../../styles/UserInfo.module.css';
 import { IoPersonCircleOutline } from "react-icons/io5";
+import { IoIosInformationCircleOutline } from "react-icons/io";
 import axios from '../../util/axiosConfig';
 
 function UserInfo({ user }) {
     const [isEditing, setIsEditing] = useState(false);
     const [nickName, setNickName] = useState(user.nickName);
-    const [email] = useState(user.email); // 이메일은 수정할 수 없으므로 상태에 저장만 합니다.
-    const [isUploading, setIsUploading] = useState(false); // 파일 업로드 상태
-    const [profileImageUrl, setProfileImageUrl] = useState(user.photoUrl); // 프로필 이미지 URL 상태
+    const [email] = useState(user.email);
+    const [profileImageUrl, setProfileImageUrl] = useState(user.photoUrl);
     const [nicknameError, setNicknameError] = useState('');
-    const fileInputRef = useRef(null); // 파일 입력 요소에 대한 ref
+    const [showTooltip, setShowTooltip] = useState(false); // Tooltip 표시 상태
+    const fileInputRef = useRef(null);
+
+    // 각 랭크에 대한 포인트 범위 정의
+    const rankThresholds = [
+        { rank: 'F', minPoints: 0, maxPoints: 50 },
+        { rank: 'D', minPoints: 51, maxPoints: 100 },
+        { rank: 'C', minPoints: 101, maxPoints: 150 },
+        { rank: 'B', minPoints: 151, maxPoints: 200 },
+        { rank: 'A', minPoints: 201, maxPoints: Infinity }
+    ];
+
+    // 현재 포인트와 다음 랭크를 계산
+    const getNextRankInfo = (currentPoints) => {
+        for (let i = 0; i < rankThresholds.length - 1; i++) {
+            const currentRank = rankThresholds[i];
+            const nextRank = rankThresholds[i + 1];
+            if (currentPoints >= currentRank.minPoints && currentPoints <= currentRank.maxPoints) {
+                const pointsNeeded = nextRank.minPoints - currentPoints;
+                return {
+                    nextRank: nextRank.rank,
+                    pointsNeeded: pointsNeeded > 0 ? pointsNeeded : 0
+                };
+            }
+        }
+        return {
+            nextRank: null,
+            pointsNeeded: 0
+        };
+    };
 
     const handleEditClick = () => {
         setIsEditing(true);
@@ -46,7 +75,7 @@ function UserInfo({ user }) {
 
         try {
             const response = await axios.put('/api/profiles', {
-                email, // 이메일은 수정하지 않습니다.
+                email,
                 nickName
             });
 
@@ -64,7 +93,6 @@ function UserInfo({ user }) {
     };
 
     const handleImageUpload = () => {
-        // 파일 입력 요소를 강제로 클릭하여 파일 선택 창을 엽니다.
         if (fileInputRef.current) {
             fileInputRef.current.click();
         }
@@ -84,8 +112,8 @@ function UserInfo({ user }) {
                 });
 
                 if (response.status === 200) {
-                    const newPhotoUrl = response.data.photoUrl; // 서버에서 반환된 새 이미지 URL을 가져옵니다.
-                    setProfileImageUrl(newPhotoUrl); // 상태 업데이트로 새 이미지 URL 설정
+                    const newPhotoUrl = response.data.photoUrl;
+                    setProfileImageUrl(newPhotoUrl);
                     alert('프로필 사진이 성공적으로 업로드되었습니다.');
                 } else {
                     throw new Error('프로필 사진 업로드에 실패했습니다.');
@@ -96,6 +124,12 @@ function UserInfo({ user }) {
             }
         }
     };
+
+    const handleIconClick = () => {
+        setShowTooltip(prevState => !prevState); // Tooltip 토글
+    };
+
+    const { nextRank, pointsNeeded } = getNextRankInfo(user.points);
 
     return (
         <div className={styles.userInfo}>
@@ -111,8 +145,8 @@ function UserInfo({ user }) {
                     accept="image/*"
                     onChange={handleFileChange}
                     className={styles.fileInput}
-                    style={{ display: 'none' }} // 기본적으로 숨김 처리
-                    ref={fileInputRef} // ref를 fileInputRef로 설정
+                    style={{ display: 'none' }}
+                    ref={fileInputRef}
                 />
             </div>
             <div className={`${styles.userDetails} ${isEditing ? styles.editing : ''}`}>
@@ -124,7 +158,28 @@ function UserInfo({ user }) {
                         readOnly
                     />
                     <span className={styles.label}>랭크</span>
-                    <input type="text" value={user.ranking} readOnly />
+                    <div className={styles.rankContainer}>
+                        <div className={styles.inputContainer}>
+                            <input type="text" value={user.ranking} readOnly />
+                            <IoIosInformationCircleOutline
+                                className={styles.infoIcon}
+                                onClick={handleIconClick}
+                            />
+                            {showTooltip && (
+                                <div className={`${styles.tooltip} ${styles.showTooltip}`}>
+                                    <p>랭크 F: 50포인트 이하</p>
+                                    <p>랭크 D: 51~100포인트</p>
+                                    <p>랭크 C: 101~150포인트</p>
+                                    <p>랭크 B: 151~200포인트</p>
+                                    <p>랭크 A: 201포인트 이상</p>
+                                    {nextRank && pointsNeeded > 0 && (
+                                        <p><i>다음 랭크 {nextRank}로 올라가려면 {pointsNeeded}포인트 더 필요합니다.</i></p>
+                                    )}
+                                </div>
+                            )}
+
+                        </div>
+                    </div>
                 </div>
                 <div className={styles.detailRow}>
                     <span className={styles.label}>닉네임</span>
