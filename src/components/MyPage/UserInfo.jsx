@@ -180,7 +180,7 @@ function UserInfo({ user }) {
                                     <p>랭크 B: 151~200포인트</p>
                                     <p>랭크 A: 201포인트 이상</p>
                                     {nextRank && pointsNeeded > 0 && (
-                                        <p>다음 랭크 {nextRank}로 올라가려면 {pointsNeeded}포인트 더 필요합니다.</p>
+                                        <p><i>다음 랭크 {nextRank}로 올라가려면 {pointsNeeded}포인트 더 필요합니다.</i></p>
                                     )}
                                 </div>
                             )}
