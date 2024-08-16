@@ -11,23 +11,24 @@ function SpaceCard() {
   const [filteredSpaces, setFilteredSpaces] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [roomUsers, setRoomUsers] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
 
-  const fetchSpaces = async () => {
+  const fetchSpaces = async (page = 0) => {
     try {
-      const response = await axios.get('/api/rooms?page=0');
-      if (Array.isArray(response.data.data)) {
-        const updatedSpaces = await Promise.all(response.data.data.map(async (space) => {
+      const response = await axios.get('/api/rooms', {
+        params: { page, size: 12 }
+      });
+      if (response.data && response.data.data) {
+        const { content, totalPages, totalElements } = response.data.data;
+        const updatedSpaces = await Promise.all(content.map(async (space) => {
           const userCountResponse = await axios.get(`/api/rooms/${space.roomId}/users`);
-          const userCount = userCountResponse.data.data.length; // 사용자 수
-
-          return {
-            ...space,
-            description: space.nickName || '방 설명',
-            userCount, // 사용자 수 업데이트
-          };
+          const userCount = userCountResponse.data.data.length;
+          return { ...space, description: space.nickName || '방 설명', userCount };
         }));
         setAllSpaces(updatedSpaces);
         setFilteredSpaces(updatedSpaces);
+        setTotalPages(totalPages);
       } else {
         console.error('Unexpected response format:', response.data);
       }
@@ -35,6 +36,10 @@ function SpaceCard() {
       console.error('Failed to fetch spaces:', error);
     }
   };
+
+  useEffect(() => {
+    fetchSpaces(currentPage);
+  }, [currentPage]);
 
   const fetchRoomUsers = async (roomId) => {
     try {
@@ -48,10 +53,6 @@ function SpaceCard() {
       console.error('Failed to fetch room users:', error);
     }
   };
-
-  useEffect(() => {
-    fetchSpaces();
-  }, []);
 
   const handleCreateClick = () => {
     setIsCreateModal(true);
@@ -95,58 +96,73 @@ function SpaceCard() {
     }
   };
 
+  const handlePrevPage = () => {
+    setCurrentPage(prev => Math.max(0, prev - 1));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage(prev => Math.min(totalPages - 1, prev + 1));
+  };
+
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <h1 className={styles.heading}>방 목록</h1>
-        <div className={styles.searchContainer}>
-          <input
-            type="text"
-            className={styles.searchInput}
-            placeholder="검색어 (방 제목)"
-            value={searchTerm}
-            onChange={handleSearchChange}
-          />
-          <button className={styles.searchButton} onClick={handleSearch}>
-            검색
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <h1 className={styles.heading}>방 목록</h1>
+          <div className={styles.searchContainer}>
+            <input
+                type="text"
+                className={styles.searchInput}
+                placeholder="검색어 (방 제목)"
+                value={searchTerm}
+                onChange={handleSearchChange}
+            />
+            <button className={styles.searchButton} onClick={handleSearch}>
+              검색
+            </button>
+          </div>
+          <button className={styles.createButton} onClick={handleCreateClick}>
+            방 생성
           </button>
         </div>
-        <button className={styles.createButton} onClick={handleCreateClick}>
-          방 생성
-        </button>
-      </div>
 
-      {filteredSpaces.length === 0 ? (
-        <p className={styles.noResultsMessage}>결과가 없습니다.</p>
-      ) : (
-        <div className={styles.spaceGrid}>
-          {filteredSpaces.map((space, index) => (
-            <div
-              key={index}
-              className={styles.spaceCard}
-              onClick={() => handleCardClick(space)}
-            >
-              <div className={styles.spaceIcon}>{space.roomPassword ? '🔒' : '🏠'}</div>
-              <div className={styles.spaceInfo}>
-                <h2 className={styles.spaceTitle}>{space.roomName}</h2>
-                <p className={styles.spaceDescription}>{space.description || '방 설명'}</p>
-                <p className={styles.spaceUserCount}>인원수: {space.userCount || 0}</p>
+        {filteredSpaces.length === 0 ? (
+            <p className={styles.noResultsMessage}>결과가 없습니다.</p>
+        ) : (
+            <>
+              <div className={styles.spaceGrid}>
+                {filteredSpaces.map((space, index) => (
+                    <div
+                        key={index}
+                        className={styles.spaceCard}
+                        onClick={() => handleCardClick(space)}
+                    >
+                      <div className={styles.spaceIcon}>{space.roomPassword ? '🔒' : '🏠'}</div>
+                      <div className={styles.spaceInfo}>
+                        <h2 className={styles.spaceTitle}>{space.roomName}</h2>
+                        <p className={styles.spaceDescription}>{space.description || '방 설명'}</p>
+                        <p className={styles.spaceUserCount}>인원수: {space.userCount || 0}</p>
+                      </div>
+                    </div>
+                ))}
               </div>
-            </div>
-          ))}
-        </div>
-      )}
+              <div className={styles.pagination}>
+                <button onClick={handlePrevPage} disabled={currentPage === 0}>이전</button>
+                <span>{currentPage + 1} / {totalPages}</span>
+                <button onClick={handleNextPage} disabled={currentPage === totalPages - 1}>다음</button>
+              </div>
+            </>
+        )}
 
-      <Modal
-        modalOpen={modalOpen}
-        setModalOpen={setModalOpen}
-        isCreateModal={isCreateModal}
-        selectedSpace={selectedSpace}
-        addNewSpace={addNewSpace}
-        fetchSpaces={fetchSpaces}
-        roomUsers={roomUsers}
-      />
-    </div>
+        <Modal
+            modalOpen={modalOpen}
+            setModalOpen={setModalOpen}
+            isCreateModal={isCreateModal}
+            selectedSpace={selectedSpace}
+            addNewSpace={addNewSpace}
+            fetchSpaces={fetchSpaces}
+            roomUsers={roomUsers}
+        />
+      </div>
   );
 }
 
