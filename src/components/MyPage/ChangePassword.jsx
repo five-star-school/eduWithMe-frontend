@@ -17,7 +17,7 @@ function ChangePassword() {
     const navigate = useNavigate();
 
     const isPasswordValid = (password) => {
-        const passwordRegex = /^(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^*+=-]).{8,15}$/;
+        const passwordRegex = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^*+=-]).{8,15}$/;
         return passwordRegex.test(password);
     };
 
@@ -26,7 +26,7 @@ function ChangePassword() {
         setNewPassword(value);
 
         if (!isPasswordValid(value)) {
-            setNewPasswordError('비밀번호는 8~15자이며, 소문자, 숫자, 특수문자를 포함해야 합니다.');
+            setNewPasswordError('비밀번호는 8~15자이며, 대문자, 숫자, 특수문자를 포함해야 합니다.');
         } else {
             setNewPasswordError('');
         }
