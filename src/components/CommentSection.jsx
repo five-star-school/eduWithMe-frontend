@@ -85,7 +85,7 @@ function CommentSection() {
             setNewComment('');
             fetchComments(0, sortOrder);
         } catch (error) {
-            alert('댓글 작성에 실패했습니다.');
+            alert('댓글은 255자 까지만 작성이 가능합니다.');
         }
     };
 
@@ -113,7 +113,7 @@ function CommentSection() {
             setEditingCommentId(null);
             setEditContent('');
         } catch (error) {
-            alert(error.response?.data?.msg || '댓글 수정에 실패했습니다.');
+            alert(error.response?.data?.msg || '댓글 수정은 255자 까지만 수정이 가능합니다.');
         }
     };
 
